@@ -1,0 +1,66 @@
+﻿using System;
+using Newtonsoft.Json;
+public class v3f
+{
+    public float x;
+    public float y;
+    public float z;
+
+    [JsonIgnore]
+    public float SqrMagnitude => x * x + y * y + z * z;
+    [JsonIgnore]
+    public float Magnitude => (float)Math.Sqrt(SqrMagnitude);
+    [JsonIgnore]
+    public v3f Normalized => this / Magnitude;
+    public v3f(float x, float y, float z)
+    {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+    public v3f Clone() => new v3f(x, y, z);
+    public override bool Equals(object obj)
+    {
+        return obj != null && obj is v3f i && i.GetHashCode() == GetHashCode();
+    }
+
+    public override int GetHashCode()
+    {
+        int hashCode = 1502939027;
+        hashCode = hashCode * -1521134295 + x.GetHashCode();
+        hashCode = hashCode * -1521134295 + y.GetHashCode();
+        hashCode = hashCode * -1521134295 + z.GetHashCode();
+        return hashCode;
+    }
+
+    public override string ToString()
+    {
+        return $"({x}, {y}, {z})";
+    }
+
+    public static v3f operator /(v3f a, float b) => new v3f(a.x / b, a.y / b, a.z / b);
+    public static v3f operator /(v3f a, int b) => new v3f(a.x / b, a.y / b, a.z / b);
+
+    public static v3f operator *(v3f a, float b) => new v3f(a.x * b, a.y * b, a.z * b);
+    public static v3f operator *(float a, v3f b) => b * a;
+    public static v3f operator *(v3f a, int b) => new v3f(a.x * b, a.y * b, a.z * b);
+    public static v3f operator *(int a, v3f b) => b * a;
+
+    public static v3f operator +(v3f a, v3f b) => new v3f(a.x + b.x, a.y + b.y, a.z + b.z);
+
+    public static v3f operator -(v3f a, v3f b) => new v3f(a.x - b.x, a.y - b.y, a.z - b.z);
+
+    public static explicit operator v3f (v3i t) => new v3f(t.x, t.y, t.z);
+    public static float Distance(v3f a, v3f b) => (a - b).Magnitude;
+    public static float SqrDistance(v3f a, v3f b) => (a - b).SqrMagnitude;
+    private const double Rad2Deg = 2 * Math.PI / 360f;
+    public static v3f FromRotationInvertX(v2f rotation) => new v3f(
+        (float)-(Math.Sin(rotation.x * Rad2Deg) * Math.Cos(rotation.y * Rad2Deg)),
+        (float)-Math.Sin(rotation.y * Rad2Deg),
+        (float)(Math.Cos(rotation.x * Rad2Deg) * Math.Cos(rotation.y * Rad2Deg)));
+    public static v3f FromRotation(v2f rotation) => new v3f(
+        (float)(Math.Sin(rotation.x * Rad2Deg) * Math.Cos(rotation.y * Rad2Deg)),
+        (float)-Math.Sin(rotation.y * Rad2Deg),
+        (float)(Math.Cos(rotation.x * Rad2Deg) * Math.Cos(rotation.y * Rad2Deg)));
+
+}

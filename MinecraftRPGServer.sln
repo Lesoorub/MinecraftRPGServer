@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinecraftRPGServer", "MinecraftRPGServer\MinecraftRPGServer.csproj", "{7D271B0C-0B8E-43DE-8E07-227F48378CCE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineSocket.NET", "..\MineSocket.NET\MineSocket.NET\MineSocket.NET.csproj", "{7A7B12B6-1122-4238-A5C3-5D4C08D8A2E9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7D271B0C-0B8E-43DE-8E07-227F48378CCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D271B0C-0B8E-43DE-8E07-227F48378CCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D271B0C-0B8E-43DE-8E07-227F48378CCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D271B0C-0B8E-43DE-8E07-227F48378CCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A7B12B6-1122-4238-A5C3-5D4C08D8A2E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A7B12B6-1122-4238-A5C3-5D4C08D8A2E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A7B12B6-1122-4238-A5C3-5D4C08D8A2E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A7B12B6-1122-4238-A5C3-5D4C08D8A2E9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {518CCF17-B378-4E2A-9150-05502AE68007}
+	EndGlobalSection
+EndGlobal
