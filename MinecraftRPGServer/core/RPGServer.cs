@@ -222,17 +222,16 @@ public sealed partial class RPGServer : MineServer.MineServer
             while (isStarted)
             {
                 WaitTick(lastProcessingTick);
+                //TODO OPTIMIZE THIS!
                 foreach (var loaded_ent_pair in loginnedPlayers
                     .SelectMany(x => x.Value.view.entities))
                 {
                     var ent = loaded_ent_pair.Value.entity;
+                    if (ent is Player player) continue;
+
                     if (!ent.Velocity.Equals(new v3f(0, 0, 0)))
-                    {
-                        if (ent is Player player)
-                            player.ApplyNewPosition(player.Position + player.Velocity);
-                        else
-                            ent.Position += ent.Velocity;
-                    }
+                        ent.Position += ent.Velocity;
+
                     if (!ent.isDestroyed)
                         ent.Tick();
                 }
