@@ -1,4 +1,4 @@
-#MMORPG Minecraft server
+#MMORPG Minecraft server ![](https://img.shields.io/badge/environment-server-orangered?style=flat-square) ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Lesoorub/MinecraftRPGServer) ![GitHub commit activity]](https://img.shields.io/github/last-commit/Lesoorub/MinecraftRPGServer)
 
 ![Переделай меня](https://github.com/Lesoorub/MinecraftRPGServer/blob/main/images/favicon.png)
 
@@ -10,23 +10,23 @@
 
 ### Планы
 + ✔️ Мир
-  + ✔️ Загрузка
-  + ❌ Изменение и синхронизация между пользователями
-    + ❌ WorldEdit
+ + ✔️ Загрузка
+ + ❌ Изменение и синхронизация между пользователями
+  + ❌ WorldEdit
 + ✔️ Инвентари
-  + ✔️ Инвентарь игрока 
-    + ✔️ Перемещение предметов ⚠️ (Найден баг)
+ + ✔️ Инвентарь игрока 
+  + ✔️ Перемещение предметов ⚠️ (Найден баг)
   + ❌ Сундук
   + ❌ Сумка
 + ✔️ Система существ
-  + ✏️ Синхронизация существ между пользователями
+ + ✏️ Синхронизация существ между пользователями
 + ✔️ Здоровье
-  + ✔️ Респавн
-  + ❌ Влияние чего-нибудь на статистики
+ + ✔️ Респавн
+ + ❌ Влияние чего-нибудь на статистики
 + ❌ Лошади
 + ✔️ Мобы
-  +❌ ИИ
-  +❌ Спавнпоинты
+ +❌ ИИ
+ +❌ Спавнпоинты
 + ❌ Вся РПГ составляющая, включая контент
 
 ### Поддержка проекта
