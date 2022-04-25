@@ -1,4 +1,5 @@
-#MMORPG Minecraft server ![](https://img.shields.io/badge/environment-server-orangered?style=flat-square) ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Lesoorub/MinecraftRPGServer) ![GitHub commit activity]](https://img.shields.io/github/last-commit/Lesoorub/MinecraftRPGServer)
+#MMORPG Minecraft server 
+![](https://img.shields.io/badge/environment-server-orangered?style=flat-square) ![](https://img.shields.io/github/commit-activity/m/Lesoorub/MinecraftRPGServer) ![](https://img.shields.io/github/last-commit/Lesoorub/MinecraftRPGServer)
 
 ![Переделай меня](https://github.com/Lesoorub/MinecraftRPGServer/blob/main/images/favicon.png)
 
