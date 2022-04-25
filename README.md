@@ -1,4 +1,4 @@
-# MMORPG Minecraft server
+# MMORPG Minecraft server 1.18.2
 
 ![](https://img.shields.io/badge/environment-server-orangered?style=flat-square) ![](https://img.shields.io/github/commit-activity/m/Lesoorub/MinecraftRPGServer) ![](https://img.shields.io/github/last-commit/Lesoorub/MinecraftRPGServer)
 
