@@ -1,4 +1,4 @@
-﻿public class ModEntityData : LivingEntityMetadata
+﻿public class MobMetadata : LivingEntityMetadata
 {
     public enum MobStatus : byte
     {

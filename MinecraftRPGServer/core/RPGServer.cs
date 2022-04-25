@@ -33,18 +33,24 @@ public sealed partial class RPGServer : MineServer.MineServer
         var timer = new System.Diagnostics.Stopwatch();
         timer.Start();
 
+        //Init packets
         LoadPackets();
         //Logging errors
         errorLoger.OnMessage += (msg) => Console.WriteLine(msg);
         //Load config
         config = ServerConfig.Load();
+        //Init blockEntities
+        BlockEntity.Init(MinecraftRPGServer.Properties.Resources.block_entity_type_1_18_2);
         //Load world
         LoadWorlds();
-        //Load Commands
-        Commands.Init();
-        tab = new TabPlayerInfo(this);
+        //Init Entities
+        Entity.InitEntities();
+        //Init items
         Item.InitItems(MinecraftRPGServer.Properties.Resources.items_1_18_2);
-        BlockEntity.Init(MinecraftRPGServer.Properties.Resources.block_entity_type_1_18_2);
+        //Init Commands
+        Commands.Init();
+        //Init players tab
+        tab = new TabPlayerInfo(this);
 
         OnStart += RPGServer_OnStart;
         OnStop += RPGServer_OnStop;
@@ -89,7 +95,7 @@ public sealed partial class RPGServer : MineServer.MineServer
         switch (sp[0])
         {
             default:
-            Console.WriteLine($"{sp[0]} is unknown command");
+                Console.WriteLine($"{sp[0]} is unknown command");
                 break;
         }
     }
@@ -139,7 +145,7 @@ public sealed partial class RPGServer : MineServer.MineServer
         GlobalPalette.Init(MinecraftRPGServer.Properties.Resources.blocks);
         var timer = new System.Diagnostics.Stopwatch();
         timer.Start();
-        worlds.TryAdd(spawnWorldName, new World(config.WorldPath, spawnWorldName));
+        worlds.TryAdd(spawnWorldName, new ReadOnlyWorld(config.WorldPath, spawnWorldName));
         timer.Stop();
         Console.WriteLine($"Worlds loaded for {((double)timer.ElapsedTicks / TimeSpan.TicksPerMillisecond):N3} ms");
     }
@@ -182,7 +188,7 @@ public sealed partial class RPGServer : MineServer.MineServer
         {
             player.data.Save(player);
             OnLogOut?.Invoke(player);
-            player.Dispose();
+            player.Destroy();
             return true;
         }
         return false;
@@ -216,21 +222,19 @@ public sealed partial class RPGServer : MineServer.MineServer
             while (isStarted)
             {
                 WaitTick(lastProcessingTick);
-                foreach (var world in loginnedPlayers
-                    .Select(x => x.Value.world)
-                    .Distinct())
+                foreach (var loaded_ent_pair in loginnedPlayers
+                    .SelectMany(x => x.Value.view.entities))
                 {
-                    foreach (var ent_pair in world.Entities)
+                    var ent = loaded_ent_pair.Value.entity;
+                    if (!ent.Velocity.Equals(new v3f(0, 0, 0)))
                     {
-                        if (!ent_pair.Value.Velocity.Equals(new v3f(0, 0, 0)))
-                        {
-                            if (ent_pair.Value is Player player)
-                                player.ApplyNewPosition(ent_pair.Value.Position + ent_pair.Value.Velocity);
-                            else
-                                ent_pair.Value.Position += ent_pair.Value.Velocity;
-                        }
-                        ent_pair.Value.Tick();
+                        if (ent is Player player)
+                            player.ApplyNewPosition(player.Position + player.Velocity);
+                        else
+                            ent.Position += ent.Velocity;
                     }
+                    if (!ent.isDestroyed)
+                        ent.Tick();
                 }
                 lastProcessingTick = currentTick;
             }

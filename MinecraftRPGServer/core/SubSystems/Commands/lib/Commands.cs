@@ -40,7 +40,7 @@ public static class Commands
         //if (!node.Flags.HasFlag(Node.FlagsEnum.IsExecutable))
         //    node.Flags |= Node.FlagsEnum.IsExecutable;
         parent.childrens.Add(cmd);
-        parent.node.Children.Add(node);
+        parent.node.Childrens.Add(node);
         return cmd;
     }
     public static bool Execute(string cmd, Player player, string[] args)
@@ -64,7 +64,7 @@ public static class Commands
         {
             if (node.Flags.HasFlag(Node.FlagsEnum.HasRedirect))
                 AddNodes(node.RedirectNode);
-            foreach (var n in node.Children)
+            foreach (var n in node.Childrens)
                 AddNodes(n);
             nodes.Add(node);
         }

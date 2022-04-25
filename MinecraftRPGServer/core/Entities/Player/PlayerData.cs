@@ -38,7 +38,7 @@ public class PlayerData
         loginname = name;
         WorldName = server.spawnWorldName;
         position = server.spawnWorld.SpawnPoint;
-        rotation = server.spawnWorld.SpawnRotation;
+        rotation = new v2f(server.spawnWorld.SpawnRotation, 0);
         Health = Player.baseMaxHealth;
     }
     /// <summary>
@@ -70,6 +70,7 @@ public class PlayerData
         CarriendItem = player.inventory.CarriedItem;
         Health = player.Health;
         SelectedSlot = player.SelectedSlot;
+        Gamemode = (byte)player.Gamemode;
 
         new DirectoryInfo(players_save_path).Create();
         File.WriteAllText(save_path(player.PlayerUUID), JsonConvert.SerializeObject(this, jsonSerializerSettings));

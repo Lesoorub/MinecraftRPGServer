@@ -26,8 +26,6 @@ public static class Physics
             isOverlapping1D(box1.y, cube_pos.y) &&
             isOverlapping1D(box1.z, cube_pos.z);
     }
-    public static bool CheckCollision(World world, v3f a_pos, v2f a_size, out Hit hit) =>
-        CheckCollisionEntitiesOverride(world, world.Entities.Select(x => x.Value), a_pos, a_size, out hit);
     public static bool CheckCollisionEntitiesOverride(World world, IEnumerable<Entity> entities, v3f a_pos, v2f a_size, out Hit hit)
     {
         v3i[] collidedBlocks = new v3i[27];

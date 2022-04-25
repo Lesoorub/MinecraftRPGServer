@@ -21,10 +21,10 @@ public class MetadataBase
         { typeof(Position?), 10 },
         { typeof(Direction), 11 },
         { typeof(Guid?), 12 },
-        //{ typeof(OptBlockID), 13 },
+        { typeof(OptBlockID), 13 },
         { typeof(NBTTag), 14 },
         { typeof(Particle), 15 },
-        //{ typeof(VillagerData), 16 },
+        { typeof(VillagerData), 16 },
         { typeof(VarInt?), 17 },
         { typeof(Pose), 18 },
     };

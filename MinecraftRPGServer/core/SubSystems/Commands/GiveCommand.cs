@@ -9,14 +9,14 @@ public class GiveCommand : IChatCommand
         {
             Name = "give",
             Flags = Node.FlagsEnum.literal,
-            Children = new System.Collections.Generic.List<Node>()
+            Childrens = new System.Collections.Generic.List<Node>()
             {
                 new Node()
                 {
                     Name = "NameID",
                     Flags = Node.FlagsEnum.argument | Node.FlagsEnum.IsExecutable,
                     Parser = Node.Parsers.item_stack,
-                    Children = new System.Collections.Generic.List<Node>()
+                    Childrens = new System.Collections.Generic.List<Node>()
                     {
                         new Node()
                         {

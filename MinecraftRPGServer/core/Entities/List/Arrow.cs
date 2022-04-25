@@ -25,27 +25,28 @@ namespace Entities
         public override void Tick()
         {
             if (skipTick) return;
+            //Уничтожить если превышено время жизни
             if (Time.GetTime() - CreateTime >= Items.Bow.ArrayLifetimeMs)
             {
                 Destroy();
-                Dispose();
                 return;
             }
+            //А не будет ли этот метод просчитывать чужие стрелы несколько раз?
             if (Physics.CheckCollisionEntitiesOverride(
                 sender.world,
-                sender.world.Entities
-                    .Where(x => x.Value is LivingEntity l &&
-                                l.EntityID != sender.EntityID)
-                    .Select(x => x.Value),
+                sender.view.livingEntities
+                    .Where(l => l.Key != sender.EntityID)
+                    .Select(x => x.Value.entity),
                 Position,
                 BoxCollider,
                 out var hit))
             {
                 if (hit.entity != null)
                 {
+                    if (hit.entity is LivingEntity t)
+                        t.Health -= SenderBow.ArrowDamage;
+                    //Уничтожить при попадании в энтити
                     Destroy();
-                    Dispose();
-                    (hit.entity as LivingEntity).Health -= SenderBow.ArrowDamage;
                 }
                 else
                 {
@@ -53,13 +54,7 @@ namespace Entities
                     foreach (var block in hit.blocks)
                         Particle.Spawn(sender.world, Particles.glow_squid_ink,
                             (v3f)block + new v3f(.5f, .5f, .5f), new v3f(0, 0, 0), 0, 10);
-                    Task.Run(async () =>
-                    {
-                        skipTick = true;
-                        await Task.Delay(Items.Bow.ArrayLifetimeMs);
-                        Destroy();
-                        Dispose();
-                    });
+                    CreateTime = Time.GetTime();
                 }
 
             }

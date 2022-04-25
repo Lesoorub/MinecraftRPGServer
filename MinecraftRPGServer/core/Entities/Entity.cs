@@ -6,9 +6,9 @@ using System.Collections.Concurrent;
 using MineServer;
 using Packets.Play;
 
-public abstract class Entity : IDisposable
+public abstract class Entity
 {
-    public static int global_id = 1;
+    private static int global_id = 1;
 
     public int EntityID;
     /// <summary>
@@ -28,7 +28,18 @@ public abstract class Entity : IDisposable
     /// Entity ID, minecraft:player, minecraft:armor_stand and e.t.c
     /// </summary>
     public virtual string ID { get; }
-    public virtual v3f Position { get; set; } = new v3f(0, 64, 0);
+    public v2i ChunkPos => new v2i((int)position.x >> 4, (int)position.z >> 4);
+    protected v3f position = new v3f(0, 64, 0);
+    public virtual v3f Position 
+    { 
+        get => position.Clone();
+        set 
+        { 
+            var last = position.Clone(); 
+            position = value.Clone(); 
+            OnPositionChanged?.Invoke(last, Position);
+        } 
+    }
     public virtual v3f Velocity { get; set; } = new v3f(0, 0, 0);
     public virtual v2f Rotation { get; set; } = new v2f(0, 0);
     public virtual EntityMetadata meta { get; set; }
@@ -38,53 +49,85 @@ public abstract class Entity : IDisposable
     public virtual bool PositionSynchronization { get; } = true;
     public virtual bool OnGround { get; set; } = false;
     public World world;
+
+
+    public delegate void PositionChangedArgs(v3f lastposition, v3f newposition);
+    public event PositionChangedArgs OnPositionChanged;
+    protected void OnPositionChanged_Invoke(v3f lastposition, v3f newposition) => OnPositionChanged?.Invoke(lastposition, newposition);
+    public delegate void ChunkChangedArgs(v2i lastchunk, v2i newchunk);
+    public event ChunkChangedArgs OnChunkChanged;
+    protected void OnChunkChanged_Invoke(v2i lastchunk, v2i newchunk) => OnChunkChanged?.Invoke(lastchunk, newchunk);
+    public delegate void DestroyArgs();
+    public event DestroyArgs OnDestroy;
+
     public Entity(World world)
     {
         this.world = world;
-        while (world.Entities.ContainsKey(global_id))
+        while (world.entities.HasEID(global_id))
         {
             global_id++;
             global_id %= int.MaxValue - 1;
         }
         EntityID = global_id;
-        world.Entities.TryAdd(EntityID, this);
         meta.InitFields();
+        world.entities.Add(this);
+        //Реализация тригера при перемещении между чанками для корректной работы системы энтити в мире
+        OnChunkChanged += Entity_OnChunkChanged;
+        OnPositionChanged += Entity_OnPositionChanged;
     }
 
-    public bool Disposed { get; private set; } = false;
-    public virtual void Dispose()
+    protected void Entity_OnChunkChanged(v2i lastchunk, v2i newchunk)
     {
-        world.Entities.TryRemove(EntityID, out var _);
-        Disposed = true;
+        world.entities.entities[EntityID] = newchunk;
+        world.entities.chunks[lastchunk].TryRemove(EntityID, out var self);
+        world.entities.chunks
+            .GetOrAdd(
+                newchunk, 
+                new Func<v2i, ConcurrentDictionary<int, Entity>>((cpos) => new ConcurrentDictionary<int, Entity>()))
+            .TryAdd(EntityID, self);
     }
+
+    protected void Entity_OnPositionChanged(v3f lastposition, v3f newposition)
+    {
+        var lastcpos = Chunk.FromAbsolutePosition(lastposition);
+        var newcpos = Chunk.FromAbsolutePosition(newposition);
+        if (!lastcpos.Equals(newcpos))
+            OnChunkChanged?.Invoke(lastcpos, newcpos);
+    }
+
+    public bool isDestroyed { get; private set; } = false;
 
     /// <summary>
     /// Optimized
     /// </summary>
     /// <param name="radius"></param>
     /// <returns></returns>
-    public IEnumerable<Entity> GetEntityInRadius(v3f position, float sqrRadius)
-    {
-        //Now it's not optimized
-        //TODO OPTIMIZE THIS!!!!
-        return world.Entities.Where(x => v3f.SqrDistance(x.Value.Position, position) <= sqrRadius).Select(x => x.Value);
-    }
-    /// <summary>
-    /// Slow
-    /// </summary>
+    public IEnumerable<Entity> GetEntityInRadius(v3f position, float sqrRadius) => 
+        world.entities.GetEntitiesInCircle(position, (float)Math.Sqrt(sqrRadius));
     public void Destroy()
     {
-        foreach (var player_pair in Player.players)
-        {
-            if (player_pair.Value.view.players.ContainsKey(EntityID))
-                player_pair.Value.SendDestroyEntities(new int[] { EntityID });
-        }
+        world.entities.Remove(EntityID);
+        isDestroyed = true;
+        OnDestroy?.Invoke();
     }
 
     public void SendChangePositionAndRotation(NetworkProvider network, v3f PreviousPosition)
     {
         var deltapos = Position - PreviousPosition;
-        void f()
+        if (TeleportSynchronization && deltapos.SqrMagnitude > 8 * 8)
+        {
+            network.Send(new EntityTeleport()
+            {
+                EntityID = EntityID,
+                Yaw = new Angle(Rotation.x),
+                Pitch = new Angle(Rotation.y),
+                X = Position.x,
+                Y = Position.y,
+                Z = Position.z,
+                OnGround = OnGround,
+            });
+        }
+        else
         {
             if (PositionSynchronization)
                 network.Send(new EntityPositionAndRotation()
@@ -106,33 +149,10 @@ public abstract class Entity : IDisposable
                     HeadYaw = new Angle(Rotation.x),
                 });
         }
-        if (TeleportSynchronization && deltapos.SqrMagnitude > 8 * 8)
-        {
-            network.Send(new EntityTeleport()
-            {
-                EntityID = EntityID,
-                Yaw = new Angle(Rotation.x),
-                Pitch = new Angle(Rotation.y),
-                X = Position.x,
-                Y = Position.y,
-                Z = Position.z,
-                OnGround = OnGround,
-            });
-            return;
-        }
-        f();
     }
     public void SendChangePosition(NetworkProvider network, v3f PreviousPosition)
     {
         var deltapos = Position - PreviousPosition;
-        void f() => network.Send(new EntityPosition()
-        {
-            EntityID = EntityID,
-            DeltaX = (short)(deltapos.x * 4096),
-            DeltaY = (short)(deltapos.y * 4096),
-            DeltaZ = (short)(deltapos.z * 4096),
-            OnGround = OnGround,
-        });
         if (TeleportSynchronization && deltapos.SqrMagnitude > 8 * 8)
         {
             network.Send(new EntityTeleport()
@@ -145,9 +165,18 @@ public abstract class Entity : IDisposable
                 Z = Position.z,
                 OnGround = OnGround,
             });
-            return;
         }
-        f();
+        else
+        {
+            network.Send(new EntityPosition()
+            {
+                EntityID = EntityID,
+                DeltaX = (short)(deltapos.x * 4096),
+                DeltaY = (short)(deltapos.y * 4096),
+                DeltaZ = (short)(deltapos.z * 4096),
+                OnGround = OnGround,
+            });
+        }
     }
     public void SendRotation(NetworkProvider network)
     {
@@ -176,14 +205,23 @@ public abstract class Entity : IDisposable
             VelocityZ = (short)(Velocity.z * 8000),
         });
     }
-
-    public void LoadEntityInRadius(float radius)
+    
+    public void ForceLoadSelfAnyPlayersInRadius(float radius)
     {
         var r = radius * radius;
         foreach (var pl_pair in Player.players)
-            if (v3f.Distance(pl_pair.Value.Position, Position) <= r)
-                pl_pair.Value.LoadEntity(this);
+            if (v3f.SqrDistance(pl_pair.Value.Position, Position) <= r)
+                pl_pair.Value.entitiesController.LoadEntity(this);
     }
 
     public virtual void Tick() { }
+
+    public static Dictionary<string, Type> EntityList = new Dictionary<string, Type>();
+    public static void InitEntities()
+    {
+        foreach (var ent_type in RPGServer.GetTypesWithAttribute<EntityAttribute>())
+        {
+            EntityList.Add(ent_type.GetCustomAttribute<EntityAttribute>().nameid, ent_type);
+        }
+    }
 }

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.Concurrent;
 using System.Linq;
 using MineServer;
 using Packets.Play;
@@ -14,37 +13,11 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     public int protocolVersion { get; set; }
 
     protected GamemodeType gamemode = GamemodeType.Survival;
-    protected v3f position = new v3f(0, 0, 0);
     protected v2f rotation = new v2f(0, 0);
     public GamemodeType Gamemode { get => gamemode; set { gamemode = value; SendChangeGamemode(value); } }
-    public override v3f Position
-    {
-        get
-        {
-            return position;
-        }
-        set
-        {
-            if (v3f.Distance(position, value) < 8)
-            {
-                var lastpos = position.Clone();
-                position = value.Clone();
-                worldController?.CheckAndSendViewPositionAndNewChunks(lastpos, position);
-                SendPlayerPositionAndLook();
-                UpdateLoadedEntitiesLoad();
-            }
-            else
-            {
-                TeleportTo(value.Clone());
-            }
-        }
-    }
     public override v2f Rotation
     {
-        get
-        {
-            return rotation;
-        }
+        get => rotation;
         set
         {
             rotation = value;
@@ -53,10 +26,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     }
     public bool IsSneaking
     {
-        get
-        {
-            return ((EntityMetadata.EntityStatus)meta["entityStatus"]).HasFlag(EntityMetadata.EntityStatus.isCrouching);
-        }
+        get => ((EntityMetadata.EntityStatus)meta["entityStatus"]).HasFlag(EntityMetadata.EntityStatus.isCrouching);
         set
         {
             if (value)
@@ -69,16 +39,16 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
                 meta.RemoveFlag("entityStatus", (byte)EntityMetadata.EntityStatus.isCrouching);
                 meta["Pose"] = (byte)0;
             }
-
             SendMetadataUpdate();
         }
     }
+    /// <summary>
+    /// no sprint - 4.316 blocks per second
+    /// with sprint - 5.612 blocks per second
+    /// </summary>
     public bool IsSprinting
     {
-        get
-        {
-            return ((EntityMetadata.EntityStatus)meta["entityStatus"]).HasFlag(EntityMetadata.EntityStatus.isCrouching);
-        }
+        get => ((EntityMetadata.EntityStatus)meta["entityStatus"]).HasFlag(EntityMetadata.EntityStatus.isCrouching);
         set
         {
             if (value)
@@ -120,9 +90,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
             base.Health = value;
 
             if (base.Health <= 0)
-            {
                 RespawnPlayer();
-            }
         }
     }
     public long lastHealthReduced;
@@ -145,6 +113,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
 
     public KeepAliveModule keepAlive = new KeepAliveModule();
     public WorldLoaderController worldController = new WorldLoaderController();
+    public EntitiesController entitiesController = new EntitiesController();
 
     public PlayerSettings settings;
     public bool isInit => settings.ViewDistance != 0;
@@ -159,16 +128,32 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
 
     public delegate void ConnectedArgs();
     public event ConnectedArgs OnConnected;
-    //public delegate void LoadEntityArgs(Entity entity, LivingEntity living, Player player_entity);
 
     public PlayerProtocol(World world) : base(world)
     {
         currentWeather = new Weather(this);
-        //meta.InitFields();
         OnConnected += PlayerProtocol_OnConnected;
+        //Привязка функционала перемещения игрока на клиенте при изменении позиции чем-либо
+        OnPositionChanged += PlayerProtocol_OnPositionChanged;
 
         keepAlive.Init(this as Player);
         worldController.Init(this as Player);
+        entitiesController.Init(this as Player);
+    }
+
+    private void PlayerProtocol_OnPositionChanged(v3f lastposition, v3f newposition)
+    {
+        if (v3f.Distance(lastposition, newposition) < 8)
+        {
+            //Это не телепортация
+            SendPlayerPositionAndLook();//Отправить клиенту его текущую позицию и вращение
+            entitiesController.UpdateLoadedEntitiesLoad();//Обновить видимость энтити вокруг
+        }
+        else
+        {
+            //Это телепортация
+            TeleportTo(newposition.Clone());
+        }
     }
 
     public void InvokeOnConnected() => OnConnected?.Invoke();
@@ -200,7 +185,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         worldController.SendWorld();//26-27
         SendPlayerPositionAndLook();//30
         //Создать все сущности у игрока
-        UpdateLoadedEntitiesLoad();//34+
+        entitiesController.UpdateLoadedEntitiesLoad();//34+
         SendInventory();
         SendUpdateHealth();
         var player = this as Player;
@@ -249,13 +234,20 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         });
     }
 
+    /// <summary>
+    /// Устанавливает игроку новую позицию без отправки ему его позиции
+    /// Пример:
+    ///    Если игрок присылает свою новую позицию, мы должны ее 
+    ///   приминить и нам не требуется отправлять ее обратно игроку
+    /// </summary>
+    /// <param name="newposition"></param>
     public void ApplyNewPosition(v3f newposition)
     {
         if ((position - newposition).SqrMagnitude == 0) return;
-        var lastpos = position;
+        var lastcpos = ChunkPos;
         position = newposition;
-        if (network == null || !isInit) return;
-        worldController.CheckAndSendViewPositionAndNewChunks(lastpos, position);
+        if (!lastcpos.Equals(ChunkPos))
+            OnChunkChanged_Invoke(lastcpos, ChunkPos);
     }
     public void ApplyNewPositionAndRotation(v3f newposition, v2f newrotation)
     {
@@ -266,20 +258,24 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     {
         rotation = newrotation;
     }
+    /// <summary>
+    /// Асинхронная функция реализующая корректную телепортацию игрока. Вызывать если собираетесь передвинуть игрока более чем на 8 блоков
+    /// </summary>
+    /// <param name="newposition">Новая позиция игрока</param>
     public async void TeleportTo(v3f newposition)
     {
         await Task.Run(async () =>
         {
-            position = newposition;
-            worldController.UnloadChunks();
+            ApplyNewPosition(newposition);
+            worldController.UnloadChunks();//Разгружает чанки
             await Task.Delay(100);
-            SendPlayerPositionAndLook();
+            SendPlayerPositionAndLook();//Передает новую позицию клиенту
             await Task.Delay(100);
-            worldController.SendUpdateViewPosition();
+            worldController.SendUpdateViewPosition();//Перемещает позицию подгружаемых чанков у клиента
             await Task.Delay(100);
-            worldController.SendWorld();
+            worldController.SendWorld();//Отправляет новый мир
             await Task.Delay(100);
-            UpdateLoadedEntitiesLoad();
+            entitiesController.UpdateLoadedEntitiesLoad();//Обновить видимость энтити вокруг
         });
     }
 
@@ -372,74 +368,26 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         foreach (var network in networks)
             network.Send(t);
     }
-    public void SendDestroyEntities(int[] entities)
+    public void SendDestroyEntities(IEnumerable<int> entities)
     {
-        if (entities.Length == 0) return;
+        if (entities.Count() == 0) return;
         network.Send(new DestroyEntities()
         {
             Entities = entities.Select(x => new VarInt(x)).ToArray()
         });
+        view.Remove(entities);
         foreach (var entity in entities)
         {
-            view.Remove(entity);
+            Console.WriteLine($"Destroy entity with EID={entity}");
         }
     }
     /// <summary>
     /// Обновляет список загруженных энтити. Удаляет энтити вне зоны прогрузки и добавляет энтити в зоне прогрузки.
     /// </summary>
 
-    public void LoadEntity(Entity entity)
-    {
-        if (entity.EntityID == EntityID) return;//Пропускаем себя
-        if (view.entities.ContainsKey(entity.EntityID)) return;//Пропускаем всех уже загруженных
-        if (entity is IEntityProtocol protocol)//Выбираем только тех кто в зоне видимости и которых можно создать
-        {
-            var nets = new NetworkProvider[] { network };
-            protocol.SendSpawn(nets);//Создать на клиенте
-            view.Add(entity);//Добавить в загруженные
-        }
-    }
-    public void UpdateLoadedEntitiesLoad()
-    {
-        var cfg = rpgserver.config;
-
-        //Выгрузить всех энтити вне зоны видимости
-        if (view.entities.Count > 0)
-        {
-            var unloadSqrDistance = Math.Pow(cfg.MaxDrawEntitiesRange + cfg.MaxDrawEntitiesRangeThreshold, 2);
-            List<int> entities_to_unload = null;
-            foreach (var loaded_entity_pair in view.entities)
-            {
-                if (v3f.SqrDistance(loaded_entity_pair.Value.entity.Position, Position) > unloadSqrDistance)
-                {
-                    if (entities_to_unload == null)
-                        entities_to_unload = new List<int>(view.entities.Count);
-                    entities_to_unload.Add(loaded_entity_pair.Key);
-                }
-            }
-
-            if (entities_to_unload != null)
-                SendDestroyEntities(entities_to_unload.ToArray());//Удалить все выбранные у клиента и из загруженных
-        }
-
-        //Добавить все энтити находящиеся в зоне видимости
-        var loadSqrDistance = cfg.MaxDrawEntitiesRange * cfg.MaxDrawEntitiesRange;
-        //var nets = new NetworkProvider[] { network };
-        foreach (var entity in GetEntityInRadius(position, loadSqrDistance))
-        {
-            LoadEntity(entity);
-            //if (entity.EntityID == EntityID) continue;//Пропускаем себя
-            //if (view.entities.Any(x => x.Key == entity.EntityID)) continue;//Пропускаем всех уже загруженных
-            ////if (entity is Player other_player && !other_player.isInit) continue;//Пропускаем еще не загрузившиехся клиентов
-            //if (entity is IEntityProtocol protocol)//Выбираем только тех кто в зоне видимости и которых можно создать
-            //{
-            //    protocol.SendSpawn(nets);//Создать на клиенте
-            //    view.Add(entity);//Добавить в загруженные
-            //}
-        }
-    }
     public override void Tick()
     {
+        entitiesController.Tick();
         //2 times per second
         if (rpgserver.currentTick % 10 == 0)
         {
@@ -450,40 +398,6 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
                 Chat.ColoredText($"&c{Health:N1}/{MaxHealth:N1}&f"));
             SendUpdateHealth();
 
-            UpdateLoadedEntitiesLoad();
-        }
-        //Удалить всех кто уже не числится в реестре энтити
-        //TODO OPTIMIZE
-        SendDestroyEntities(view.entities
-            .Where(x => !world.Entities.ContainsKey(x.Key))
-            .Select(x => x.Key)
-            .ToArray());
-        //Обновление позиций всех загруженных(видимых) энтити
-        foreach (var loaded_entity in view.entities)
-        {
-            var ent = loaded_entity.Value.entity;
-            bool PositionChanged = !loaded_entity.Value.PreviousPosition.Equals(ent.Position);
-            bool RotationChanged = !loaded_entity.Value.PreviousRotation.Equals(ent.Rotation);
-            if (PositionChanged || RotationChanged)
-            {
-                if (PositionChanged && RotationChanged)//position and rotataion
-                {
-                    ent.SendChangePositionAndRotation(network, loaded_entity.Value.PreviousPosition);
-                }
-                else
-                {
-                    if (PositionChanged)
-                        ent.SendChangePosition(network, loaded_entity.Value.PreviousPosition);
-                    else 
-                        ent.SendRotation(network);
-                }
-                loaded_entity.Value.PreviousPosition = new v3f(ent.Position.x, ent.Position.y, ent.Position.z);
-                loaded_entity.Value.PreviousRotation = new v2f(ent.Rotation.x, ent.Rotation.y);
-            }
-            if (!ent.Velocity.Equals(new v3f(0, 0, 0)))
-            {
-                ent.SendVelosity(network);
-            }
         }
     }
     public void SendInventory()
@@ -509,21 +423,29 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     public void SendMetadataUpdate()
     {
         var playermeta = (PlayerMetadata)meta;
-        
-        void Send(long last, NetworkProvider net)
+        var now = Time.GetTime();
+        bool Send(long last, NetworkProvider net)
         {
             var changes = playermeta.GetMetadataChanges(last);
             if (changes.Length > 1)
+            {
                 net.Send(new Packets.Play.EntityMetadata()
                 {
                     EntityID = EntityID,
                     Metadata = changes
                 });
+                return true;
+            }
+            return false;
         }
-        
-        Send(PreviousRecievedMetadata, network);
+
+        //Отправляю себе свои изменения метадаты
+        if (Send(PreviousRecievedMetadata, network))
+            PreviousRecievedMetadata = now;
+        //Отправляю всем видимым игрокам свои изменения метадаты
         foreach (var loaded_ent_pair in view.players)
-            Send(loaded_ent_pair.Value.PreviousMetadataTime, loaded_ent_pair.Value.entity.network);
+            if (Send(loaded_ent_pair.Value.PreviousMetadataTime, loaded_ent_pair.Value.entity.network))
+                loaded_ent_pair.Value.PreviousMetadataTime = now;
     } 
 
     public void SendPlayAnimation(EntityAnimation_clientbound.AnimationType animation, NetworkProvider net)
@@ -636,40 +558,5 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         //    DimensionName = currentWorldName,
         //    HashedSeed = 0
         //});
-    }
-}
-public class EntitiesController : IModule
-{
-    Player player;
-    public void Init(Player player)
-    {
-        this.player = player;
-    }
-
-    public void Tick()
-    {
-
-    }
-}
-public class EntityView
-{
-    public ConcurrentDictionary<int, LoadedEntity<Entity>> entities = new ConcurrentDictionary<int, LoadedEntity<Entity>>();
-    public ConcurrentDictionary<int, LoadedEntity<LivingEntity>> livingEntities = new ConcurrentDictionary<int, LoadedEntity<LivingEntity>>();
-    public ConcurrentDictionary<int, LoadedEntity<Player>> players = new ConcurrentDictionary<int, LoadedEntity<Player>>();
-
-    public void Add(Entity ent)
-    {
-        if (ent is Entity e) entities.TryAdd(e.EntityID, new LoadedEntity<Entity>(e));
-        if (ent is LivingEntity l) livingEntities.TryAdd(l.EntityID, new LoadedEntity<LivingEntity>(l));
-        if (ent is Player p) players.TryAdd(p.EntityID, new LoadedEntity<Player>(p));
-    }
-    public void Remove(int eid)
-    {
-        if (entities.ContainsKey(eid))
-            entities.TryRemove(eid, out _);
-        if (livingEntities.ContainsKey(eid))
-            livingEntities.TryRemove(eid, out _);
-        if (players.ContainsKey(eid))
-            players.TryRemove(eid, out _);
     }
 }

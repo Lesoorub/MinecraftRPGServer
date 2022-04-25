@@ -14,11 +14,11 @@ public class OnInteractEntity : PacketListener
         var pack = packet as Packets.Play.InteractEntity;
         if (player == null || pack == null) return;
 
-        if (pack.Type == Packets.Play.InteractEntity.InteractType.Attack &&
-            player.world.Entities.TryGetValue(pack.EntityID, out var target) &&
-            target is LivingEntity livingEntity_target)
+        if (pack.Type == Packets.Play.InteractEntity.InteractType.Attack)
         {
-            player.Attack(livingEntity_target);
+            var target = player.world.entities.GetByEID(pack.EntityID);
+            if (target is LivingEntity livingEntity_target)
+                player.Attack(livingEntity_target);
         }
     }
 }

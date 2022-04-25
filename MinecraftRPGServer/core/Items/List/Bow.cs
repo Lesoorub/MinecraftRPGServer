@@ -68,7 +68,7 @@ namespace Items
                 SenderBow = this,
                 sender = player
             };
-            entity.LoadEntityInRadius(player.rpgserver.config.MaxDrawEntitiesRange);
+            entity.ForceLoadSelfAnyPlayersInRadius(player.rpgserver.config.MaxDrawEntitiesRange);
             entity.SendVelosity(player.network);
         }
     }

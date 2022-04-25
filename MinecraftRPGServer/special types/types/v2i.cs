@@ -11,7 +11,11 @@
 
     public override bool Equals(object obj)
     {
-        return obj != null && obj is v2i i && i.GetHashCode() == GetHashCode();
+        return 
+            obj != null && 
+            obj is v2i i && 
+            i.x == x && 
+            i.y == y;
     }
 
     public static v2i zero =    new v2i(0, 0);

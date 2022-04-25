@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
+using System.Linq;
 using Packets.Play;
-using System;
 using MineServer;
 
 [ChatCommand]
@@ -11,7 +11,7 @@ public class TestCommand : IChatCommand
         Commands.Register("test",
         (player, args) =>
         {
-
+            player.SendDestroyEntities(player.view.entities.Select(x => x.Key));
         });
     }
 }

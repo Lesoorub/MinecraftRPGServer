@@ -5,12 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-public interface IModule
-{
-    void Init(Player player);
-    void Tick();
-}
-
 public class KeepAliveModule : IModule
 {
     public bool KeepAliveResponsed = true;

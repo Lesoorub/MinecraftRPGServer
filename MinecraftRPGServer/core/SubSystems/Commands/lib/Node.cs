@@ -17,8 +17,8 @@ public class Node : ISerializable
     }
     public int index = -1;
     public FlagsEnum Flags;
-    public int ChildrenCount { get => Children != null ? Children.Count : 0; }
-    public List<Node> Children = new List<Node>();
+    public int ChildrenCount { get => Childrens != null ? Childrens.Count : 0; }
+    public List<Node> Childrens = new List<Node>();
     //Optional
     public Node RedirectNode;//Only if Flags.HasRedirect
     public string Name;//Only if Flags is 1 or 2
@@ -289,7 +289,7 @@ public class Node : ISerializable
     {
         this.Flags = flags;
         if (Childrens == null) return;
-        Children = Childrens.ToList();
+        this.Childrens = Childrens.ToList();
     }
     public Node(Node[] Childrens, Node RedirectNode,
         FlagsEnum flags = FlagsEnum.HasRedirect) : this(Childrens, flags)
@@ -330,7 +330,7 @@ public class Node : ISerializable
 
         //header
         writer.Write((byte)Flags);
-        writer.Write(Children.Select(x => new VarInt(x.index)).ToArray());
+        writer.Write(Childrens.Select(x => new VarInt(x.index)).ToArray());
 
         if (Flags.HasFlag(FlagsEnum.HasRedirect))
             writer.Write(new VarInt(RedirectNode.index));

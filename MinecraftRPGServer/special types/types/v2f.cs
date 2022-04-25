@@ -22,4 +22,17 @@ public class v2f
     public static v2f operator -(v2f a, v2f b) => new v2f(a.x - b.x, a.y - b.y);
     public static v2f operator *(v2f a, float b) => new v2f(a.x * b, a.y * b);
     public static v2f operator /(v2f a, float b) => new v2f(a.x / b, a.y / b);
+
+    public override bool Equals(object obj)
+    {
+        return obj is v2f i && i.x == x && i.y == y;
+    }
+
+    public override int GetHashCode()
+    {
+        int hashCode = 1502939027;
+        hashCode = hashCode * -1521134295 + x.GetHashCode();
+        hashCode = hashCode * -1521134295 + y.GetHashCode();
+        return hashCode;
+    }
 }

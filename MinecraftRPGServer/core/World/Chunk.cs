@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using MineServer;
@@ -115,4 +117,11 @@ public class Chunk
             writer.WriteRaw(section.Bytes);
         Data = writer.ToArray();
     }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static int FromAbsolutePosition(float absT) => (int)absT >> 4;
+    public static v2i FromAbsolutePosition(v2f absT) => new v2i(FromAbsolutePosition(absT.x), FromAbsolutePosition(absT.y));
+    public static v2i FromAbsolutePosition(v3f absT) => new v2i(FromAbsolutePosition(absT.x), FromAbsolutePosition(absT.z));
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static int GetRelativeCoord(int x) => x & 0xF;
 }

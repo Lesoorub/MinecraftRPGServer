@@ -33,7 +33,7 @@
                 Velocity = velosity
             };
             foreach (var player in Player.GetInWorldWithSqrDistance(world, position, ViewDistanceSqr))
-                player.LoadEntity(eitem);
+                player.entitiesController.LoadEntity(eitem);
         }
     }
 }

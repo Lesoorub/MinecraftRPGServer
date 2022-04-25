@@ -5,13 +5,18 @@ using System;
 public class WorldLoaderController : IModule
 {
     Player player;
-    public v2i ChunkPos => new v2i((int)player.Position.x >> 4, (int)player.Position.z >> 4);
     public List<v2i> loadedChunks = new List<v2i>();
     public void Init(Player player)
     {
         this.player = player;
+        player.OnChunkChanged += Player_OnChunkChanged;
     }
 
+    private void Player_OnChunkChanged(v2i lastchunk, v2i newchunk)
+    {
+        SendUpdateViewPosition();
+        SendWorld();
+    }
     public void Tick()
     {
 
@@ -19,7 +24,7 @@ public class WorldLoaderController : IModule
     public void SendWorld()
     {
         int r = player.settings.ViewDistance;
-        var cpos = ChunkPos;
+        var cpos = player.ChunkPos;
         for (int x = -r + 1; x < r; x++)
             for (int y = -r + 1; y < r; y++)
             {
@@ -44,7 +49,7 @@ public class WorldLoaderController : IModule
     }
     public void SendUpdateViewPosition()
     {
-        var cpos = ChunkPos;
+        var cpos = player.ChunkPos;
         player.network.Send(new UpdateViewPosition()
         {
             ChunkX = cpos.x,
@@ -64,15 +69,5 @@ public class WorldLoaderController : IModule
             ChunkX = pos.x,
             ChunkZ = pos.y,
         });
-    }
-    public void CheckAndSendViewPositionAndNewChunks(v3f lastpos, v3f newpos)
-    {
-        var lastcpos = new v2i((int)lastpos.x >> 4, (int)lastpos.z >> 4);
-        var newcpos = new v2i((int)newpos.x >> 4, (int)newpos.z >> 4);
-        if (lastcpos.x != newcpos.x || lastcpos.y != newcpos.y)
-        {
-            SendUpdateViewPosition();
-            SendWorld();
-        }
     }
 }

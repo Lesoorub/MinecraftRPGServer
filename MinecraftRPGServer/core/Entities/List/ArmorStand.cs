@@ -1,5 +1,6 @@
 ﻿namespace Entities
 {
+    [Entity("armor_stand")]
     public class ArmorStand : LivingEntityProtocol
     {
         public override string ID => "minecraft:armor_stand";

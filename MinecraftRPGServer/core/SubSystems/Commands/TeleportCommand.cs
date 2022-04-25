@@ -9,7 +9,7 @@ public class TeleportCommand : IChatCommand
         {
             Name = "teleport",
             Flags = Node.FlagsEnum.literal,
-            Children = new System.Collections.Generic.List<Node>()
+            Childrens = new System.Collections.Generic.List<Node>()
             {
                 new Node()
                 {
@@ -23,7 +23,7 @@ public class TeleportCommand : IChatCommand
                     Flags = Node.FlagsEnum.argument,
                     Parser = Node.Parsers.entity,
                     Properties = new Node.Parsers.EntityParser(Node.Parsers.EntityParser.State.Multiply),
-                    Children = new System.Collections.Generic.List<Node>()
+                    Childrens = new System.Collections.Generic.List<Node>()
                     {
                         new Node()
                         {
