@@ -549,14 +549,6 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         MaxHealth = GetMaxHealth();
         Health = MaxHealth;
         PlayerTitle.SetTitles(network, Chat.ColoredText($"&4Вы умерли"), 0, 5 * 20, 20);
-        TeleportTo(world.SpawnPoint);
-        //network.Send(new Respawn()
-        //{
-        //    Dimension = SupportedProtocol.allprotocols[protocolVersion].Dimension,
-        //    Gamemode = (byte)Gamemode,
-        //    PreviousGamemode = (byte)Gamemode,
-        //    DimensionName = currentWorldName,
-        //    HashedSeed = 0
-        //});
+        Position = world.SpawnPoint.Clone();
     }
 }

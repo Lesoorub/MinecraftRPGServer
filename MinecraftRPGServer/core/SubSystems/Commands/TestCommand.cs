@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using System.Linq;
 using Packets.Play;
 using MineServer;
 
@@ -8,10 +7,10 @@ public class TestCommand : IChatCommand
 {
     public void Register()
     {
-        Commands.Register("test",
-        (player, args) =>
-        {
-            player.SendDestroyEntities(player.view.entities.Select(x => x.Key));
-        });
+        Commands.Register("test", Execute);
+    }
+    void Execute(Player player, string[] args)
+    {
+
     }
 }
