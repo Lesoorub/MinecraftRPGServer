@@ -243,7 +243,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     /// <param name="newposition"></param>
     public void ApplyNewPosition(v3f newposition)
     {
-        if ((position - newposition).SqrMagnitude == 0) return;
+        if (position.Equals(newposition)) return;
         var lastcpos = ChunkPos;
         position = newposition;
         if (!lastcpos.Equals(ChunkPos))
@@ -269,13 +269,14 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
             ApplyNewPosition(newposition);
             worldController.UnloadChunks();//Разгружает чанки
             await Task.Delay(100);
+            position = newposition;
             SendPlayerPositionAndLook();//Передает новую позицию клиенту
-            await Task.Delay(100);
             worldController.SendUpdateViewPosition();//Перемещает позицию подгружаемых чанков у клиента
-            await Task.Delay(100);
             worldController.SendWorld();//Отправляет новый мир
             await Task.Delay(100);
             entitiesController.UpdateLoadedEntitiesLoad();//Обновить видимость энтити вокруг
+            position = newposition;
+            SendPlayerPositionAndLook();//Компенсирует падение игрока
         });
     }
 
@@ -381,9 +382,6 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
             Console.WriteLine($"Destroy entity with EID={entity}");
         }
     }
-    /// <summary>
-    /// Обновляет список загруженных энтити. Удаляет энтити вне зоны прогрузки и добавляет энтити в зоне прогрузки.
-    /// </summary>
 
     public override void Tick()
     {
@@ -397,7 +395,10 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
                 ChatMessage_clientbound.PositionType.game_info,
                 Chat.ColoredText($"&c{Health:N1}/{MaxHealth:N1}&f"));
             SendUpdateHealth();
+        }
 
+        if (rpgserver.currentTick % 10 == 0)
+        {
         }
     }
     public void SendInventory()

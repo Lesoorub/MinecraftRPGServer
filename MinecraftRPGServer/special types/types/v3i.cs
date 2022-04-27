@@ -56,4 +56,5 @@ public class v3i
     }
 
     public static explicit operator v3i(v3d v) => new v3i((int)v.x, (int)v.y, (int)v.z);
+    public static explicit operator v3i(v3f v) => new v3i((int)v.x, (int)v.y, (int)v.z);
 }

@@ -11,6 +11,5 @@ public class TestCommand : IChatCommand
     }
     void Execute(Player player, string[] args)
     {
-
     }
 }

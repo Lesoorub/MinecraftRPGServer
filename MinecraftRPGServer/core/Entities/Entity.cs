@@ -29,6 +29,7 @@ public abstract class Entity
     /// </summary>
     public virtual string ID { get; }
     public v2i ChunkPos => new v2i((int)position.x >> 4, (int)position.z >> 4);
+    public v3i BlockPos => new v3i((int)position.x, (int)position.y, (int)position.z);
     protected v3f position = new v3f(0, 64, 0);
     public virtual v3f Position 
     { 
@@ -37,7 +38,7 @@ public abstract class Entity
         { 
             var last = position.Clone(); 
             position = value.Clone(); 
-            OnPositionChanged?.Invoke(last, Position);
+            OnPositionChanged?.Invoke(last, value.Clone());
         } 
     }
     public virtual v3f Velocity { get; set; } = new v3f(0, 0, 0);
@@ -79,12 +80,15 @@ public abstract class Entity
     protected void Entity_OnChunkChanged(v2i lastchunk, v2i newchunk)
     {
         world.entities.entities[EntityID] = newchunk;
-        world.entities.chunks[lastchunk].TryRemove(EntityID, out var self);
-        world.entities.chunks
-            .GetOrAdd(
-                newchunk, 
-                new Func<v2i, ConcurrentDictionary<int, Entity>>((cpos) => new ConcurrentDictionary<int, Entity>()))
-            .TryAdd(EntityID, self);
+        lock (world.entities.chunks)
+        {
+            world.entities.chunks[lastchunk].TryRemove(EntityID, out var self);
+            world.entities.chunks
+                .GetOrAdd(
+                    newchunk,
+                    new Func<v2i, ConcurrentDictionary<int, Entity>>((cpos) => new ConcurrentDictionary<int, Entity>()))
+                .TryAdd(EntityID, self);
+        }
     }
 
     protected void Entity_OnPositionChanged(v3f lastposition, v3f newposition)
