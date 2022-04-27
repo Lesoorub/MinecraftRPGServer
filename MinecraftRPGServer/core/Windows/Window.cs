@@ -72,18 +72,18 @@ public class Window
         }
 
         //calculate items count
-        int Hash(Slot slot)
+        string Hash(Slot slot)
         {
-            if (!slot.Present) return 0;
-            return slot.ItemID.GetHashCode() * (slot.NBT == null ? 1 : slot.NBT.GetHashCode());
+            if (!slot.Present || slot.ItemCount == 0) return null;
+            return $"{slot.ItemID}, {(slot.NBT != null ? Convert.ToBase64String(slot.NBT.Bytes) : "null")}";
         }
 
-        var sendedItems = new SortedDictionary<int, int>();
-        var realItems = new SortedDictionary<int, int>();
-        void Add(SortedDictionary<int, int> dict, Slot slot)
+        var sendedItems = new SortedDictionary<string, int>();
+        var realItems = new SortedDictionary<string, int>();
+        void Add(SortedDictionary<string, int> dict, Slot slot)
         {
             var hash = Hash(slot);
-            if (hash == 0) return;
+            if (hash == null) return;
             if (dict.ContainsKey(hash))
                 dict[hash] += slot.ItemCount;
             else
@@ -117,6 +117,7 @@ public class Window
             SetSlot(indexedSlot.index, indexedSlot.data);
         }
         CarriedItem = ClickedItem;
+        if (!CarriedItem.Present) CarriedItem = null;
         return true;
     }
 

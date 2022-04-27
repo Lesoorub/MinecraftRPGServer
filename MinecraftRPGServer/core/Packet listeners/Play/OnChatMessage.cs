@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 
 [PacketListener(0x03, State.Play)]
-public class ChatMessage : PacketListener
+public class OnChatMessage : PacketListener
 {
     public override void OnPacketRecieved(IClient client, IPacket packet)
     {

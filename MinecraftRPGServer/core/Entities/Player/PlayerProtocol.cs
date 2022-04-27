@@ -197,6 +197,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     public void DropItem(int index, byte count)
     {
         var item = inventory.slots[index];
+        if (item == null) return;
         Entities.Item.Spawn(world, new Slot(item.ItemID, count, item.NBT), Position + new v3f(0, 1.5f, 0));
         item.ItemCount -= count;
         if (item.ItemCount <= 0)
@@ -386,6 +387,15 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
             Console.WriteLine($"Destroy entity with EID={entity}");
         }
     }
+    public void SendCollectItem(int WhoIED, int ItemEID, int count)
+    {
+        network.Send(new CollectItem()
+        {
+            CollectedEntityID = ItemEID,
+            CollectorEntityID = WhoIED,
+            PickupItemCount = count
+        });
+    }
 
     public override void Tick()
     {
@@ -406,10 +416,14 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         {
             if (!item.isDestroyed && item.PickUpReady)
             {
-                item.Destroy();
                 var slot = (Slot)item.meta["Item"];
                 inventory.AddItem(slot);
                 SendInventory();
+                SendCollectItem(EntityID, item.EntityID, slot.ItemCount);
+                foreach (var other_player in view.players)
+                    other_player.Value.entity.SendCollectItem(EntityID, item.EntityID, slot.ItemCount);
+                item.Destroy();
+                SendEquipments();
             }
         }
     }
@@ -495,7 +509,6 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
                 action(loaded_entity.Value.entity);
     }
 
-    public IEnumerable<Player> LoadedPlayers => view.players.Select(x => x.Value.entity);
     public void SendEquipments()
     {
         Item[] equipments = new Item[]
@@ -528,9 +541,9 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         }
         var data = writer.ToArray();
         if (data.Length > 0)
-            foreach (var player in LoadedPlayers)
+            foreach (var player in view.players)
             {
-                player.network.Send(new EntityEquipment()
+                player.Value.entity.network.Send(new EntityEquipment()
                 {
                     EntityID = EntityID,
                     equipmentArray = data

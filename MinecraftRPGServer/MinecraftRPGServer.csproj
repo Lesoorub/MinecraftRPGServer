@@ -193,7 +193,7 @@
     <Compile Include="core\Items\Item.cs" />
     <Compile Include="core\Items\ItemAttribute.cs" />
     <Compile Include="core\Items\IUsable.cs" />
-    <Compile Include="core\Packet listeners\Play\ChatMessage.cs" />
+    <Compile Include="core\Packet listeners\Play\OnChatMessage.cs" />
     <Compile Include="core\Packet listeners\Play\OnClickWindow.cs" />
     <Compile Include="core\Packet listeners\Play\OnCreativeInventoryAction.cs" />
     <Compile Include="core\Packet listeners\Play\OnPlayerDigging.cs" />

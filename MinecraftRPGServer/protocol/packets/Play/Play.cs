@@ -806,5 +806,17 @@ namespace Packets.Play
         public int ParticleCount;
         public RawByteArray Data;
     }
+    [BoundToClientPackage]
+    public class CollectItem : MSerializableToBytes, IPacket
+    {
+        public override int package_id => 0x61;
+
+        public VarInt CollectedEntityID;
+        public VarInt CollectorEntityID;
+        /// <summary>
+        /// Seems to be 1 for XP orbs, otherwise the number of items in the stack.
+        /// </summary>
+        public VarInt PickupItemCount;
+    }
     #endregion
 }
