@@ -57,10 +57,12 @@ public class GiveCommand : IChatCommand
             {
                 if (!nameid.StartsWith("minecraft:"))
                     nameid = "minecraft:" + nameid;
-                if (player.inventory.AddItem(Item.Create(nameid, count)))
+                if (player.inventory.AddItem(Item.Create(nameid, count), out var rest_item))
                     player.SendInventory();
                 else
+                {
                     player.EchoIntoChatFromServer("Not enought space");
+                }
             }
             catch (Exception ex)
             {

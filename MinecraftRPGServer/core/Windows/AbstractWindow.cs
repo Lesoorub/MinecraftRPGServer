@@ -22,7 +22,37 @@ public abstract class AbstractWindow
     /// </summary>
     /// <param name="packet"></param>
     /// <returns>true if successfuly overwise false</returns>
-    public virtual bool ClickWindow(ClickWindow packet) => false;
+    public virtual bool ClickWindow(ClickWindow packet)
+    {
+        void Swap(ref Item a, ref Item b)
+        {
+            var t = a;
+            a = b;
+            b = t;
+        }
+
+        var mode = packet.Mode;
+        var button = packet.Button;
+        var slot = packet.Slot;
+
+        switch (mode)
+        {
+            case 0:
+                if (button == 0)
+                {
+                    var item = GetItem(slot);
+                    Swap(ref player.CarriedItem, ref item);
+                    return true;
+                }
+                else if (button == 1)
+                {
+
+                }
+                break;
+        }
+
+        return false;
+    }
 
     protected Slot[] Combine(params object[] items)
     {
