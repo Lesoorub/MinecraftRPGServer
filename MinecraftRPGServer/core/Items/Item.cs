@@ -15,7 +15,7 @@ public class Item
 {
     public bool Present { get => itemCount != 0; }
     public VarInt ItemID { get; set; }
-    private byte itemCount = 1;
+    private byte itemCount = 0;
     public byte ItemCount 
     { 
         get => itemCount; 

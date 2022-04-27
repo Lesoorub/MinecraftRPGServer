@@ -113,8 +113,7 @@ public class EntitiesController : IModule
         }
 
         //Добавить все энтити находящиеся в зоне видимости
-        var loadSqrDistance = cfg.MaxDrawEntitiesRange * cfg.MaxDrawEntitiesRange;
-        foreach (var entity in player.GetEntityInRadius(player.Position, loadSqrDistance))
+        foreach (var entity in player.GetEntityInRadius(player.Position, cfg.MaxDrawEntitiesRange))
         {
             LoadEntity(entity);
         }

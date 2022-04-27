@@ -92,7 +92,8 @@ public class Window
         foreach (var indexedSlot in ArrayOfSlots)
         {
             Add(sendedItems, indexedSlot.data);
-            Add(realItems, slots[indexedSlot.index]);
+            if (slots[indexedSlot.index] != null)
+                Add(realItems, slots[indexedSlot.index]);
         }
         Add(realItems, CarriedItem);
         Add(sendedItems, ClickedItem);

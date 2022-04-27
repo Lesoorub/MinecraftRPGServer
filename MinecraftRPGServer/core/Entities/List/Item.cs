@@ -1,4 +1,6 @@
-﻿namespace Entities
+﻿using System;
+
+namespace Entities
 {
     public class Item : EntityProtocol
     {
@@ -14,6 +16,10 @@
         public override bool TeleportSynchronization => true;
         public override bool PositionSynchronization => true;
 
+        public int elapsedTicks = 0;
+        public const int PickUpDelayInTicks = 40;
+        public bool PickUpReady => elapsedTicks >= PickUpDelayInTicks;
+
         public Item(World world) : base(world) { }
         public Item(World world, Slot item) : base(world) 
         { 
@@ -21,17 +27,23 @@
         }
         public override void Tick()
         {
-            Velocity *= 0.98f;
-            Velocity.y -= 0.04f;
-            Collision.EntityPhysics.CalcCollisions(this);
+            if (elapsedTicks < PickUpDelayInTicks)
+                elapsedTicks++;
         }
-        public static void Spawn(World world, Slot item, v3f position, v3f velosity)
+        public static void Spawn(World world, Slot item, v3f position)
         {
-            var eitem = new Item(world, item)
+            int coly = (int)position.y;
+            for (int y = coly; y >= -64; y--)
             {
-                Position = position,
-                Velocity = velosity
-            };
+                if (world.GetBlock((int)Math.Floor(position.x), y, (int)Math.Floor(position.z)).haveCollision)
+                {
+                    coly = y;
+                    break;
+                }
+            }
+            var eitem = new Item(world, item);
+            eitem.Position = new v3f(position.x, coly + 1 + eitem.BoxCollider.y / 2, position.z);
+
             foreach (var player in Player.GetInWorldWithSqrDistance(world, position, ViewDistanceSqr))
                 player.entitiesController.LoadEntity(eitem);
         }

@@ -106,8 +106,8 @@ public abstract class Entity
     /// </summary>
     /// <param name="radius"></param>
     /// <returns></returns>
-    public IEnumerable<Entity> GetEntityInRadius(v3f position, float sqrRadius) => 
-        world.entities.GetEntitiesInCircle(position, (float)Math.Sqrt(sqrRadius));
+    public IEnumerable<Entity> GetEntityInRadius(v3f position, float Radius) => 
+        world.entities.GetEntitiesInCircle(position, Radius);
     public void Destroy()
     {
         world.entities.Remove(EntityID);

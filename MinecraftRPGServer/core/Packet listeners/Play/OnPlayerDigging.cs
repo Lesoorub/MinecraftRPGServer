@@ -25,7 +25,7 @@ public class OnPlayerDigging : PacketListener
                 break;
             case PlayerDigging.Status.DropItem:
             case PlayerDigging.Status.DropItemStack:
-                player.DropItem(player.inventory.slots.ToList().IndexOf(player.SelectedItem));
+                player.DropItem(player.inventory.slots.ToList().IndexOf(player.SelectedItem), 1);
                 break;
         }
     }

@@ -54,6 +54,15 @@ public class v3f
     public static float Distance(v3f a, v3f b) => (a - b).Magnitude;
     public static float SqrDistance(v3f a, v3f b) => (a - b).SqrMagnitude;
     private const double Rad2Deg = 2 * Math.PI / 360f;
+    public static readonly v3f zero    = new v3f( 0,  0,  0);
+    public static readonly v3f one     = new v3f( 1,  1,  1);
+    public static readonly v3f halfone = new v3f(.5f,.5f,.5f);
+    public static readonly v3f right   = new v3f( 1,  0,  0);
+    public static readonly v3f left    = new v3f(-1,  0,  0);
+    public static readonly v3f up      = new v3f( 0,  1,  0);
+    public static readonly v3f down    = new v3f( 0, -1,  0);
+    public static readonly v3f forward = new v3f( 0,  0,  1);
+    public static readonly v3f back    = new v3f( 0,  0, -1);
     public static v3f FromRotationInvertX(v2f rotation) => new v3f(
         (float)-(Math.Sin(rotation.x * Rad2Deg) * Math.Cos(rotation.y * Rad2Deg)),
         (float)-Math.Sin(rotation.y * Rad2Deg),

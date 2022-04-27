@@ -168,7 +168,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         };
         inventory.OnDropStack += (item) =>
         {
-            DropItem(inventory.slots.ToList().IndexOf(item));
+            DropItem(inventory.slots.ToList().IndexOf(item), item.ItemCount);
         };
         SendHeldItemChanged();//16
         network.Send(new Tags()
@@ -194,9 +194,13 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         SendEquipments();
         SendMetadataUpdate();
     }
-    public void DropItem(int index)
+    public void DropItem(int index, byte count)
     {
-        Entities.Item.Spawn(world, inventory.slots[index], Position + new v3f(0, 1.5f, 0), ForwardDir * 0.25f);
+        var item = inventory.slots[index];
+        Entities.Item.Spawn(world, new Slot(item.ItemID, count, item.NBT), Position + new v3f(0, 1.5f, 0));
+        item.ItemCount -= count;
+        if (item.ItemCount <= 0)
+            inventory.slots[index] = null;
     }
     private void Rpgserver_OnLogOut(Player player)
     {
@@ -396,9 +400,17 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
                 Chat.ColoredText($"&c{Health:N1}/{MaxHealth:N1}&f"));
             SendUpdateHealth();
         }
-
-        if (rpgserver.currentTick % 10 == 0)
+        foreach(var item in GetEntityInRadius(Position, PlayerSettings.ItemPickUpRadius)
+            .Select(x => x as Entities.Item)
+            .Where(x => x != null))
         {
+            if (!item.isDestroyed && item.PickUpReady)
+            {
+                item.Destroy();
+                var slot = (Slot)item.meta["Item"];
+                inventory.AddItem(slot);
+                SendInventory();
+            }
         }
     }
     public void SendInventory()

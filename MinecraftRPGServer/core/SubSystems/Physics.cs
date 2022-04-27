@@ -138,54 +138,45 @@ namespace Collision
         }
         public static void CalcCollisions(Entity target)
         {
+            throw new NotImplementedException();
             World w = target.world;
 
-            float sign(float x) => x == 0 ? 0 : (x > 0 ? 1 : -1);
+            float sign(float x) => Math.Min(Math.Max(x, -1), 1);
             v3f GetNormal(v3f point, v3i block) => new v3f(
                     sign(point.x - (block.x + 0.5f)),
                     sign(point.y - (block.y + 0.5f)),
                     sign(point.z - (block.z + 0.5f)));
 
-            var p = target.Position;
+            //var p = target.Position;
             var c = target.BoxCollider;
-            v3f min = new v3f(
-                p.x - c.x / 2,
-                p.y - c.y / 2,
-                p.z - c.x / 2);
-            v3f max = new v3f(
-                p.x + c.x / 2,
-                p.y + c.y / 2,
-                p.z + c.x / 2);
-            Particle.Spawn(target.world, Particles.note, target.Position, new v3f(0, 0, 0), 0, 1);
-            for (int x = (int)min.x; x <= max.x; x++)
-                for (int y = (int)min.y; y <= max.y; y++)
-                    for (int z = (int)min.z; z <= max.z; z++)
+            //v3f min = new v3f(
+            //    p.x - c.x / 2,
+            //    p.y - c.y / 2,
+            //    p.z - c.x / 2);
+            //v3f max = new v3f(
+            //    p.x + c.x / 2,
+            //    p.y + c.y / 2,
+            //    p.z + c.x / 2);
+            AABB aabb = new AABB(target.Position, new v3f(c.x, c.y, c.x));
+            Particle.Spawn(target.world, Particles.crit, target.Position, v3f.zero, 0, 1);
+            for (int x = (int)aabb.min.x; x <= aabb.max.x; x++)
+                for (int y = (int)aabb.min.y; y <= aabb.max.y; y++)
+                    for (int z = (int)aabb.min.z; z <= aabb.max.z; z++)
                     {
                         var loc = new v3i(x, y, z);
-                        Particle.Spawn(target.world, Particles.flame, (v3f)loc + new v3f(.5f, .5f, .5f), new v3f(0, 0, 0), 0, 1);
-                        if (w.GetBlock(loc).haveCollision)
+                        Particle.Spawn(target.world, Particles.flame, (v3f)loc + v3f.halfone, v3f.zero, 0, 1);
+
+                        if (w.GetBlock(loc).haveCollision && 
+                            AABB.Intersection(aabb, loc))
                         {
-                            Particle.Spawn(target.world, Particles.glow, (v3f)loc + new v3f(.5f,.5f,.5f), new v3f(0, 0, 0), 0, 1);
+                            Particle.Spawn(target.world, Particles.glow, (v3f)loc + v3f.halfone, v3f.zero, 0, 1);
+                            if (loc.Equals(target.BlockPos))
+                            {
+                                target.Position.y = y + 1 + c.y / 2;
+                                target.Velocity = v3f.zero;
+                                break;
+                            }
                             var normal = GetNormal(target.Position, loc);
-                            Console.WriteLine(normal);
-                            float f(float t, float nt, float ct) => 
-                                t + 0.5f + nt / 2 - nt * ct / 2;
-                            if (AABB.isOverlapping1D(min.x, max.x, x, x + 1))
-                            {
-                                target.Position.x = f(x, normal.x, c.x);
-                                target.Velocity.x = 0;
-                            }
-                            if (AABB.isOverlapping1D(min.y, max.y, y, y + 1))
-                            {
-                                target.Position.y = f(y, normal.y, c.y);
-                                target.Velocity.y = 0;
-                                target.OnGround = true;
-                            }
-                            if (AABB.isOverlapping1D(min.z, max.z, z, z + 1))
-                            {
-                                target.Position.z = f(z, normal.z, c.x);
-                                target.Velocity.z = 0;
-                            }
                             break;
                         }
                     }
@@ -194,19 +185,11 @@ namespace Collision
 
     public static class Physics
     {
-        public static List<AABB> CollidedWith(AABB a, IEnumerable<AABB> b)
+        public static void CollidedWith(AABB a, IEnumerable<AABB> b, Action<AABB> OnCollided)
         {
-            List<AABB> list = null;
             foreach (var el in b)
-            {
                 if (AABB.Intersection(a, el))
-                {
-                    if (list == null)
-                        list = new List<AABB>(b.Count());
-                    list.Add(el);
-                }
-            }
-            return list ?? new List<AABB>(0);
+                    OnCollided(el);
         }
         public static bool CollidedWithWorld(AABB a, World world, out int len, ref v3i[] blocks)
         {
