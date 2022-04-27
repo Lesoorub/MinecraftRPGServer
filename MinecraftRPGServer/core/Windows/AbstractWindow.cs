@@ -24,11 +24,12 @@ public abstract class AbstractWindow
     /// <returns>true if successfuly overwise false</returns>
     public virtual bool ClickWindow(ClickWindow packet)
     {
-        void Swap(ref Item a, ref Item b)
+        void SwapWithCarriedItem(int index)
         {
-            var t = a;
-            a = b;
-            b = t;
+            var item = GetItem(index);
+            var t = player.CarriedItem;
+            player.CarriedItem = item;
+            SetSlot(index, t);
         }
 
         var mode = packet.Mode;
@@ -40,8 +41,7 @@ public abstract class AbstractWindow
             case 0:
                 if (button == 0)
                 {
-                    var item = GetItem(slot);
-                    Swap(ref player.CarriedItem, ref item);
+                    SwapWithCarriedItem(slot);
                     return true;
                 }
                 else if (button == 1)
