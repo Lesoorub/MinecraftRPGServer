@@ -8,6 +8,6 @@ public class OnCreativeInventoryAction : PacketListener
         var player = client as Player;
         var creativeInventoryAction = packet as Packets.Play.CreativeInventoryAction;
         if (player == null || creativeInventoryAction == null) return;
-        player.inventory.SetSlot(creativeInventoryAction.Slot, creativeInventoryAction.ClickedItem);
+        player.inventoryWindow.SetSlot(creativeInventoryAction.Slot, creativeInventoryAction.ClickedItem);
     }
 }

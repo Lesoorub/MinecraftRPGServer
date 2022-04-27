@@ -119,9 +119,10 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     public bool isInit => settings.ViewDistance != 0;
     public Guid PlayerUUID;
 
-    public PlayerInventory inventory = new PlayerInventory();
-    public Item SelectedItem => inventory.Hotbar[selectedSlot];
-    public Item OffHandSelectedItem => inventory.slots[45];
+    public InventoryOfPlayer inventory;
+    public PlayerInventoryWindow inventoryWindow;
+    public Item SelectedItem => inventory.hotbar[selectedSlot];
+    public Item OffHandSelectedItem => inventory.Offhand;
     public int LastStateID = 1;
 
     public long PreviousRecievedMetadata = 0;
@@ -160,15 +161,12 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     private void PlayerProtocol_OnConnected()
     {
         rpgserver.OnLogOut += Rpgserver_OnLogOut;
-        inventory.OnSlotChanged += (item, index) =>
+        inventoryWindow = new PlayerInventoryWindow(inventory);
+        inventoryWindow.OnItemChanged += (item, index) =>
         {
             if ((index >= 5 && index <= 8) ||
                 (index >= 36 && index <= 45))
                 SendEquipments();
-        };
-        inventory.OnDropStack += (item) =>
-        {
-            DropItem(inventory.slots.ToList().IndexOf(item), item.ItemCount);
         };
         SendHeldItemChanged();//16
         network.Send(new Tags()
@@ -196,12 +194,14 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     }
     public void DropItem(int index, byte count)
     {
-        var item = inventory.slots[index];
+        var item = inventoryWindow.GetItem(index);
         if (item == null) return;
         Entities.Item.Spawn(world, new Slot(item.ItemID, count, item.NBT), Position + new v3f(0, 1.5f, 0));
         item.ItemCount -= count;
         if (item.ItemCount <= 0)
-            inventory.slots[index] = null;
+            item = null;
+        inventoryWindow.SetSlot(index, item);
+        inventoryWindow.OnItemChange_Invoke(item, index);
     }
     private void Rpgserver_OnLogOut(Player player)
     {
@@ -417,12 +417,20 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
             if (!item.isDestroyed && item.PickUpReady)
             {
                 var slot = (Slot)item.meta["Item"];
-                inventory.AddItem(slot);
+                if (!inventory.AddItem(slot, out var rest_item))
+                {
+                    continue;
+                }
+                if (rest_item != null)
+                {
+                    item.meta["Item"] = rest_item;
+                    continue;
+                }
+                item.Destroy();
                 SendInventory();
                 SendCollectItem(EntityID, item.EntityID, slot.ItemCount);
                 foreach (var other_player in view.players)
                     other_player.Value.entity.SendCollectItem(EntityID, item.EntityID, slot.ItemCount);
-                item.Destroy();
                 SendEquipments();
             }
         }
@@ -431,8 +439,8 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     {
         network.Send(new WindowItems()
         {
-            WindowID = (byte)inventory.WindowID,
-            slots = inventory.slots.Select(x => (Slot)x).ToArray(),
+            WindowID = 0,
+            slots = inventoryWindow.Slots,
             CarriedItem = inventory.CarriedItem,
             StateID = LastStateID
         });
@@ -509,6 +517,9 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
                 action(loaded_entity.Value.entity);
     }
 
+    /// <summary>
+    /// Send player equipments for each viewd player, include me.
+    /// </summary>
     public void SendEquipments()
     {
         Item[] equipments = new Item[]

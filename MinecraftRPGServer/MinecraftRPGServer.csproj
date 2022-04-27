@@ -175,6 +175,10 @@
     <Compile Include="core\SubSystems\PlayerTitle.cs" />
     <Compile Include="core\SubSystems\Random.cs" />
     <Compile Include="core\SubSystems\Time.cs" />
+    <Compile Include="core\Windows\AbstractWindow.cs" />
+    <Compile Include="core\Windows\List\ChestWindow.cs" />
+    <Compile Include="core\Windows\InventoryOfPlayer.cs" />
+    <Compile Include="core\Windows\List\PlayerInventoryWindow.cs" />
     <Compile Include="core\World\EntityWorld.cs" />
     <Compile Include="core\World\World.cs" />
     <Compile Include="special types\Direction.cs" />

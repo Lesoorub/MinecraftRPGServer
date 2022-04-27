@@ -42,9 +42,8 @@ namespace Items
             long deltaTicks = player.rpgserver.currentTick - startTicks;
             if (deltaTicks < minChargeTicks) return;
 
-            int arrowindex = player.inventory.FindItem("minecraft:arrow");
-            if (arrowindex == -1) return;
-            var arrowItem = player.inventory.slots[arrowindex];
+            var arrowItem = player.inventory.FindItem("minecraft:arrow");
+            if (arrowItem == null) return;
             arrowItem.ItemCount--;
             player.SendInventory();
 

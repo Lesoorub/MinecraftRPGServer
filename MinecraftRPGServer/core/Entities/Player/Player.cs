@@ -26,8 +26,7 @@ public class Player : PlayerProtocol
     {
         this.data = data;
         PlayerUUID = FromLoginName(data.loginname);
-        inventory.slots = data.Inventory.Select(x => (x != null && x.Present) ? x : null).ToArray();
-        inventory.CarriedItem = (data.CarriendItem != null && data.CarriendItem.Present) ? data.CarriendItem : null;
+        inventory = data.inventory;
         var lastcpos = ChunkPos;
         position = data.position;
         Entity_OnChunkChanged(lastcpos, ChunkPos);
@@ -36,7 +35,6 @@ public class Player : PlayerProtocol
         Health = data.Health;
         gamemode = (GamemodeType)data.Gamemode;
         SelectedSlot = data.SelectedSlot;
-
     }
     public void OnDisconnected(DisconnectReason reason)
     {

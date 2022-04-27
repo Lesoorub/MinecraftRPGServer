@@ -21,6 +21,8 @@ public class Item
         get => itemCount; 
         set => itemCount = Math.Min(Math.Max(value, (byte)0), (byte)64);
     }
+    [JsonIgnore]
+    public virtual bool sendNBT { get; } = false;
     public NBTTag NBT { get; private set; } = new NBTTag(new TAG_Compound(new List<TAG>(), "tag"));
 
     
@@ -72,7 +74,7 @@ public class Item
     }
     
     public static implicit operator Item(Slot slot) => FromSlot(slot);
-    public static implicit operator Slot(Item item) => item != null ? new Slot(item.ItemID, item.ItemCount, item.NBT) : default(Slot);
+    public static implicit operator Slot(Item item) => item != null ? new Slot(item.ItemID, item.ItemCount, item.sendNBT ? item.NBT : null) : default(Slot);
 
     public static Dictionary<string, int> NameIDs = new Dictionary<string, int>();
     public static Dictionary<int, Type> itemTypes = new Dictionary<int, Type>();

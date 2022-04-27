@@ -24,8 +24,10 @@ public class OnPlayerDigging : PacketListener
                 (player.SelectedItem as IUsingFinish)?.UsingFinish(player);
                 break;
             case PlayerDigging.Status.DropItem:
+                player.DropItem(36 + player.SelectedSlot, 1);
+                break;
             case PlayerDigging.Status.DropItemStack:
-                player.DropItem(player.inventory.slots.ToList().IndexOf(player.SelectedItem), 1);
+                player.DropItem(36 + player.SelectedSlot, player.SelectedItem.ItemCount);
                 break;
         }
     }

@@ -14,7 +14,7 @@ public class OnCloseWindow : PacketListener
         var player = client as Player;
         var pack = packet as CloseWindow_serverbound;
         if (pack == null || player == null) return;
-        if (pack.WindowID == player.inventory.WindowID)
+        if (pack.WindowID == 0)
             player.SendInventory();
     }
 }
