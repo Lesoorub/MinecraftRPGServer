@@ -22,9 +22,16 @@ namespace Items
         public float ArrowSpeed = 3;
         public float ArrowDamage = 15;
 
+        public override bool sendNBT => true;
+
         public Bow()
         {
-            Name = Chat.ColoredText("Bow");
+            Chat f(Chat t) => new Chat()
+            {
+                color = Chat.ColorNames.reset,
+                extra = new Chat[] { t, }
+            };
+            Name = f(Chat.ColoredText("&6Bow"));
             Lore = new Chat[]
             {
                 Chat.ColoredText("&aLore1"),

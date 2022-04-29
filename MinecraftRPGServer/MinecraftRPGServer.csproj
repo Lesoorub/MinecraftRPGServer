@@ -235,7 +235,6 @@
     <Compile Include="core\World\GlobalPalette.cs" />
     <Compile Include="core\World\MCA.cs" />
     <Compile Include="core\World\Optimization\BlockMeta.cs" />
-    <Compile Include="core\World\Optimization\BlocksMeta.cs" />
     <Compile Include="core\World\Palette.cs" />
     <Compile Include="core\World\PalettedContrainer.cs" />
     <Compile Include="core\World\ReadOnlyWorld.cs" />
