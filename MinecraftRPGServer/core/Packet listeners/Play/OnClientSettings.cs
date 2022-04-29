@@ -12,10 +12,10 @@ public class OnClientSettings : PacketListener
         var server = player.server as RPGServer;
         if (!player.isInit)
         {
-            player.settings.UpdateBy(packet as ClientSettings);
+            player.settings.UpdateBy(server, packet as ClientSettings);
             player.InvokeOnConnected();
             return;
         }
-        player.settings.UpdateBy(packet as ClientSettings);
+        player.settings.UpdateBy(server, packet as ClientSettings);
     }
 }

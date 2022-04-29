@@ -23,19 +23,25 @@ public class WorldLoaderController : IModule
     }
     public void SendWorld()
     {
-        int r = player.settings.ViewDistance;
+        int r = player.settings.ViewDistance + 1;
         var cpos = player.ChunkPos;
-        for (int x = -r + 1; x < r; x++)
-            for (int y = -r + 1; y < r; y++)
-            {
-                var rpos = new v2i(x + cpos.x, y + cpos.y);
-                if (loadedChunks.Contains(rpos))
-                    continue;
-                loadedChunks.Add(rpos);
-                var chunk = player.world.GetChunk(rpos);
-                if (chunk == null) continue;
-                player.network.Send(chunk.BacketPacket);
-            }
+        void f(int x, int z)
+        {
+            var rpos = new v2i(x, z);
+            if (loadedChunks.Contains(rpos))
+                return;
+            loadedChunks.Add(rpos);
+            var chunk = player.world.GetChunk(rpos);
+            if (chunk == null) return;
+            player.network.Send(chunk.BacketPacket);
+        }
+        for (int k = 0; k < r; k++)
+            for (int x = -k; x <= k; x++)
+                for (int z = -k; z <= k; z++)
+                {
+                    if (Math.Abs(x) != k && Math.Abs(z) != k) continue;
+                    f(x + cpos.x, z + cpos.y);
+                }
         //Unload chunks
         foreach (var pos in loadedChunks)
         {
