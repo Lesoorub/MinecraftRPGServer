@@ -19,7 +19,7 @@ public class PlayerData
     public InventoryOfPlayer inventory = new InventoryOfPlayer();
 
 
-    private static JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings()
+    public static JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings()
     {
         Formatting = Formatting.Indented,
         TypeNameHandling = TypeNameHandling.All,

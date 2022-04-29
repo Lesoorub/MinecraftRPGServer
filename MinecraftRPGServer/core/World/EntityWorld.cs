@@ -6,24 +6,10 @@ using System.Collections.Generic;
 
 public class EntityWorld
 {
-    private class v2iComparer : IEqualityComparer<v2i>
-    {
-        public bool Equals(v2i x, v2i y)
-        {
-            if (x == null && y == null) return true;
-            if (x != null && y != null) return x.Equals(y);
-            return false;
-        }
-
-        public int GetHashCode(v2i obj)
-        {
-            return obj.GetHashCode();
-        }
-    }
     public ConcurrentDictionary<int, v2i> entities = 
         new ConcurrentDictionary<int, v2i>();
     public ConcurrentDictionary<v2i, ConcurrentDictionary<int, Entity>> chunks = 
-        new ConcurrentDictionary<v2i, ConcurrentDictionary<int, Entity>>(new v2iComparer());
+        new ConcurrentDictionary<v2i, ConcurrentDictionary<int, Entity>>(v2iComparer.Instance);
     public void Add(Entity entity)
     {
         lock (entities)

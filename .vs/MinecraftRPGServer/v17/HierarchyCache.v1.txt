@@ -12,17 +12,41 @@ i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:
 ++core
 i:{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}:c:\users\lesoorub\source\repos\minesocket.net\minesocket.net\core\
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\
+++BytesBasedPacket.cs
+i:{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}:c:\users\lesoorub\source\repos\minesocket.net\minesocket.net\core\bytesbasedpacket.cs
+++NetworkProvider.cs
+i:{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}:c:\users\lesoorub\source\repos\minesocket.net\minesocket.net\core\networkprovider.cs
+++SerializableToBytes.cs
+i:{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}:c:\users\lesoorub\source\repos\minesocket.net\minesocket.net\core\serializabletobytes.cs
 ++enums
 i:{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}:c:\users\lesoorub\source\repos\minesocket.net\minesocket.net\enums\
 ++extensions
 i:{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}:c:\users\lesoorub\source\repos\minesocket.net\minesocket.net\extensions\
+++FastByteArrayExtensions.cs
+i:{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}:c:\users\lesoorub\source\repos\minesocket.net\minesocket.net\extensions\fastbytearrayextensions.cs
 ++intefaces
 i:{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}:c:\users\lesoorub\source\repos\minesocket.net\minesocket.net\intefaces\
+++IClient.cs
+i:{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}:c:\users\lesoorub\source\repos\minesocket.net\minesocket.net\intefaces\iclient.cs
+++IPacket.cs
+i:{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}:c:\users\lesoorub\source\repos\minesocket.net\minesocket.net\intefaces\ipacket.cs
+++ISerializable.cs
+i:{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}:c:\users\lesoorub\source\repos\minesocket.net\minesocket.net\intefaces\iserializable.cs
 ++libs
 i:{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}:c:\users\lesoorub\source\repos\minesocket.net\minesocket.net\libs\
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\libs\
+++ArrayReader.cs
+i:{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}:c:\users\lesoorub\source\repos\minesocket.net\minesocket.net\libs\arrayreader.cs
+++ArrayWriter.cs
+i:{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}:c:\users\lesoorub\source\repos\minesocket.net\minesocket.net\libs\arraywriter.cs
+++Logger.cs
+i:{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}:c:\users\lesoorub\source\repos\minesocket.net\minesocket.net\libs\logger.cs
 ++specify types
 i:{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}:c:\users\lesoorub\source\repos\minesocket.net\minesocket.net\specify types\
+++IndexedArray.cs
+i:{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}:c:\users\lesoorub\source\repos\minesocket.net\minesocket.net\specify types\indexedarray.cs
+++VarInt.cs
+i:{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}:c:\users\lesoorub\source\repos\minesocket.net\minesocket.net\specify types\varint.cs
 ++MineServer.cs
 i:{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}:c:\users\lesoorub\source\repos\minesocket.net\minesocket.net\mineserver.cs
 ++packages.config
@@ -58,32 +82,8 @@ i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:
 ++System.Xml.Linq
 i:{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}:
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:
-++BytesBasedPacket.cs
-i:{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}:c:\users\lesoorub\source\repos\minesocket.net\minesocket.net\core\bytesbasedpacket.cs
-++NetworkProvider.cs
-i:{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}:c:\users\lesoorub\source\repos\minesocket.net\minesocket.net\core\networkprovider.cs
-++SerializableToBytes.cs
-i:{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}:c:\users\lesoorub\source\repos\minesocket.net\minesocket.net\core\serializabletobytes.cs
 ++DisconnectReason.cs
 i:{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}:c:\users\lesoorub\source\repos\minesocket.net\minesocket.net\enums\disconnectreason.cs
-++FastByteArrayExtensions.cs
-i:{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}:c:\users\lesoorub\source\repos\minesocket.net\minesocket.net\extensions\fastbytearrayextensions.cs
-++IClient.cs
-i:{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}:c:\users\lesoorub\source\repos\minesocket.net\minesocket.net\intefaces\iclient.cs
-++IPacket.cs
-i:{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}:c:\users\lesoorub\source\repos\minesocket.net\minesocket.net\intefaces\ipacket.cs
-++ISerializable.cs
-i:{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}:c:\users\lesoorub\source\repos\minesocket.net\minesocket.net\intefaces\iserializable.cs
-++ArrayReader.cs
-i:{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}:c:\users\lesoorub\source\repos\minesocket.net\minesocket.net\libs\arrayreader.cs
-++ArrayWriter.cs
-i:{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}:c:\users\lesoorub\source\repos\minesocket.net\minesocket.net\libs\arraywriter.cs
-++Logger.cs
-i:{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}:c:\users\lesoorub\source\repos\minesocket.net\minesocket.net\libs\logger.cs
-++IndexedArray.cs
-i:{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}:c:\users\lesoorub\source\repos\minesocket.net\minesocket.net\specify types\indexedarray.cs
-++VarInt.cs
-i:{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}:c:\users\lesoorub\source\repos\minesocket.net\minesocket.net\specify types\varint.cs
 ++MinecraftRPGServer
 i:{00000000-0000-0000-0000-000000000000}:MinecraftRPGServer
 ++Entities
@@ -92,61 +92,16 @@ i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraf
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\list\
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\windows\list\
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\items\list\
-++ArmorStand.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\list\armorstand.cs
-++Arrow.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\list\arrow.cs
-++Item.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\list\item.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\items\item.cs
 ++Metadata
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\
-++AbstractArrowMetadata.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\abstractarrowmetadata.cs
-++ArmorStandMetadata.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\armorstandmetadata.cs
-++ArrowMetadata.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\arrowmetadata.cs
-++EntityMetadata.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\entitymetadata.cs
-++ItemMetadata.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\itemmetadata.cs
-++LivingEntityMetadata.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\livingentitymetadata.cs
-++MetadataBase.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\metadatabase.cs
-++ModEntityData.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\modentitydata.cs
-++PlayerMetadata.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\playermetadata.cs
 ++Player
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\player\
-++modules
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\player\modules\
-++KeepAliveModule.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\player\modules\keepalivemodule.cs
-++WorldLoaderController.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\player\modules\worldloadercontroller.cs
-++ConnectedClient.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\player\connectedclient.cs
-++GamemodeType.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\player\gamemodetype.cs
-++LoadedEntity.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\player\loadedentity.cs
-++Player.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\player\player.cs
-++PlayerData.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\player\playerdata.cs
-++PlayerProtocol.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\player\playerprotocol.cs
-++PlayerSettings.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\player\playersettings.cs
-++TabPlayerInfo.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\player\tabplayerinfo.cs
-++Weather.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\player\weather.cs
+++CustomCommandNode.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\customcommandnode.cs
 ++Entity.cs
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\entity.cs
+++EntityAttribute.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\entityattribute.cs
 ++EntityProtocol.cs
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\entityprotocol.cs
 ++IEntityProtocol.cs
@@ -168,10 +123,10 @@ i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraf
 ++Play
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\packet listeners\play\
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\protocol\packets\play\
-++ChatMessage.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\packet listeners\play\chatmessage.cs
 ++OnAnimation.cs
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\packet listeners\play\onanimation.cs
+++OnChatMessage.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\packet listeners\play\onchatmessage.cs
 ++OnClickWindow.cs
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\packet listeners\play\onclickwindow.cs
 ++OnClientSettings.cs
@@ -206,40 +161,18 @@ i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraf
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\packet listeners\packetlistenerattribute.cs
 ++SubSystems
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\
-++Commands
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\commands\
-++lib
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\commands\lib\
-++BreakingCommand.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\commands\breakingcommand.cs
-++Gamemode.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\commands\gamemode.cs
-++GiveCommand.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\commands\givecommand.cs
-++PrivateMessageCommand.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\commands\privatemessagecommand.cs
-++TeleportCommand.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\commands\teleportcommand.cs
-++TestCommand.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\commands\testcommand.cs
-++BossBarManager.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\bossbarmanager.cs
-++MotdDescriptionCreator.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\motddescriptioncreator.cs
-++Physics.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\physics.cs
-++PlayerTitle.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\playertitle.cs
-++Random.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\random.cs
-++SupportedProtocol.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\supportedprotocol.cs
-++Time.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\time.cs
 ++Windows
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\windows\
+++ChestWindow.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\windows\list\chestwindow.cs
 ++PlayerInventory.cs
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\windows\list\playerinventory.cs
+++PlayerInventoryWindow.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\windows\list\playerinventorywindow.cs
+++AbstractWindow.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\windows\abstractwindow.cs
+++InventoryOfPlayer.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\windows\inventoryofplayer.cs
 ++SlotsPart.cs
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\windows\slotspart.cs
 ++Window.cs
@@ -248,12 +181,18 @@ i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraf
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\world\
 ++Optimization
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\world\optimization\
+++BlockMeta.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\world\optimization\blockmeta.cs
+++BlocksMeta.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\world\optimization\blocksmeta.cs
 ++BlockState.cs
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\world\blockstate.cs
 ++ChunckSection.cs
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\world\chuncksection.cs
 ++Chunk.cs
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\world\chunk.cs
+++EntityWorld.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\world\entityworld.cs
 ++GlobalPalette.cs
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\world\globalpalette.cs
 ++MCA.cs
@@ -272,12 +211,48 @@ i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraf
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\serverconfig.cs
 ++State.cs
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\state.cs
+++BitSet.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\libs\bitset.cs
+++GZip.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\libs\gzip.cs
+++zlib.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\libs\zlib.cs
 ++protocol
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\protocol\
 ++Resources
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\resources\
 ++special types
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\
+++types
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\types\
+++Angle.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\angle.cs
+++BlockEntity.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\blockentity.cs
+++Chat.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\chat.cs
+++Direction.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\direction.cs
+++NBT.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\nbt.cs
+++OptBlockID.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\optblockid.cs
+++OptString.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\optstring.cs
+++Particle.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\particle.cs
+++Pose.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\pose.cs
+++Position.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\position.cs
+++RawByteArray.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\rawbytearray.cs
+++Slot.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\slot.cs
+++TextScheme.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\textscheme.cs
+++VillagerData.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\villagerdata.cs
 ++App.config
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\app.config
 ++Program.cs
@@ -304,6 +279,133 @@ i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:
 ++System.ValueTuple
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:
+++ArmorStand.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\list\armorstand.cs
+++Arrow.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\list\arrow.cs
+++Enderman.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\list\enderman.cs
+++EyeOfEnder.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\list\eyeofender.cs
+++Husk.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\list\husk.cs
+++IronGolem.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\list\irongolem.cs
+++Item.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\list\item.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\items\item.cs
+++Silverfish.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\list\silverfish.cs
+++Snowball.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\list\snowball.cs
+++SnowGolem.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\list\snowgolem.cs
+++Spider.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\list\spider.cs
+++Villager.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\list\villager.cs
+++WanderingTrader.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\list\wanderingtrader.cs
+++Wither.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\list\wither.cs
+++WitherSkeleton.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\list\witherskeleton.cs
+++Zombie.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\list\zombie.cs
+++ZombieVillager.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\list\zombievillager.cs
+++AbstractArrowMetadata.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\abstractarrowmetadata.cs
+++AbstractGolemMetadata.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\abstractgolemmetadata.cs
+++AbstractSkeletonMetadata.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\abstractskeletonmetadata.cs
+++AbstractVillagerMetadata.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\abstractvillagermetadata.cs
+++AgeableMobMetadata.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\ageablemobmetadata.cs
+++ArmorStandMetadata.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\armorstandmetadata.cs
+++ArrowMetadata.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\arrowmetadata.cs
+++EndermiteMetadata.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\endermitemetadata.cs
+++EntityMetadata.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\entitymetadata.cs
+++EyeOfEnderMetadata.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\eyeofendermetadata.cs
+++GiantMetadata.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\giantmetadata.cs
+++IronGolemMetadata.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\irongolemmetadata.cs
+++ItemMetadata.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\itemmetadata.cs
+++LivingEntityMetadata.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\livingentitymetadata.cs
+++MetadataBase.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\metadatabase.cs
+++MobMetadata.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\mobmetadata.cs
+++MonsterMetadata.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\monstermetadata.cs
+++PathfinderMobMetadata.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\pathfindermobmetadata.cs
+++PlayerMetadata.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\playermetadata.cs
+++RaiderMetadata.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\raidermetadata.cs
+++SilverfishMetadata.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\silverfishmetadata.cs
+++SkeletonMetadata.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\skeletonmetadata.cs
+++SnowballMetadata.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\snowballmetadata.cs
+++SnowGolemMetadata.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\snowgolemmetadata.cs
+++SpiderMetadata.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\spidermetadata.cs
+++StrayMetadata.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\straymetadata.cs
+++VexMetadata.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\vexmetadata.cs
+++VillagerMetadata.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\villagermetadata.cs
+++WanderingTraderMetadata.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\wanderingtradermetadata.cs
+++WitherMetadata.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\withermetadata.cs
+++WitherSkeletonMetadata.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\witherskeletonmetadata.cs
+++ZoglinMetadata.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\zoglinmetadata.cs
+++ZombieMetadata.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\zombiemetadata.cs
+++ZombieVillagerMetadata.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\metadata\zombievillagermetadata.cs
+++modules
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\player\modules\
+++ConnectedClient.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\player\connectedclient.cs
+++EntitiesController.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\player\entitiescontroller.cs
+++EntityView.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\player\entityview.cs
+++GamemodeType.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\player\gamemodetype.cs
+++LoadedEntity.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\player\loadedentity.cs
+++Player.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\player\player.cs
+++PlayerData.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\player\playerdata.cs
+++PlayerProtocol.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\player\playerprotocol.cs
+++PlayerSettings.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\player\playersettings.cs
+++TabPlayerInfo.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\player\tabplayerinfo.cs
+++Weather.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\player\weather.cs
 ++Classes
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\items\classes\
 ++ItemAttribute.cs
@@ -322,24 +424,22 @@ i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraf
 ++Status.cs
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\packet listeners\status\status.cs
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\protocol\packets\status.cs
-++ChatCommandAttribute.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\commands\lib\chatcommandattribute.cs
-++Commands.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\commands\lib\commands.cs
-++IChatCommand.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\commands\lib\ichatcommand.cs
-++Node.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\commands\lib\node.cs
-++BlockMeta.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\world\optimization\blockmeta.cs
-++BlocksMeta.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\world\optimization\blocksmeta.cs
-++BitSet.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\libs\bitset.cs
-++GZip.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\libs\gzip.cs
-++zlib.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\libs\zlib.cs
+++Commands
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\commands\
+++BossBarManager.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\bossbarmanager.cs
+++MotdDescriptionCreator.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\motddescriptioncreator.cs
+++Physics.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\physics.cs
+++PlayerTitle.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\playertitle.cs
+++Random.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\random.cs
+++SupportedProtocol.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\supportedprotocol.cs
+++Time.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\time.cs
 ++packets
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\protocol\packets\
 ++BoundToClientPackageAttribute.cs
@@ -366,34 +466,26 @@ i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraf
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\resources\items 1.18.2.json
 ++Tags1.18.2.bin
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\resources\tags1.18.2.bin
-++types
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\types\
-++Angle.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\angle.cs
-++BlockEntity.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\blockentity.cs
-++Chat.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\chat.cs
-++Direction.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\direction.cs
-++NBT.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\nbt.cs
-++OptString.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\optstring.cs
-++Particle.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\particle.cs
-++Pose.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\pose.cs
-++Position.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\position.cs
-++RawByteArray.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\rawbytearray.cs
-++Slot.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\slot.cs
-++TextScheme.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\textscheme.cs
+++v2f.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\types\v2f.cs
+++v2i.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\types\v2i.cs
+++v3d.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\types\v3d.cs
+++v3f.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\types\v3f.cs
+++v3i.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\types\v3i.cs
+++v3s.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\types\v3s.cs
 ++Resources.Designer.cs
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\properties\resources.designer.cs
+++IModule.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\player\modules\imodule.cs
+++KeepAliveModule.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\player\modules\keepalivemodule.cs
+++WorldLoaderController.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\entities\player\modules\worldloadercontroller.cs
 ++Armor.cs
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\items\classes\armor.cs
 ++Helmet.cs
@@ -414,19 +506,42 @@ i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraf
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\items\list\quality.cs
 ++Rarity.cs
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\items\list\rarity.cs
+++lib
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\commands\lib\
+++BornCommand.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\commands\borncommand.cs
+++BreakingCommand.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\commands\breakingcommand.cs
+++CreateCommand.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\commands\createcommand.cs
+++Gamemode.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\commands\gamemode.cs
+++GiveCommand.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\commands\givecommand.cs
+++InfoCommand.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\commands\infocommand.cs
+++PrivateMessageCommand.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\commands\privatemessagecommand.cs
+++TeleportCommand.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\commands\teleportcommand.cs
+++TestCommand.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\commands\testcommand.cs
+++UnloadCommand.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\commands\unloadcommand.cs
 ++Login.cs
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\protocol\packets\login.cs
-++v2f.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\types\v2f.cs
-++v2i.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\types\v2i.cs
-++v3d.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\types\v3d.cs
-++v3f.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\types\v3f.cs
-++v3i.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\types\v3i.cs
-++v3s.cs
-i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\special types\types\v3s.cs
+++ChatCommandAttribute.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\commands\lib\chatcommandattribute.cs
+++Commands.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\commands\lib\commands.cs
+++IChatCommand.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\commands\lib\ichatcommand.cs
+++Node.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\core\subsystems\commands\lib\node.cs
 ++Play.cs
 i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\protocol\packets\play\play.cs
+++NewFolder1
+++Comparers
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\comparers\
+++v2iComparer.cs
+i:{7d271b0c-0b8e-43de-8e07-227f48378cce}:c:\users\lesoorub\source\repos\minecraftrpgserver\minecraftrpgserver\comparers\v2icomparer.cs

@@ -11,7 +11,7 @@ using MineServer;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-public class Item
+public class Item : ICloneable
 {
     public bool Present { get => itemCount != 0; }
     public VarInt ItemID { get; set; }
@@ -136,5 +136,12 @@ public class Item
             ItemID = id,
             ItemCount = count
         };
+    }
+
+    public object Clone()
+    {
+        return JsonConvert.DeserializeObject(
+            JsonConvert.SerializeObject(this, PlayerData.jsonSerializerSettings), 
+            PlayerData.jsonSerializerSettings);
     }
 }

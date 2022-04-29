@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using MineServer;
-
 public class MCA
 {
-    Dictionary<v2i, Chunk> chunks = new Dictionary<v2i, Chunk>();
+    Dictionary<v2i, Chunk> chunks = new Dictionary<v2i, Chunk>(v2iComparer.Instance);
     public byte[] location_table_raw;
     public byte[] timestamp_table_raw;
     public byte[] chunks_raw;
@@ -26,7 +25,8 @@ public class MCA
         if (!chunks.ContainsKey(t))
         {
             var c = LoadChunk(rx, rz);
-            chunks[t] = c;
+            if (c != null)
+                chunks.Add(t, c);
             return c;
         }
         return chunks[t];

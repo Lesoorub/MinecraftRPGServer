@@ -24,7 +24,66 @@ public abstract class AbstractWindow
     /// <returns>true if successfuly overwise false</returns>
     public virtual bool ClickWindow(ClickWindow packet)
     {
-        void SwapWithCarriedItem(int index)
+        bool ItemEquals(Item a, Item b) => 
+            a != null && 
+            b != null && 
+            a.ItemID.value == b.ItemID.value && 
+            a.NBT.Bytes.SequenceEqual(b.NBT.Bytes);
+        void LeftClickOnSlot(int index)
+        {
+            var item = GetItem(index);
+            if (ItemEquals(item, player.CarriedItem))
+            {
+                item.ItemCount += player.CarriedItem.ItemCount;
+                if (item.ItemCount > 64)
+                {
+                    player.CarriedItem.ItemCount = (byte)(item.ItemCount - 64);
+                    item.ItemCount = 64;
+                }
+                else
+                    player.CarriedItem = null;
+                SetSlot(index, item);
+                return;
+            }
+            SwapWithCI(index);
+        }
+        void RightClickOnSlot(int index)
+        {
+            var item = GetItem(index);
+            if (item == null)
+            {
+                //place 1 item from CI
+                var newItem = (Item)item.Clone();
+                newItem.ItemCount = 1;
+                player.CarriedItem.ItemCount -= 1;
+                if (player.CarriedItem.ItemCount <= 0)
+                    player.CarriedItem = null;
+                SetSlot(index, newItem);
+                return;
+            }
+            else
+            {
+                if (item.ItemCount < 64 && ItemEquals(item, player.CarriedItem))
+                {
+                    //add 1 item from CI to item
+                    item.ItemCount += 1;
+                    player.CarriedItem.ItemCount -= 1;
+                    if (player.CarriedItem.ItemCount <= 0)
+                        player.CarriedItem = null;
+                    SetSlot(index, item);
+                    return;
+                }
+                else if (player.CarriedItem == null)
+                {
+                    //add half to CI from item
+                    player.CarriedItem = (Item)item.Clone();
+                    item.ItemCount /= 2;
+                    player.CarriedItem.ItemCount -= item.ItemCount;
+                    SetSlot(index, item);
+                }
+            }
+        }
+        void SwapWithCI(int index)
         {
             var item = GetItem(index);
             var t = player.CarriedItem;
@@ -41,12 +100,13 @@ public abstract class AbstractWindow
             case 0:
                 if (button == 0)
                 {
-                    SwapWithCarriedItem(slot);
+                    LeftClickOnSlot(slot);
                     return true;
                 }
                 else if (button == 1)
                 {
-
+                    RightClickOnSlot(slot);
+                    return true;
                 }
                 break;
         }
