@@ -59,7 +59,11 @@ public struct Slot : ISerializable, IDeserializable
             ItemID = reader.ReadVarInt();
             ItemCount = reader.ReadByte();
             if (bytes[reader.offset] != 0)
-                NBT = new NBTTag(bytes.Skip(reader.offset));
+            {
+                NBT = new NBTTag();
+                NBT.FromByteArray(bytes, reader.offset, out var nbt_len);
+                reader.offset += nbt_len;
+            }
             else
                 reader.offset++;
         }

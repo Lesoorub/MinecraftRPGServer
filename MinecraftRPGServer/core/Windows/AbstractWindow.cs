@@ -25,24 +25,40 @@ public abstract class AbstractWindow
     public virtual bool ClickWindow(ClickWindow packet)
     {
         bool ItemEquals(Item a, Item b) => 
-            a != null && 
-            b != null && 
+            a != null && b != null && 
             a.ItemID.value == b.ItemID.value && 
             a.NBT.Bytes.SequenceEqual(b.NBT.Bytes);
+        bool Add(int index, byte count, out byte restCount)
+        {
+            restCount = 0;
+            if (count == 0) return false;
+            var item = GetItem(index);
+            item.ItemCount += count;
+            if (count < 0)
+            {
+                if (item.ItemCount <= 0)
+                    item = null;
+            }
+            else//count > 0
+            {
+                if (item.ItemCount >= 64)
+                {
+                    restCount = (byte)(item.ItemCount - 64);
+                    item.ItemCount = 64;
+                    return true;
+                }
+            }
+            SetSlot(index, item);
+            return false;
+        }
         void LeftClickOnSlot(int index)
         {
-            var item = GetItem(index);
-            if (ItemEquals(item, player.CarriedItem))
+            if (ItemEquals(GetItem(index), player.CarriedItem))
             {
-                item.ItemCount += player.CarriedItem.ItemCount;
-                if (item.ItemCount > 64)
-                {
-                    player.CarriedItem.ItemCount = (byte)(item.ItemCount - 64);
-                    item.ItemCount = 64;
-                }
+                if (Add(index, player.CarriedItem.ItemCount, out var rest))
+                    player.CarriedItem.ItemCount = rest;
                 else
                     player.CarriedItem = null;
-                SetSlot(index, item);
                 return;
             }
             SwapWithCI(index);
@@ -53,7 +69,7 @@ public abstract class AbstractWindow
             if (item == null)
             {
                 //place 1 item from CI
-                var newItem = (Item)item.Clone();
+                var newItem = (Item)player.CarriedItem.Clone();
                 newItem.ItemCount = 1;
                 player.CarriedItem.ItemCount -= 1;
                 if (player.CarriedItem.ItemCount <= 0)
@@ -94,20 +110,110 @@ public abstract class AbstractWindow
         var mode = packet.Mode;
         var button = packet.Button;
         var slot = packet.Slot;
+        bool isArmor(int k) => k >= 5 && k <= 8;
+        bool isHotbar(int k) => k >= 36 && k <= 44;
+        bool isMainInv(int k) => k >= 9 && k <= 35;
+        bool TryMoveItemTo(Item clickedItem, int startindex, int endindex)
+        {
+            if (clickedItem == null)
+                return false;
+            //Try add to exists item
+            for (int k = startindex; k <= endindex; k++)
+            {
+                var k_item = GetItem(k);
+                if (ItemEquals(clickedItem, k_item))
+                {
+                    if (Add(k, clickedItem.ItemCount, out var rest))
+                    {
+                        //if k_item_count == 64
+                        clickedItem.ItemCount = rest;
+                        SetSlot(slot, clickedItem);
+                    }
+                    else
+                    {
+                        //if clickedItem_count == 0;
+                        SetSlot(slot, null);
+                        return true;
+                    }
+                }
+            }
+            if (clickedItem.ItemCount == 0)
+            {
+                SetSlot(slot, null);
+                return true;
+            }
+            //place in empty slot
+            for (int k = startindex; k <= endindex; k++)
+            {
+                var item = GetItem(k);
+                if (item == null)
+                {
+                    SetSlot(k, clickedItem);
+                    SetSlot(slot, null);
+                    return true;
+                }
+            }
+            if (clickedItem.ItemCount == 0)
+            {
+                SetSlot(slot, null);
+                return true;
+            }
+            return false;
+        }
 
         switch (mode)
         {
             case 0:
                 if (button == 0)
                 {
+                    if (slot == -999)
+                    {
+                        //Drop CI
+                        return true;
+                    }
                     LeftClickOnSlot(slot);
                     return true;
                 }
                 else if (button == 1)
                 {
+                    if (slot == -999)
+                    {
+                        //Drop 1 item from CI
+                        return true;
+                    }
                     RightClickOnSlot(slot);
                     return true;
                 }
+                break;
+            case 1:
+                //Shift + left mouse click
+                {
+                    var clicked = GetItem(slot);
+                    if (clicked == null) break;
+
+                    if (isHotbar(slot))
+                    {
+                        if (!TryMoveItemTo(clicked, 5, 8))//Move to armor
+                            TryMoveItemTo(clicked, 9, 35);//Move item to mainInv
+                        break;
+                    }
+                    if (isArmor(slot))
+                    {
+                        if (!TryMoveItemTo(clicked, 36, 44))//Move item to hotbar
+                            TryMoveItemTo(clicked, 9, 35);//Move item to mainInv
+                        break;
+                    }
+                    if (isMainInv(slot))
+                    {
+                        if (!TryMoveItemTo(clicked, 5, 8))//Move to armor
+                            TryMoveItemTo(clicked, 36, 44);//Move item to hotbar
+                        break;
+                    }
+                    if (!TryMoveItemTo(clicked, 36, 44))//Move item to hotbar
+                        TryMoveItemTo(clicked, 9, 35);//Move item to mainInv
+                }
+                break;
+            case 2:
                 break;
         }
 

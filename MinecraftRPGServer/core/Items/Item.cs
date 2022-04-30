@@ -24,8 +24,9 @@ public class Item : ICloneable
     [JsonIgnore]
     public virtual bool sendNBT { get; } = false;
     public NBTTag NBT { get; private set; } = new NBTTag(new TAG_Compound(new List<TAG>(), "tag"));
+    [JsonIgnore]
+    public virtual SlotType slotType { get; } = SlotType.All;
 
-    
     public Chat Name 
     { 
         //get => (NBT["display"] != null && NBT["display"]["Name"] != null) ? (NBT["display"]["Name"] as TAG_String)?.data : null;
