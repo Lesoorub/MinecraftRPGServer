@@ -192,16 +192,20 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         SendEquipments();
         SendMetadataUpdate();
     }
-    public void DropItem(int index, byte count)
+    public void DropItem(ref Item item, byte count)
     {
-        var item = inventoryWindow.GetItem(index);
         if (item == null) return;
         Entities.Item.Spawn(world, new Slot(item.ItemID, count, item.NBT), Position + new v3f(0, 1.5f, 0));
         item.ItemCount -= count;
         if (item.ItemCount <= 0)
             item = null;
+    }
+    public void DropItem(int index, byte count)
+    {
+        var item = inventoryWindow.GetItem(index);
+        DropItem(ref item, count);
         inventoryWindow.SetSlot(index, item);
-        inventoryWindow.OnItemChange_Invoke(item, index);
+        inventoryWindow.OnItemChanged_Invoke(item, index);
     }
     private void Rpgserver_OnLogOut(Player player)
     {

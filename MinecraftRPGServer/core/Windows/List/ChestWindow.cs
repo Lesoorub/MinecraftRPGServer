@@ -9,21 +9,16 @@
     public override Item GetItem(int index)
     {
         if (index <= 26) return inventory[index];
-        if (index >= 27 && index <= 53) return player.mainInv[index - 27].item;
-        if (index >= 54 && index <= 52) return player.hotbar[index - 54].item;
+        if (index >= 27 && index <= 53) return pinv.mainInv[index - 27].item;
+        if (index >= 54 && index <= 52) return pinv.hotbar[index - 54].item;
         return null;
     }
     public override void SetSlot(int index, Item newItem)
     {
-        void f()
-        {
-            if (index <= 26) { inventory[index] = newItem; return; }
-            if (index >= 27 && index <= 53) { player.mainInv[index - 27].item = newItem; return; }
-            if (index >= 54 && index <= 52) { player.hotbar[index - 54].item = newItem; return; }
-        }
         if (newItem != null && newItem.ItemCount <= 0)
             newItem = null;
-        f();
-        OnItemChange_Invoke(newItem, index);
+        if (index <= 26) { inventory[index] = newItem; return; }
+        if (index >= 27 && index <= 53) { pinv.mainInv[index - 27].item = newItem; return; }
+        if (index >= 54 && index <= 52) { pinv.hotbar[index - 54].item = newItem; return; }
     }
 }

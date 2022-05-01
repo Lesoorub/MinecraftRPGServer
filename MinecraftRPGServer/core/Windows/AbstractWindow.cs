@@ -5,17 +5,17 @@ using Packets.Play;
 
 public abstract class AbstractWindow
 {
-    public virtual Slot[] Slots => Combine(inventory, player.mainInv, player.hotbar);
+    public virtual Slot[] Slots => Combine(inventory, pinv.mainInv, pinv.hotbar);
     public Slot[] inventory { get; set; }
     public virtual int Type { get; }
     public virtual string Name { get; }
-    protected InventoryOfPlayer player;
-    public void OnItemChange_Invoke(Item item, int index) => OnItemChanged?.Invoke(item, index);
+    protected InventoryOfPlayer pinv;
+    public void OnItemChanged_Invoke(Item item, int index) => OnItemChanged?.Invoke(item, index);
     public delegate void ItemChangedArgs(Item item, int index);
     public event ItemChangedArgs OnItemChanged;
     public AbstractWindow(InventoryOfPlayer player)
     {
-        this.player = player;
+        this.pinv = player;
     }
     public virtual Item GetItem(int index) => null;
     public virtual void SetSlot(int index, Item newItem) { }
@@ -24,155 +24,97 @@ public abstract class AbstractWindow
     /// </summary>
     /// <param name="packet"></param>
     /// <returns>true if successfuly overwise false</returns>
-    public virtual bool ClickWindow(ClickWindow packet)
+    public virtual bool ClickWindow(Player player, ClickWindow packet)
     {
-        void Invoke(ItemMovement.AbstractClick abs, int index)
-        {
-            var item = GetItem(index);
-            abs.CarriedItem = player.CarriedItem.item;
-            abs.ClickOnSlot(ref item);
-            player.CarriedItem.item = abs.CarriedItem;
-            if (player.CarriedItem.item != null && player.CarriedItem.item.ItemCount == 0)
-                player.CarriedItem.item = null;
-            SetSlot(index, item);
-        }
-
-        //bool Add(int index, sbyte count, out byte restCount)
-        //{
-        //    restCount = 0;
-        //    if (count == 0) return false;
-        //    var item = GetItem(index);
-        //    if (count + item.ItemCount < 0)
-        //        throw new System.Exception("Попытка отнять от предмета больше чем допустима");
-        //    item.ItemCount = (byte)(item.ItemCount + count);
-        //    if (count < 0)
-        //    {
-        //        if (item.ItemCount <= 0)
-        //            item = null;
-        //    }
-        //    else//count > 0
-        //    {
-        //        if (item.ItemCount >= 64)
-        //        {
-        //            restCount = (byte)(item.ItemCount - 64);
-        //            item.ItemCount = 64;
-        //            return true;
-        //        }
-        //    }
-        //    SetSlot(index, item);
-        //    return false;
-        //}
         var mode = packet.Mode;
         var button = packet.Button;
         var slot = packet.Slot;
-        //bool isArmor(int k) => k >= 5 && k <= 8;
-        //bool isHotbar(int k) => k >= 36 && k <= 44;
-        //bool isMainInv(int k) => k >= 9 && k <= 35;
-        //bool TryMoveItemTo(Item clickedItem, int startindex, int endindex)
-        //{
-        //    if (clickedItem == null)
-        //        return false;
-        //    //Try add to exists item
-        //    for (int k = startindex; k <= endindex; k++)
-        //    {
-        //        var k_item = GetItem(k);
-        //        if (ItemEquals(clickedItem, k_item))
-        //        {
-        //            if (Add(k, (sbyte)clickedItem.ItemCount, out var rest))
-        //            {
-        //                //if k_item_count == 64
-        //                clickedItem.ItemCount = rest;
-        //                SetSlot(slot, clickedItem);
-        //            }
-        //            else
-        //            {
-        //                //if clickedItem_count == 0;
-        //                SetSlot(slot, null);
-        //                return true;
-        //            }
-        //        }
-        //    }
-        //    if (clickedItem.ItemCount == 0)
-        //    {
-        //        SetSlot(slot, null);
-        //        return true;
-        //    }
-        //    //place in empty slot
-        //    for (int k = startindex; k <= endindex; k++)
-        //    {
-        //        var item = GetItem(k);
-        //        if (item == null)
-        //        {
-        //            SetSlot(k, clickedItem);
-        //            SetSlot(slot, null);
-        //            return true;
-        //        }
-        //    }
-        //    if (clickedItem.ItemCount == 0)
-        //    {
-        //        SetSlot(slot, null);
-        //        return true;
-        //    }
-        //    return false;
-        //}
-
-        Console.WriteLine($"mode={mode}, button={button}, slot={slot}, GetItem(slot)={(Slot)GetItem(slot)}, CI={(Slot)player.CarriedItem.item}");
-        switch (mode)
+        void Invoke(ItemMovement.AbstractClick abs)
         {
-            case 0:
-                if (button == 0)
-                {
-                    if (slot == -999)
-                    {
-                        //Drop CI
-                        return true;
-                    }
-                    Invoke(ItemMovement.left, slot);
-                    return true;
-                }
-                else if (button == 1)
-                {
-                    if (slot == -999)
-                    {
-                        //Drop 1 item from CI
-                        return true;
-                    }
-                    Invoke(ItemMovement.right, slot);
-                    return true;
-                }
-                break;
-            case 1:
-                ////Shift + left mouse click
-                //{
-                //    var clicked = GetItem(slot);
-                //    if (clicked == null) break;
-
-                //    if (isHotbar(slot))
-                //    {
-                //        if (!TryMoveItemTo(clicked, 5, 8))//Move to armor
-                //            TryMoveItemTo(clicked, 9, 35);//Move item to mainInv
-                //        break;
-                //    }
-                //    if (isArmor(slot))
-                //    {
-                //        if (!TryMoveItemTo(clicked, 36, 44))//Move item to hotbar
-                //            TryMoveItemTo(clicked, 9, 35);//Move item to mainInv
-                //        break;
-                //    }
-                //    if (isMainInv(slot))
-                //    {
-                //        if (!TryMoveItemTo(clicked, 5, 8))//Move to armor
-                //            TryMoveItemTo(clicked, 36, 44);//Move item to hotbar
-                //        break;
-                //    }
-                //    if (!TryMoveItemTo(clicked, 36, 44))//Move item to hotbar
-                //        TryMoveItemTo(clicked, 9, 35);//Move item to mainInv
-                //}
-                break;
-            case 2:
-                break;
+            var item = GetItem(slot);
+            abs.index = slot;
+            abs.button = button;
+            abs.CarriedItem = pinv.CarriedItem.item;
+            abs.window = this;
+            abs.player = player;
+            abs.ClickOnSlot(ref item);
+            pinv.CarriedItem.item = abs.CarriedItem;
+            if (pinv.CarriedItem.item != null && pinv.CarriedItem.item.ItemCount == 0)
+                pinv.CarriedItem.item = null;
+            SetSlot(slot, item);
         }
-        return false;
+        Console.WriteLine($"mode={mode}, button={button}, slot={slot}, GetItem(slot)={(Slot)GetItem(slot)}, CI={(Slot)pinv.CarriedItem.item}");
+        if (slot != -1)
+        {
+            switch (mode)
+            {
+                case 0://Mouse click
+                    if (button == 0)//Left
+                    {
+                        if (slot == -999)
+                        {
+                            //Drop CI
+                            if (pinv.CarriedItem.item != null)
+                                player.DropItem(ref pinv.CarriedItem.item, pinv.CarriedItem.item.ItemCount);
+                            return true;
+                        }
+                        Invoke(ItemMovement.leftClick);
+                        break;
+                    }
+                    else if (button == 1)//Right
+                    {
+                        if (slot == -999)
+                        {
+                            //Drop stack item from CI
+                            if (pinv.CarriedItem.item != null && pinv.CarriedItem.item.ItemCount >= 1)
+                                player.DropItem(ref pinv.CarriedItem.item, 1);
+                            return true;
+                        }
+                        Invoke(ItemMovement.rightClick);
+                        break;
+                    }
+                    break;
+                case 1://Shift + left mouse click
+                    break;
+                case 2://Number key {BUTTON}
+                       //if Button == 40 it is Offhand swap key F
+                    Invoke(ItemMovement.numKeyClick);
+                    break;
+                case 3://Middle click, only creative in non-player inventory
+                    if (player.Gamemode != GamemodeType.Creative) break;
+                    {
+                        var item = GetItem(slot);
+                        if (item == null) break;
+                        pinv.CarriedItem.item = (Item)item.Clone();
+                        pinv.CarriedItem.item.ItemCount = 64;
+                    }
+                    break;
+                case 4://Drop
+                       //Clicked item is always empty
+                    {
+                        var item = GetItem(slot);
+                        if (item == null) break;
+                        if (button == 0)//Q
+                            player.DropItem(slot, 1);
+                        else if (button == 1)//Control + Q
+                            player.DropItem(slot, item.ItemCount);
+                    }
+                    break;
+                case 5://Painting (PAIN)
+                    break;
+                case 6://Double click
+                    if (button == 0)
+                        Invoke(ItemMovement.doubleClick);
+                    break;
+                default:
+                    return false;
+            }
+        }
+
+        foreach(var sl in packet.Slots)
+            OnItemChanged?.Invoke(GetItem(sl.index), sl.index);
+
+        return true;
     }
 
     protected Slot[] Combine(params object[] items)
@@ -185,13 +127,18 @@ public abstract class AbstractWindow
     }
     public class ItemMovement
     {
-        public static LeftClick left = new LeftClick();
-        public static RightClick right = new RightClick();
+        public static LeftClick leftClick = new LeftClick();
+        public static RightClick rightClick = new RightClick();
+        public static DoubleClick doubleClick = new DoubleClick();
+        public static NumKeyClick numKeyClick = new NumKeyClick();
         public abstract class AbstractClick
         {
             public int index;
+            public int button;
             public SlotType slotType;
             public Item CarriedItem;
+            public AbstractWindow window;
+            public Player player;
             public virtual void ClickOnSlot(ref Item item) { }
             protected bool ItemEquals(Item a, Item b) =>
                 a != null && b != null &&
@@ -264,6 +211,40 @@ public abstract class AbstractWindow
                             Swap(ref item, ref CarriedItem);
                         }
                     }
+                }
+            }
+        }
+        public class DoubleClick : AbstractClick
+        {
+            public override void ClickOnSlot(ref Item item)
+            {
+                if (item == null && CarriedItem == null) return;
+                if (CarriedItem == null) return;
+                for (int k = 9; k <= 44; k++)
+                {
+                    var k_item = window.GetItem(k);
+                    if (ItemEquals(k_item, CarriedItem))
+                    {
+                        TryMove(ref CarriedItem, ref k_item, k_item.ItemCount);
+                        window.SetSlot(index, k_item);
+                        if (CarriedItem.ItemCount == 64)
+                            return;
+                    }
+                }
+            }
+        }
+        public class NumKeyClick : AbstractClick
+        {
+            public override void ClickOnSlot(ref Item item)
+            {
+                int newindex = 36 + button;
+                if (button == 40)
+                    newindex = 45;
+                if (index != newindex)
+                {
+                    var t = window.GetItem(newindex);
+                    Swap(ref item, ref t);
+                    window.SetSlot(newindex, t);
                 }
             }
         }
