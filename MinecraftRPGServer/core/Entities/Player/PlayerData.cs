@@ -16,7 +16,7 @@ public class PlayerData
     public v3f position;
     public v2f rotation;
     public float Health;
-    public InventoryOfPlayer inventory = new InventoryOfPlayer();
+    public PressedInventory inventory = new PressedInventory(new InventoryOfPlayer());
 
 
     public static JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings()
@@ -65,7 +65,7 @@ public class PlayerData
         WorldName = player.world.publicName;
         position = player.Position;
         rotation = player.Rotation;
-        inventory = player.inventory;
+        inventory = new PressedInventory(player.inventory);
         Health = player.Health;
         SelectedSlot = player.SelectedSlot;
         Gamemode = (byte)player.Gamemode;

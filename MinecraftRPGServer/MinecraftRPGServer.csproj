@@ -159,6 +159,7 @@
     <Compile Include="core\Items\List\NetheriteSword.cs" />
     <Compile Include="core\Items\List\Quality.cs" />
     <Compile Include="core\Items\List\Rarity.cs" />
+    <Compile Include="core\Items\SlotType.cs" />
     <Compile Include="core\Packet listeners\Play\OnAnimation.cs" />
     <Compile Include="core\Packet listeners\Play\OnClientStatus.cs" />
     <Compile Include="core\Packet listeners\Play\OnCloseWindow.cs" />
@@ -176,9 +177,11 @@
     <Compile Include="core\SubSystems\Random.cs" />
     <Compile Include="core\SubSystems\Time.cs" />
     <Compile Include="core\Windows\AbstractWindow.cs" />
+    <Compile Include="core\Windows\IndexedItem.cs" />
     <Compile Include="core\Windows\List\ChestWindow.cs" />
     <Compile Include="core\Windows\InventoryOfPlayer.cs" />
     <Compile Include="core\Windows\List\PlayerInventoryWindow.cs" />
+    <Compile Include="core\Windows\PressedInventory.cs" />
     <Compile Include="core\World\EntityWorld.cs" />
     <Compile Include="Comparers\v2iComparer.cs" />
     <Compile Include="core\World\World.cs" />

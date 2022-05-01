@@ -121,8 +121,8 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
 
     public InventoryOfPlayer inventory;
     public PlayerInventoryWindow inventoryWindow;
-    public Item SelectedItem => inventory.hotbar[selectedSlot];
-    public Item OffHandSelectedItem => inventory.Offhand;
+    public Item SelectedItem => inventory.hotbar[selectedSlot].item;
+    public Item OffHandSelectedItem => inventory.Offhand.item;
     public int LastStateID = 1;
 
     public long PreviousRecievedMetadata = 0;
@@ -441,7 +441,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         {
             WindowID = 0,
             slots = inventoryWindow.Slots,
-            CarriedItem = inventory.CarriedItem,
+            CarriedItem = inventory.CarriedItem.item,
             StateID = LastStateID
         });
     }
@@ -526,10 +526,10 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         {
             SelectedItem,
             OffHandSelectedItem,
-            inventory.Armor[3],
-            inventory.Armor[2],
-            inventory.Armor[1],
-            inventory.Armor[0],
+            inventory.Armor[3].item,
+            inventory.Armor[2].item,
+            inventory.Armor[1].item,
+            inventory.Armor[0].item,
         };
         List<EntityEquipment.Equipment> list = new List<EntityEquipment.Equipment>();
         for (int k = 0; k < equipments.Length; k++)

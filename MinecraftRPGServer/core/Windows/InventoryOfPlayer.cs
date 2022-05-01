@@ -10,12 +10,19 @@
         carriedItem
     }
 
-    public Item[] mainInv = new Item[27];
-    public Item[] hotbar = new Item[9];
-    public Item[] Armor = new Item[4];
-    public Item[] Craft = new Item[4];
-    public Item Offhand;
-    public Item CarriedItem;
+
+    public IndexedItem[] mainInv = new IndexedItem[27];
+    public IndexedItem[] hotbar = new IndexedItem[9];
+    public IndexedItem[] Armor = new IndexedItem[4]
+    {
+        new IndexedItem(null, SlotType.Armor | SlotType.Helmet),
+        new IndexedItem(null, SlotType.Armor | SlotType.Chest),
+        new IndexedItem(null, SlotType.Armor | SlotType.Leggins),
+        new IndexedItem(null, SlotType.Armor | SlotType.Boots),
+    };
+    public IndexedItem[] Craft = new IndexedItem[4];
+    public IndexedItem Offhand;
+    public IndexedItem CarriedItem;
 
     public void OnItemChange_Invoke(Item item, ItemPlace place) => OnItemChanged?.Invoke(item, place);
     public delegate void ItemChangedArgs(Item item, ItemPlace place);
@@ -46,33 +53,33 @@
         int index;
         if (FindSpaceForItem(hotbar, item, out index))
         {
-            if (Add(ref hotbar[index]))
+            if (Add(ref hotbar[index].item))
                 rest = item;
             return true;
         }
         if (FindSpaceForItem(mainInv, item, out index))
         {
-            if (Add(ref mainInv[index]))
+            if (Add(ref mainInv[index].item))
                 rest = item;
             return true;
         }
-        if (FindSpaceForItem(new Item[] { Offhand }, item, out _))
+        if (FindSpaceForItem(new IndexedItem[] { Offhand }, item, out _))
         {
-            if (Add(ref Offhand))
+            if (Add(ref Offhand.item))
                 rest = item;
             return true;
         }
         return false;
     }
 
-    bool FindSpaceForItem(Item[] arr, Item item, out int index)
+    bool FindSpaceForItem(IndexedItem[] arr, Item item, out int index)
     {
         for (int k = 0; k < arr.Length; k++)
         {
             var i = arr[k];
-            if (i == null || !i.Present) continue;
-            if (i.ItemID.value.Equals(item.ItemID.value) &&//Совпадение по ID
-                i.NBT.Bytes.Equals(item.NBT.Bytes)) //Совпадение по NBT
+            if (i.item == null || !i.item.Present) continue;
+            if (i.item.ItemID.value.Equals(item.ItemID.value) &&//Совпадение по ID
+                i.item.NBT.Bytes.Equals(item.NBT.Bytes)) //Совпадение по NBT
             {
                 index = k;
                 return true;
@@ -81,7 +88,7 @@
         for (int k = 0; k < arr.Length; k++)
         {
             var i = arr[k];
-            if (i == null || !i.Present)
+            if (i.item == null || !i.item.Present)
             {
                 index = k;
                 return true;
@@ -94,12 +101,12 @@
     public Item FindItem(string nameid)
     {
         if (!Item.NameIDs.TryGetValue(nameid, out var itemid)) return null;
-        bool find(Item[] arr, out int index)
+        bool find(IndexedItem[] arr, out int index)
         {
             for (int k = 0; k < arr.Length; k++)
             {
                 var i = arr[k];
-                if (i.ItemID.value.Equals(itemid))
+                if (i.item.ItemID.value.Equals(itemid))
                 {
                     index = k;
                     return true;
@@ -109,9 +116,9 @@
             return false;
         }
         int t;
-        if (find(mainInv, out t)) return mainInv[t];
-        if (find(hotbar, out t)) return hotbar[t];
-        if (Offhand.ItemID.value.Equals(itemid)) return Offhand;
+        if (find(mainInv, out t)) return mainInv[t].item;
+        if (find(hotbar, out t)) return hotbar[t].item;
+        if (Offhand.item.ItemID.value.Equals(itemid)) return Offhand.item;
         return null;
     }
 }

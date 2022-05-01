@@ -26,7 +26,8 @@ public class Player : PlayerProtocol
     {
         this.data = data;
         PlayerUUID = FromLoginName(data.loginname);
-        inventory = data.inventory;
+        inventory = new InventoryOfPlayer();
+        data.inventory.UnloadTo(ref inventory);
         var lastcpos = ChunkPos;
         position = data.position;
         Entity_OnChunkChanged(lastcpos, ChunkPos);
