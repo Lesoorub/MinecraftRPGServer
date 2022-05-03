@@ -250,8 +250,8 @@ namespace Packets.Play
         public byte Gamemode;
         public sbyte PreviousGamemode;
         public string[] DimensionsNames;
-        public NBTTag DimensionCodec;
-        public NBTTag Dimension;
+        public RawByteArray DimensionCodec;
+        public RawByteArray Dimension;
         public string DimensionName;
         public long HashedSeed;
         public VarInt MaxPlayers;

@@ -23,56 +23,46 @@ public class Item : ICloneable
     }
     [JsonIgnore]
     public virtual bool sendNBT { get; } = false;
-    public NBTTag NBT { get; private set; } = new NBTTag(new TAG_Compound(new List<TAG>(), "tag"));
     [JsonIgnore]
-    public virtual SlotType allowedType { get; } = SlotType.All;
+    public NBTTag NBT 
+    {
+        get
+        {
+            var nbt = new NBTTag(new TAG_Compound(new List<TAG>(), "tag"));
+            if (Damage != 0)
+                nbt["Damage"] = new TAG_Int(Damage, "Damage");//OK
 
-    public Chat Name 
-    { 
-        //get => (NBT["display"] != null && NBT["display"]["Name"] != null) ? (NBT["display"]["Name"] as TAG_String)?.data : null;
-        set
-        {
-            if (NBT["display"] == null)
-                NBT["display"] = new TAG_Compound(new List<TAG>(), "display");
-            if (value.Equals(default))
+            var display = new List<TAG>();
+            if (!string.IsNullOrEmpty(Name))
             {
-                (NBT["display"] as TAG_Compound).RemoveTag("Name");
-                return;
+                var c = Chat.ColoredText(Name);
+                display.Add(new TAG_String(c.ToString(), "Name"));
             }
-            NBT["display"]["Name"] = new TAG_String(value.ToString(), "Name");
-        }
-    }
-    public Chat[] Lore
-    {
-        //get => (NBT["display"] != null && NBT["display"]["Lore"] != null) ? (NBT["display"]["Lore"] as TAG_List)?.data.Select(x => (x as TAG_String)?.data).ToArray() : null;
-        set
-        {
-            if (NBT["display"] == null)
-                NBT["display"] = new TAG_Compound(new List<TAG>(), "display");
-            if (value == null)
+            if (!ChatName.Equals(default))
+                display.Add(new TAG_String(ChatName.ToString(), "Name"));
+            if (Lore != null && Lore.Length > 0)
             {
-                (NBT["display"] as TAG_Compound).RemoveTag("Lore");
-                return;
+                display.Add(new TAG_List(
+                    Lore.Select(x => (TAG)new TAG_String(Chat.ColoredText(x).ToString())).ToList(),
+                    TAG_String._TypeID,
+                    "Lore"));
             }
-            NBT["display"]["Lore"] = new TAG_List(
-                value.Select(x => (TAG)new TAG_String(x.ToString())).ToList(), 
-                TAG_String._TypeID, 
-                "Lore");
+            if (display.Count > 0)
+                nbt["display"] = new TAG_Compound(display, "display");
+
+            return nbt;
         }
-    }
-    public int Damage
-    {
-        get => NBT["Damage"] != null ? (int)(NBT["Damage"] as TAG_Int) : 0;
-        set
-        {
-            if (value == 0)
-            {
-                ((TAG_Compound)NBT).RemoveTag("Damage");
-                return;
-            }
-            NBT["Damage"] = new TAG_Int(value);
-        }
-    }
+    } 
+    [JsonIgnore]
+    public virtual SlotType allowedType { get; } = SlotType.Any;
+
+    [JsonIgnore]
+    public string Name;
+    [JsonIgnore]
+    public Chat ChatName;
+    [JsonIgnore]
+    public string[] Lore;
+    public int Damage;
     
     public static implicit operator Item(Slot slot) => FromSlot(slot);
     public static implicit operator Slot(Item item) => item != null ? new Slot(item.ItemID, item.ItemCount, item.sendNBT ? item.NBT : null) : default(Slot);

@@ -7,7 +7,7 @@ using MineServer;
 public struct Chat : ISerializable, IDeserializable
 {
     public string text;
-    public bool bold, italic, underlined, strikethrough, obfuscated;
+    public bool? bold, italic, underlined, strikethrough, obfuscated;
     /// <summary>
     /// ColorNames
     /// </summary>
@@ -17,12 +17,16 @@ public struct Chat : ISerializable, IDeserializable
     public _clickEvent clickEvent;
     public _hoverEvent hoverEvent;
 
-    private static JsonSerializerSettings notNull = new JsonSerializerSettings() { DefaultValueHandling = DefaultValueHandling.Ignore };
+    private static JsonSerializerSettings notNull = new JsonSerializerSettings() 
+    { 
+        DefaultValueHandling = DefaultValueHandling.Ignore,
+        NullValueHandling = NullValueHandling.Ignore,
+    };
 
     public Chat(string text)
     {
         this.text = text;
-        bold = italic = underlined = strikethrough = obfuscated = false;
+        bold = italic = underlined = strikethrough = obfuscated = null;
         color = ColorNames.gray;
         extra = null;
         insertion = null;
@@ -43,59 +47,79 @@ public struct Chat : ISerializable, IDeserializable
 
     public static Chat ColoredText(string text)
     {
-        var sp = text.Split('&');
-        if (sp.Length == 1)
+        var spl = text.Split('&');
+        if (spl.Length == 1)
+            return new Chat(text);
+
+        List<Chat> list = new List<Chat>();
+
+        bool? bold, italic, underlined, strikethrough, obfuscated;
+        bold = italic = underlined = strikethrough = obfuscated = null;
+        string str = spl[0];
+
+        const string colors = "0123456789abcdef";
+        const string modifers = "lnomkr";
+        int index = 0;
+        foreach (var s in spl)
         {
-            return new Chat(sp[0]);
-        }
-        var body = new Chat("");
-        List<Chat> t = new List<Chat>();
-        Chat last = new Chat(sp[0]);
-        string colors = "0123456789abcdef";
-        string modifers = "lnomkr";
-        foreach (string s in sp)
-        {
-            if (string.IsNullOrEmpty(s)) continue;
-            if (s.StartsWith("#"))
+            if (string.IsNullOrEmpty(s))
             {
-                if (!last.Equals(default))
-                    t.Add(last);
-                last = new Chat(s.Substring(7));
-                last.color = s.Substring(0, 7);
+                if (index != 0 && index != spl.Length - 1)
+                    str += "&";
                 continue;
             }
-            if (modifers.Contains(s[0].ToString()) && !last.Equals(default))
+            index++;
+            if (s.StartsWith("#"))
+            {
+                list.Add(new Chat(str + s.Substring(7))
+                {
+                    color = s.Substring(0, 7),
+                    bold = bold,
+                    italic = italic,
+                    underlined = underlined,
+                    strikethrough = strikethrough,
+                    obfuscated = obfuscated,
+                });
+                str = string.Empty;
+                continue;
+            }
+            if (modifers.Contains(s[0].ToString()))
             {
                 switch (s[0])
                 {
-                    case 'l': last.bold = true;          break;
-                    case 'n': last.underlined = true;    break;
-                    case 'o': last.italic = true;        break;
-                    case 'm': last.strikethrough = true; break;
-                    case 'k': last.obfuscated = true;    break;
+                    case 'l': bold = true; break;
+                    case 'n': underlined = true; break;
+                    case 'o': italic = true; break;
+                    case 'm': strikethrough = true; break;
+                    case 'k': obfuscated = true; break;
                     case 'r':
-                        last.obfuscated = last.strikethrough = last.italic = last.underlined = last.bold = false;
+                        obfuscated = strikethrough = italic = underlined = bold = false;
                         break;
                 }
-                last.text += s.Substring(1);
+                str += s.Substring(1);
+                continue;
             }
             if (colors.Contains(s[0].ToString()))
             {
-                if (!last.Equals(default))
-                    t.Add(last);
-                last = new Chat("")
+                list.Add(new Chat(str + s.Substring(1))
                 {
-                    color = ColorNameArray[ColorIndexesArray.IndexOf(s[0])]
-                };
-                last.text += s.Substring(1);
+                    color = ColorNameArray[ColorIndexesArray.IndexOf(s[0])],
+                    bold = bold,
+                    italic = italic,
+                    underlined = underlined,
+                    strikethrough = strikethrough,
+                    obfuscated = obfuscated,
+                });
+                str = string.Empty;
+                continue;
             }
         }
-        if (!last.Equals(default))
-            t.Add(last);
-        body.extra = t.ToArray();
-        return body;
+        return new Chat()
+        {
+            text = "",
+            extra = list.ToArray(),
+        };
     }
-
     public byte[] ToByteArray()
     {
         var writer = new ArrayWriter(true);

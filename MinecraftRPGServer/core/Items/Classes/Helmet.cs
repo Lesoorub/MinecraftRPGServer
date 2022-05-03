@@ -1,4 +1,7 @@
-﻿public class Helmet : Armor
+﻿namespace Items
 {
-
+    public class Helmet : Armor
+    {
+    
+    }
 }

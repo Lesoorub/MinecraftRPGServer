@@ -578,7 +578,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     public float GetMaxHealth() => Player.baseMaxHealth;
     public void Attack(LivingEntity target)
     {
-        if (!(SelectedItem is Sword sword))
+        if (!(SelectedItem is Items.Sword sword))
         {
             target.Health -= Player.baseHandDamage;
             return;

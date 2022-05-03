@@ -16,7 +16,7 @@
     public IndexedItem[] Armor = new IndexedItem[4]
     {
         new IndexedItem(null, SlotType.Armor | SlotType.Helmet),
-        new IndexedItem(null, SlotType.Armor | SlotType.Chest),
+        new IndexedItem(null, SlotType.Armor | SlotType.Chestplate),
         new IndexedItem(null, SlotType.Armor | SlotType.Leggins),
         new IndexedItem(null, SlotType.Armor | SlotType.Boots),
     };

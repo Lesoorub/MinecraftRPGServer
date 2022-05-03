@@ -1,4 +1,5 @@
-﻿public class PlayerInventory : Window
+﻿[System.Obsolete("See player inventory v2.0")]
+public class PlayerInventory : Window
 {
     public override int WindowID { get => 0; }
     public override Item[] slots { get; set; } = new Item[46];

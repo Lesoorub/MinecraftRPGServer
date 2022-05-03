@@ -1,5 +1,8 @@
-﻿public abstract class Sword : Item
+﻿namespace Items
 {
-    public float MinDamage;
-    public float MaxDamage;
+    public abstract class Sword : RPGItem
+    {
+        public float MinDamage;
+        public float MaxDamage;
+    }
 }

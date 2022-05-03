@@ -1,8 +1,13 @@
-﻿[Item("minecraft:iron_helmet")]
-public class IronHelmet : Helmet
+﻿namespace Items
 {
-    public IronHelmet()
+    [Item("minecraft:iron_helmet")]
+    public class IronHelmet : Helmet
     {
-        Health = 10;
+        public override SlotType allowedType => SlotType.Armor | SlotType.Helmet;
+        public IronHelmet()
+        {
+            Health = 10;
+        }
     }
+
 }

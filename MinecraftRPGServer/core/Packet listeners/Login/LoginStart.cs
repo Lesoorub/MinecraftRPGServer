@@ -34,7 +34,7 @@ public class LoginStart : PacketListener
                 DimensionName = player.world.publicName,
                 HashedSeed = 0,
                 MaxPlayers = server.maxPlayers,
-                ViewDistance = 8,
+                ViewDistance = server.config.MaxViewDistance,
                 ReducedDebugInfo = false,
                 EnableRespawnScreen = false,
                 IsDebug = false,

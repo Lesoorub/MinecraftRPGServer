@@ -1,4 +1,7 @@
-﻿public class Armor : Item
+﻿namespace Items
 {
-    public float Health;
+    public class Armor : RPGItem
+    {
+        public float Health;
+    }
 }

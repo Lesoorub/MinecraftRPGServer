@@ -153,12 +153,13 @@
     <Compile Include="core\Items\Classes\Armor.cs" />
     <Compile Include="core\Items\List\Bow.cs" />
     <Compile Include="core\Items\Classes\Helmet.cs" />
+    <Compile Include="core\Items\List\DiamondHelmet.cs" />
     <Compile Include="core\Items\List\IronHelmet.cs" />
     <Compile Include="core\Items\Classes\Sword.cs" />
     <Compile Include="core\Items\List\IronSword.cs" />
     <Compile Include="core\Items\List\NetheriteSword.cs" />
-    <Compile Include="core\Items\List\Quality.cs" />
-    <Compile Include="core\Items\List\Rarity.cs" />
+    <Compile Include="core\Items\Quality.cs" />
+    <Compile Include="core\Items\Rarity.cs" />
     <Compile Include="core\Items\SlotType.cs" />
     <Compile Include="core\Packet listeners\Play\OnAnimation.cs" />
     <Compile Include="core\Packet listeners\Play\OnClientStatus.cs" />

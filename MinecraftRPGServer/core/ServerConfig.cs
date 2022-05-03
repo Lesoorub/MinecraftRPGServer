@@ -9,8 +9,8 @@ public class ServerConfig
     public string[] descriptions = new string[]
     {
         //"←→↑↓⛏🪓🏹🗡✂🛡🎣🔱⚗🧪♪♫♬☻♂🔥🌊☄☠☀☂☃☁☽☃™©®℗★☆■□♦♠♥♣♢♤♡♧¿¡∞⚐⚑✔✖✎♀♂⚓⛨⚀⚁⚂⚃⚄⚅≡±≥≤⌠⌡÷≈°∙√ⁿ²■⯪⯫Ɑ🛡✂🍖🪣🔔⏳⚑₠₡₢₣₤₥₦₩₫₭₮₰₱₲₳₵₶₷₸₹₺₻",
-        "              &a🏹 &l&#FF4400H&#b74b24E&#b65149L&#92586dL&#6d5f92I&#4966b6U&#246cdbM &9🛡 &l&6MMORPG &c🗡&r                 " +
-        "                         &#a6a6a6C&#a0a0a0l&#9b9b9bo&#959595s&#8f8f8fe&#898989d &#7e7e7ea&#787878l&#737373p&#6d6d6dh&#676767a &#5c5c5ct&#565656e&#505050s&#4b4b4bt",
+        $"             &a🏹 {grad("ARHELLIUM", 0xfc4300, 0x246bd8)} &9🛡 &l&6MMORPG &c🗡&r\n" +
+        $"                   {grad("Closed alpha test", 0xa6a6a6, 0x4b4b4b)}",
     };
 
     //Chat
@@ -27,6 +27,27 @@ public class ServerConfig
     public bool AllowBreakBlocks = false;
     public int MaxViewDistance = 8;
     public string WorldPath = @"C:\Users\Lesoorub\Desktop\Bukkit 1.18.2\world";
+
+    static string grad(string text, int start_color, int end_color)
+    {
+        int ToColor(byte r, byte g, byte b) => r << 16 | g << 8 | b; 
+        void FromColor(int color, out byte r, out byte g, out byte b)
+        {
+            r = (byte)((color >> 16) & 0xFF);
+            g = (byte)((color >> 8) & 0xFF);
+            b = (byte)(color & 0xFF);
+        }
+        System.Text.StringBuilder strb = new System.Text.StringBuilder();
+        float lerp (float a, float b, float t) => a + (b - a) * t;
+        FromColor(start_color, out var sr, out var sg, out var sb);
+        FromColor(end_color, out var er, out var eg, out var eb);
+        for (int k = 0; k < text.Length; k++)
+        {
+            float t = (float)k / text.Length;
+            strb.Append($"&#{ToColor((byte)lerp(sr, er, t),(byte)lerp(sg, eg, t),(byte)lerp(sb, eb, t)):X}{text[k]}");
+        }
+        return strb.ToString();
+    }
 
     public static ServerConfig Load()
     {

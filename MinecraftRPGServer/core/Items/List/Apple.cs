@@ -1,13 +1,17 @@
-﻿[Item("minecraft:apple")]
-public class Apple : Item, IUsable
+﻿namespace Items
 {
-    public Apple()
+    [Item("minecraft:apple")]
+    public class Apple : Item, IUsable
     {
+        public Apple()
+        {
 
+        }
+
+        public void Use(Player player)
+        {
+            player.EchoIntoChatFromServer("use");
+        }
     }
 
-    public void Use(Player player)
-    {
-        player.EchoIntoChatFromServer("use");
-    }
 }

@@ -22,20 +22,14 @@ namespace Items
         public float ArrowSpeed = 3;
         public float ArrowDamage = 15;
 
-        public override bool sendNBT => true;
 
         public Bow()
         {
-            Chat f(Chat t) => new Chat()
+            Name = "&6Bow";
+            Lore = new string[]
             {
-                color = Chat.ColorNames.reset,
-                extra = new Chat[] { t, }
-            };
-            Name = f(Chat.ColoredText("&6Bow"));
-            Lore = new Chat[]
-            {
-                Chat.ColoredText("&aLore1"),
-                Chat.ColoredText("&fLore2"),
+                "&aLore1",
+                "&fLore2",
             };
             Damage = 50;
         }
@@ -82,6 +76,7 @@ namespace Items
     {
         public Rarity rarity = Rarity.Legendary;
         public Quality quality = Quality.Excelant;
+        public override bool sendNBT => true;
 
         readonly string[] qualirty_prefix = new string[] { "Poor", "Normal", "Good", "Excelant", "Perfect" };
         readonly string[] rarity_prefix = new string[] { "common", "uncommon", "rare", "mystic", "legendary" };

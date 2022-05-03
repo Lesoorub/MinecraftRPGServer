@@ -1,9 +1,13 @@
-﻿[Item("minecraft:netherite_sword")]
-public class NetheriteSword : Sword
+﻿namespace Items
 {
-    public NetheriteSword()
+    [Item("minecraft:netherite_sword")]
+    public class NetheriteSword : Sword
     {
-        MinDamage = 15;
-        MaxDamage = 25;
+        public NetheriteSword()
+        {
+            MinDamage = 15;
+            MaxDamage = 25;
+        }
     }
+
 }

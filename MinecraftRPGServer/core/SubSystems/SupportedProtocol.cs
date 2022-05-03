@@ -3,17 +3,17 @@ using MinecraftRPGServer.Properties;
 
 public class SupportedProtocol
 {
-    public readonly NBTTag DimensionCodec;
-    public readonly NBTTag Dimension;
+    public readonly byte[] DimensionCodec;
+    public readonly byte[] Dimension;
     public readonly byte[] Tags;
+
 
     public SupportedProtocol(byte[] codec, byte[] dim, byte[] Tags)
     {
-        DimensionCodec = new NBTTag(codec);
-        Dimension = new NBTTag(dim);
+        DimensionCodec = codec;
+        Dimension = dim;
         this.Tags = Tags;
     }
-
 
     public static Dictionary<int, SupportedProtocol> allprotocols = new Dictionary<int, SupportedProtocol>()
     {

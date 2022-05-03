@@ -1,5 +1,5 @@
 ﻿using System;
-
+[Obsolete("See player inventory v2.0")]
 public class SlotsPart
 {
     private PlayerInventory inv;
