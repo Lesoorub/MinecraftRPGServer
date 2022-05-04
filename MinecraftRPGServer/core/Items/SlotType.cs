@@ -4,11 +4,11 @@
 public enum SlotType : byte
 {
     Any = 0,
-    Armor = 0x01,
-    Helmet = 0x02,
-    Chestplate = 0x04,
-    Leggins = 0x08,
-    Boots = 0x1,
-    CustomList = 0x2,
-    ReadOnly = 0x4,
+    Armor = 1,
+    Helmet = 2,
+    Chestplate = 4,
+    Leggins = 8,
+    Boots = 16,
+    CustomList = 32,
+    ReadOnly = 64,
 }

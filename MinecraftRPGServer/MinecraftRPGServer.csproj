@@ -230,9 +230,6 @@
     <Compile Include="core\Entities\Player\PlayerProtocol.cs" />
     <Compile Include="core\ServerConfig.cs" />
     <Compile Include="core\SubSystems\SupportedProtocol.cs" />
-    <Compile Include="core\Windows\List\PlayerInventory.cs" />
-    <Compile Include="core\Windows\SlotsPart.cs" />
-    <Compile Include="core\Windows\Window.cs" />
     <Compile Include="core\World\BlockState.cs" />
     <Compile Include="core\World\ChunckSection.cs" />
     <Compile Include="core\World\Chunk.cs" />

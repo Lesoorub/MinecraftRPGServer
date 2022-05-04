@@ -106,7 +106,7 @@
             for (int k = 0; k < arr.Length; k++)
             {
                 var i = arr[k];
-                if (i.item.ItemID.value.Equals(itemid))
+                if (i.item != null && i.item.ItemID.value.Equals(itemid))
                 {
                     index = k;
                     return true;

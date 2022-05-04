@@ -34,7 +34,7 @@ public abstract class AbstractWindow
         void Invoke(ItemMovement.AbstractClick abs)
         {
             var item = GetItem(slot);
-            abs.index = slot;
+            abs.slot = slot;
             abs.button = button;
             abs.CarriedItem = pinv.CarriedItem.item;
             abs.window = this;
@@ -139,7 +139,7 @@ public abstract class AbstractWindow
         public PaintingClick painting = new PaintingClick();
         public abstract class AbstractClick
         {
-            public int index;
+            public int slot;
             public int button;
             public SlotType slotType;
             public Item CarriedItem;
@@ -154,13 +154,20 @@ public abstract class AbstractWindow
             {
                 if (!ItemEquals(target, from) || count == 0) return false;
                 if (from.ItemCount - count < 0) return false;
-                target.ItemCount += count;
-                from.ItemCount -= count;
-                if (target.ItemCount > 64)
+                int target_count = target.ItemCount;
+                int from_count = from.ItemCount;
+
+                target_count += count;
+                from_count -= count;
+
+                if (target_count > 64)
                 {
-                    from.ItemCount = (byte)(target.ItemCount - 64);
-                    target.ItemCount = 64;
+                    from_count += target_count - 64;
+                    target_count = 64;
                 }
+
+                target.ItemCount = (byte)target_count;
+                from.ItemCount = (byte)from_count;
                 if (from.ItemCount == 0)
                     from = null;
                 return true;
@@ -173,22 +180,18 @@ public abstract class AbstractWindow
             }
             protected bool CanPlace(IndexedItem to, IndexedItem item)
             {
+                bool has(SlotType type) => to.type.HasFlag(type) && item.item != null && item.item.allowedType.HasFlag(type);
                 if (to.type == SlotType.Any) return true;
                 if (to.type == SlotType.ReadOnly) return false;
                 if (to.type == SlotType.CustomList && 
                     to.allowedIDs.Contains(item.item.ItemID)) 
                     return true;
-                if (  to.type.HasFlag(SlotType.Armor) && 
-                    item.type.HasFlag(SlotType.Armor))
+                if (has(SlotType.Armor))
                 {
-                    if (  to.type.HasFlag(SlotType.Helmet) && 
-                        item.type.HasFlag(SlotType.Helmet)) return true;
-                    if (  to.type.HasFlag(SlotType.Chestplate) && 
-                        item.type.HasFlag(SlotType.Chestplate)) return true;
-                    if (  to.type.HasFlag(SlotType.Leggins) && 
-                        item.type.HasFlag(SlotType.Leggins)) return true;
-                    if (  to.type.HasFlag(SlotType.Boots) && 
-                        item.type.HasFlag(SlotType.Boots)) return true;
+                    if (has(SlotType.Helmet)) return true;
+                    if (has(SlotType.Chestplate)) return true;
+                    if (has(SlotType.Leggins)) return true;
+                    if (has(SlotType.Boots)) return true;
                 }
                 return false;
             }
@@ -198,12 +201,22 @@ public abstract class AbstractWindow
             public override void ClickOnSlot(ref Item item)
             {
                 if (item == null && CarriedItem == null) return;
-                if (!CanPlace(window.GetSlot(index), window.pinv.CarriedItem)) 
-                    return;
-                if (item == null || !ItemEquals(item, CarriedItem))
-                    Swap(ref item, ref CarriedItem);
-                else
+                if (item == null || CarriedItem == null)//Drop from CI
+                {
+                    if (item == null && CarriedItem != null)
+                    {
+                        if (CanPlace(window.GetSlot(slot), window.pinv.CarriedItem))
+                            Swap(ref item, ref CarriedItem);
+                    }
+                    else
+                    {
+                        Swap(ref item, ref CarriedItem);
+                    }
+                }
+                else if (ItemEquals(item, CarriedItem))//Try Add To item from CI
+                {
                     TryMove(ref item, ref CarriedItem, CarriedItem.ItemCount);
+                }
             }
         }
         public sealed class RightClick : AbstractClick
@@ -211,22 +224,27 @@ public abstract class AbstractWindow
             public override void ClickOnSlot(ref Item item)
             {
                 if (item == null && CarriedItem == null) return;
-                if (!CanPlace(window.GetSlot(index), window.pinv.CarriedItem)) return;
                 if (item == null)
                 {
                     //set item with count equal 1 from CI
-                    item = (Item)CarriedItem.Clone();
-                    item.ItemCount = 0;
-                    TryMove(ref item, ref CarriedItem, 1);
+                    if (CanPlace(window.GetSlot(slot), window.pinv.CarriedItem))
+                    {
+                        item = (Item)CarriedItem.Clone();
+                        item.ItemCount = 0;
+                        TryMove(ref item, ref CarriedItem, 1);
+                    }
                 }
                 else
                 {
                     if (CarriedItem == null)
                     {
                         //grab clicked item with item.count / 2 count.
-                        CarriedItem = (Item)item.Clone();
-                        CarriedItem.ItemCount = 0;
-                        TryMove(ref CarriedItem, ref item, (byte)System.Math.Ceiling(item.ItemCount / 2f));
+                        if (CanPlace(window.GetSlot(slot), window.pinv.CarriedItem))
+                        {
+                            CarriedItem = (Item)item.Clone();
+                            CarriedItem.ItemCount = 0;
+                            TryMove(ref CarriedItem, ref item, (byte)Math.Ceiling(item.ItemCount / 2f));
+                        }
                     }
                     else
                     {
@@ -238,7 +256,8 @@ public abstract class AbstractWindow
                         else
                         {
                             //Swap
-                            Swap(ref item, ref CarriedItem);
+                            if (CanPlace(window.GetSlot(slot), window.pinv.CarriedItem))
+                                Swap(ref item, ref CarriedItem);
                         }
                     }
                 }
@@ -248,15 +267,32 @@ public abstract class AbstractWindow
         {
             public override void ClickOnSlot(ref Item item)
             {
-                if (item == null && CarriedItem == null) return;
                 if (CarriedItem == null) return;
                 for (int k = 9; k <= 44; k++)
                 {
+                    if (k == slot)
+                        continue;
                     var k_item = window.GetItem(k);
-                    if (ItemEquals(k_item, CarriedItem))
+                    if (!ItemEquals(k_item, CarriedItem))
+                        continue;
+                    if (k_item.ItemCount == 64) continue;
+                    if (TryMove(ref CarriedItem, ref k_item, k_item.ItemCount))
                     {
-                        TryMove(ref CarriedItem, ref k_item, k_item.ItemCount);
-                        window.SetSlot(index, k_item);
+                        window.SetSlot(k, k_item);
+                        if (CarriedItem.ItemCount == 64)
+                            return;
+                    }
+                }
+                for (int k = 9; k <= 44; k++)
+                {
+                    if (k == slot)
+                        continue;
+                    var k_item = window.GetItem(k);
+                    if (!ItemEquals(k_item, CarriedItem))
+                        continue;
+                    if (TryMove(ref CarriedItem, ref k_item, k_item.ItemCount))
+                    {
+                        window.SetSlot(k, k_item);
                         if (CarriedItem.ItemCount == 64)
                             return;
                     }
@@ -270,8 +306,8 @@ public abstract class AbstractWindow
                 int newindex = 36 + button;
                 if (button == 40)
                     newindex = 45;
-                if (!CanPlace(window.GetSlot(index), window.GetSlot(newindex))) return;
-                if (index != newindex)
+                if (!CanPlace(window.GetSlot(slot), window.GetSlot(newindex))) return;
+                if (slot != newindex)
                 {
                     var t = window.GetItem(newindex);
                     Swap(ref item, ref t);
@@ -281,9 +317,9 @@ public abstract class AbstractWindow
         }
         public sealed class ShiftClick : AbstractClick
         {
-            bool isArmor => index >= 5 && index <= 8;
-            bool isMainInv => index >= 9 && index <= 35;
-            bool isHotbar => index >= 36 && index <= 44;
+            bool isArmor => slot >= 5 && slot <= 8;
+            bool isMainInv => slot >= 9 && slot <= 35;
+            bool isHotbar => slot >= 36 && slot <= 44;
             public override void ClickOnSlot(ref Item item)
             {
                 if (isArmor)
@@ -311,7 +347,7 @@ public abstract class AbstractWindow
                 {
                     var k_slot = window.GetSlot(k);
                     var k_item = k_slot.item;
-                    if (k_item == null && CanPlace(k_slot, window.GetSlot(index)))
+                    if (k_item == null && CanPlace(k_slot, window.GetSlot(slot)))
                     {
                         k_item = (Item)item.Clone();
                         k_item.ItemCount = 0;
@@ -325,9 +361,118 @@ public abstract class AbstractWindow
         }
         public sealed class PaintingClick : AbstractClick
         {
+            enum Type : byte
+            {
+                none,
+                equal,
+                ones,
+                creative
+            }
+            Type type = Type.none;
+            List<int> slots = new List<int>();
             public override void ClickOnSlot(ref Item item)
             {
-
+                if (slot == -999)//Starting/Ending mouse drag
+                {
+                    switch (button)
+                    {
+                        //starting
+                        case 0://left
+                            if (CarriedItem != null)
+                                type = Type.equal;
+                            break;
+                        case 4://right
+                            if (CarriedItem != null)
+                                type = Type.ones;
+                            break;
+                        case 8://middle
+                            if (CarriedItem != null && player.Gamemode == GamemodeType.Creative)
+                                type = Type.creative;
+                            break;
+                        //ending
+                        case 2://left
+                            if (CarriedItem != null)
+                            {
+                                byte count = (byte)(CarriedItem.ItemCount / slots.Count);
+                                foreach (var k in slots)
+                                {
+                                    var k_slot = window.GetSlot(k);
+                                    if (k_slot.item == null)
+                                    {
+                                        k_slot.item = (Item)CarriedItem.Clone();
+                                        k_slot.item.ItemCount = 0;
+                                        TryMove(ref k_slot.item, ref CarriedItem, count);
+                                        window.SetSlot(k, k_slot.item);
+                                    }
+                                    else TryMove(ref k_slot.item, ref CarriedItem, count);
+                                }
+                            }
+                            type = Type.none;
+                            slots.Clear();
+                            break;
+                        case 6://right
+                            foreach (var k in slots)
+                            {
+                                byte count = 1;
+                                var k_slot = window.GetSlot(k);
+                                if (k_slot.item == null)
+                                {
+                                    k_slot.item = (Item)CarriedItem.Clone();
+                                    k_slot.item.ItemCount = 0;
+                                    TryMove(ref k_slot.item, ref CarriedItem, count);
+                                    window.SetSlot(k, k_slot.item);
+                                }
+                                else 
+                                    TryMove(ref k_slot.item, ref CarriedItem, count);
+                            }
+                            type = Type.none;
+                            slots.Clear();
+                            break;
+                        case 10://middle
+                            if (player.Gamemode == GamemodeType.Creative)
+                            {
+                                CarriedItem.ItemCount = 64;
+                                foreach (var k in slots)
+                                {
+                                    var k_slot = window.GetSlot(k);
+                                    if (k_slot.item == null)
+                                    {
+                                        k_slot.item = (Item)CarriedItem.Clone();
+                                        window.SetSlot(k, k_slot.item);
+                                    }
+                                    else if (ItemEquals(CarriedItem, k_slot.item))
+                                    {
+                                        k_slot.item = (Item)CarriedItem.Clone();
+                                        window.SetSlot(k, k_slot.item);
+                                    }
+                                }
+                            }
+                            type = Type.none;
+                            slots.Clear();
+                            break;
+                    }
+                    return;
+                }
+                if (type == Type.none)
+                {
+                    slots.Clear();
+                    return;
+                }
+                //in the future, the slot is considered normal
+                if (slots.Contains(slot)) return;
+                slots.Add(slot);
+                switch (type)
+                {
+                    case Type.creative:
+                        CarriedItem.ItemCount = 64;
+                        foreach (var k in slots)
+                        {
+                            var s = window.GetSlot(k);
+                            s.item = (Item)CarriedItem.Clone();
+                            window.SetSlot(k, s.item);
+                        }
+                        break;
+                }
             }
         }
     }
