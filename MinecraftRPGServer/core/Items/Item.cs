@@ -11,7 +11,7 @@ using MineServer;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-public class Item : ICloneable
+public class Item : ICloneable, ISerializable
 {
     public bool Present { get => itemCount != 0; }
     public VarInt ItemID { get; set; }
@@ -135,4 +135,6 @@ public class Item : ICloneable
             JsonConvert.SerializeObject(this, PlayerData.jsonSerializerSettings), 
             PlayerData.jsonSerializerSettings);
     }
+
+    public byte[] ToByteArray() => ((Slot)this).ToByteArray();
 }

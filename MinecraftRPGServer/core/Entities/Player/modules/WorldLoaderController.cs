@@ -23,35 +23,38 @@ public class WorldLoaderController : IModule
     }
     public void SendWorld()
     {
-        int r = player.settings.ViewDistance + 1;
-        var cpos = player.ChunkPos;
-        void f(int x, int z)
+        lock (loadedChunks)
         {
-            var rpos = new v2i(x, z);
-            if (loadedChunks.Contains(rpos))
-                return;
-            loadedChunks.Add(rpos);
-            var chunk = player.world.GetChunk(rpos);
-            if (chunk == null) return;
-            player.network.Send(chunk.BacketPacket);
+            int r = player.settings.ViewDistance + 1;
+            var cpos = player.ChunkPos;
+            void f(int x, int z)
+            {
+                var rpos = new v2i(x, z);
+                if (loadedChunks.Contains(rpos))
+                    return;
+                loadedChunks.Add(rpos);
+                var chunk = player.world.GetChunk(rpos);
+                if (chunk == null) return;
+                player.network.Send(chunk.BacketPacket);
+            }
+            for (int k = 0; k < r; k++)
+                for (int x = -k; x <= k; x++)
+                    for (int z = -k; z <= k; z++)
+                    {
+                        if (Math.Abs(x) != k && Math.Abs(z) != k) continue;
+                        f(x + cpos.x, z + cpos.y);
+                    }
+            //Unload chunks
+            foreach (var pos in loadedChunks)
+            {
+                if (Math.Abs(pos.x - cpos.x) > r ||
+                    Math.Abs(pos.y - cpos.y) > r)
+                    SendUnloadChunk(pos);
+            }
+            loadedChunks.RemoveAll(pos =>
+                Math.Abs(pos.x - cpos.x) > r ||
+                Math.Abs(pos.y - cpos.y) > r);
         }
-        for (int k = 0; k < r; k++)
-            for (int x = -k; x <= k; x++)
-                for (int z = -k; z <= k; z++)
-                {
-                    if (Math.Abs(x) != k && Math.Abs(z) != k) continue;
-                    f(x + cpos.x, z + cpos.y);
-                }
-        //Unload chunks
-        foreach (var pos in loadedChunks)
-        {
-            if (Math.Abs(pos.x - cpos.x) > r ||
-                Math.Abs(pos.y - cpos.y) > r)
-                SendUnloadChunk(pos);
-        }
-        loadedChunks.RemoveAll(pos =>
-            Math.Abs(pos.x - cpos.x) > r ||
-            Math.Abs(pos.y - cpos.y) > r);
     }
     public void SendUpdateViewPosition()
     {
@@ -64,9 +67,12 @@ public class WorldLoaderController : IModule
     }
     public void UnloadChunks()
     {
-        foreach (var pos in loadedChunks)
-            SendUnloadChunk(pos);
-        loadedChunks.Clear();
+        lock (loadedChunks)
+        {
+            foreach (var pos in loadedChunks)
+                SendUnloadChunk(pos);
+            loadedChunks.Clear();
+        }
     }
     public void SendUnloadChunk(v2i pos)
     {

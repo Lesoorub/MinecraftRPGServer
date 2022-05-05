@@ -168,10 +168,13 @@
     <Compile Include="core\Packet listeners\Play\OnHeldItemChange_serverbound.cs" />
     <Compile Include="core\Packet listeners\Play\OnInteractEntity.cs" />
     <Compile Include="core\SubSystems\Commands\BornCommand.cs" />
+    <Compile Include="core\SubSystems\Commands\ColorsCommand.cs" />
     <Compile Include="core\SubSystems\Commands\CreateCommand.cs" />
     <Compile Include="core\SubSystems\Commands\GiveCommand.cs" />
+    <Compile Include="core\SubSystems\Commands\HealCommand.cs" />
     <Compile Include="core\SubSystems\Commands\InfoCommand.cs" />
     <Compile Include="core\SubSystems\Commands\PrivateMessageCommand.cs" />
+    <Compile Include="core\SubSystems\Commands\SavePlayerCommand.cs" />
     <Compile Include="core\SubSystems\Commands\UnloadCommand.cs" />
     <Compile Include="core\SubSystems\Physics.cs" />
     <Compile Include="core\SubSystems\PlayerTitle.cs" />

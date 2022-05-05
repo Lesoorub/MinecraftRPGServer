@@ -1,4 +1,6 @@
-﻿[ChatCommand]
+﻿using System.Linq;
+
+[ChatCommand]
 public class PrivateMessageCommand : IChatCommand
 {
     public void Register()
@@ -49,7 +51,7 @@ public class PrivateMessageCommand : IChatCommand
     }
     public void Execute(Player player, string[] args)
     {
-        if (args.Length != 2) return;
+        if (args.Length < 2) return;
         var target = player.rpgserver.FindByUsername(args[0]);
         player.Echo(
             player.PlayerUUID,
@@ -57,13 +59,13 @@ public class PrivateMessageCommand : IChatCommand
             Chat.ColoredText(player.rpgserver.config.PMFormat
                 .Replace("{playername}", player.data.username)
                 .Replace("{selfusername}", target.data.username)
-                .Replace("{message}", args[1])));
+                .Replace("{message}", string.Join(" ", args.Skip(1)))));
         target.Echo(
             player.PlayerUUID, 
             Packets.Play.ChatMessage_clientbound.PositionType.chat, 
             Chat.ColoredText(player.rpgserver.config.PMFormat
                 .Replace("{playername}", target.data.username)
                 .Replace("{selfusername}", player.data.username)
-                .Replace("{message}", args[1])));
+                .Replace("{message}", string.Join(" ", args.Skip(1)))));
     }
 }

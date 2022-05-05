@@ -81,6 +81,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
             {
                 //Отправить видимым игрокам анимацию удара по мне
                 PlayAnimation(EntityAnimation_clientbound.AnimationType.TakeDamage);
+                
                 lastHealthReduced = Time.GetTime();
             }
             if (value > MaxHealth)
@@ -194,8 +195,11 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     }
     public void DropItem(ref Item item, byte count)
     {
-        if (item == null) return;
-        Entities.Item.Spawn(world, new Slot(item.ItemID, count, item.NBT), Position + new v3f(0, 1.5f, 0));
+        if (item == null || item.ItemCount < count) return;
+
+        var clone = (Item)item.Clone();
+        clone.ItemCount = count;
+        Entities.Item.Spawn(world, clone, Position + new v3f(0, 1.5f, 0));
         item.ItemCount -= count;
         if (item.ItemCount <= 0)
             item = null;
@@ -346,6 +350,37 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
             Value = value
         });
     }
+    public void PlaySound(string name, NamedSoundEffect.Categories category, v3f position, float volume = 1, float pitch = 0.5f)
+    {
+        network.Send(new NamedSoundEffect()
+        {
+            SoundName = name,
+            SoundCategory = category,
+            EffectPositionX = (int)(position.x * 8),
+            EffectPositionY = (int)(position.y * 8),
+            EffectPositionZ = (int)(position.z * 8),
+            Volume = volume,
+            Pitch = pitch
+        });
+    }
+    public void PlaySound(int sound_id, NamedSoundEffect.Categories category, v3f position, float volume = 1, float pitch = 0.5f)
+    {
+        network.Send(new EntitySoundEffect()
+        {
+            SoundID = sound_id,
+            SoundCategory = category,
+            EntityID = EntityID,
+            Volume = volume,
+            Pitch = pitch
+        });
+    }
+    public void StopAllSounds()
+    {
+        network.Send(new StopSound()
+        {
+            Flags = 0
+        });
+    }
     public void SendEnableRespawnScreen(bool isImmediatelyRespawn) =>
         SendChangeGameState(ChangeGameState.ReasonType.EnableRespawnScreen, isImmediatelyRespawn ? 1 : 0);
 
@@ -420,21 +455,21 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         {
             if (!item.isDestroyed && item.PickUpReady)
             {
-                var slot = (Slot)item.meta["Item"];
-                if (!inventory.AddItem(slot, out var rest_item))
-                {
+                var slot = (Item)item.meta["Item"];
+                int count = slot.ItemCount;
+                if (!inventory.AddItem(ref slot))
                     continue;
-                }
-                if (rest_item != null)
+                if (slot != null && slot.Present)
                 {
-                    item.meta["Item"] = rest_item;
+                    item.meta["Item"] = slot;
+                    count -= slot.ItemCount;
                     continue;
                 }
                 item.Destroy();
                 SendInventory();
-                SendCollectItem(EntityID, item.EntityID, slot.ItemCount);
+                SendCollectItem(EntityID, item.EntityID, count);
                 foreach (var other_player in view.players)
-                    other_player.Value.entity.SendCollectItem(EntityID, item.EntityID, slot.ItemCount);
+                    other_player.Value.entity.SendCollectItem(EntityID, item.EntityID, count);
                 SendEquipments();
             }
         }

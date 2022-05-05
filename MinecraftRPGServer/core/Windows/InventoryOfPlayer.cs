@@ -1,4 +1,5 @@
-﻿public class InventoryOfPlayer
+﻿using static AbstractWindow.ItemMovement.AbstractClick;
+public class InventoryOfPlayer
 {
     public enum ItemPlace : byte
     {
@@ -28,97 +29,78 @@
     public delegate void ItemChangedArgs(Item item, ItemPlace place);
     public event ItemChangedArgs OnItemChanged;
 
-    public bool AddItem(Item item, out Item rest)
+    public bool AddItem(ref Item item)
     {
-        bool Add(ref Item target)
+        throw new System.NotImplementedException();
+        int find(Item i, IndexedItem[] to)
         {
-            if (target == null)
+            for (int k = 0; k < to.Length; k++)
             {
-                target = item;
-                return false;
+                var t = to[k];
+                if (t.item == null || (ItemEquals(i, t.item) && CanPlace(t, i)))
+                    return k;
             }
-            if (target.ItemCount + item.ItemCount <= 64)
+            return -1;
+        }
+        while (item.ItemCount > 0)
+        {
+            int index;
+            if ((index = find(item, hotbar)) != -1)
             {
-                target.ItemCount += item.ItemCount;
-                return false;
+                var slot = hotbar[index];
+                if (slot.item == null)
+                {
+                    slot.item = item;
+                    return true;
+                }
+                if (TryMove(ref slot.item, ref item, item.ItemCount))
+                    continue;
             }
-            else
+            if ((index = find(item, mainInv)) != -1)
             {
-                item.ItemCount -= (byte)(64 - target.ItemCount);
-                target.ItemCount = 64;
-                return true;
+                var slot = mainInv[index];
+                if (slot.item == null)
+                {
+                    slot.item = item;
+                    return true;
+                }
+                if (TryMove(ref slot.item, ref item, item.ItemCount))
+                    continue;
             }
+            if (find(item, new IndexedItem[] { Offhand }) != -1)
+            {
+                var slot = Offhand;
+                if (slot.item == null)
+                {
+                    slot.item = item;
+                    return true;
+                }
+                if (TryMove(ref slot.item, ref item, item.ItemCount))
+                    continue;
+            }
+            return false;
         }
-        rest = null;
-        int index;
-        if (FindSpaceForItem(hotbar, item, out index))
-        {
-            if (Add(ref hotbar[index].item))
-                rest = item;
-            return true;
-        }
-        if (FindSpaceForItem(mainInv, item, out index))
-        {
-            if (Add(ref mainInv[index].item))
-                rest = item;
-            return true;
-        }
-        if (FindSpaceForItem(new IndexedItem[] { Offhand }, item, out _))
-        {
-            if (Add(ref Offhand.item))
-                rest = item;
-            return true;
-        }
-        return false;
+        return true;
     }
-
-    bool FindSpaceForItem(IndexedItem[] arr, Item item, out int index)
-    {
-        for (int k = 0; k < arr.Length; k++)
-        {
-            var i = arr[k];
-            if (i.item == null || !i.item.Present) continue;
-            if (i.item.ItemID.value.Equals(item.ItemID.value) &&//Совпадение по ID
-                i.item.NBT.Bytes.Equals(item.NBT.Bytes)) //Совпадение по NBT
-            {
-                index = k;
-                return true;
-            }
-        }
-        for (int k = 0; k < arr.Length; k++)
-        {
-            var i = arr[k];
-            if (i.item == null || !i.item.Present)
-            {
-                index = k;
-                return true;
-            }
-        }
-        index = -1;
-        return false;
-    }
-
     public Item FindItem(string nameid)
     {
         if (!Item.NameIDs.TryGetValue(nameid, out var itemid)) return null;
-        bool find(IndexedItem[] arr, out int index)
+        int find(IndexedItem[] arr)
         {
             for (int k = 0; k < arr.Length; k++)
             {
                 var i = arr[k];
                 if (i.item != null && i.item.ItemID.value.Equals(itemid))
                 {
-                    index = k;
-                    return true;
+                    return k;
                 }
             }
-            index = -1;
-            return false;
+            return -1;
         }
         int t;
-        if (find(mainInv, out t)) return mainInv[t].item;
-        if (find(hotbar, out t)) return hotbar[t].item;
-        if (Offhand.item.ItemID.value.Equals(itemid)) return Offhand.item;
+        if ((t = find(mainInv)) != -1) return mainInv[t].item;
+        if ((t = find(hotbar)) != -1) return hotbar[t].item;
+        if (Offhand.item != null && Offhand.item.ItemID.value.Equals(itemid)) return Offhand.item;
         return null;
     }
 }

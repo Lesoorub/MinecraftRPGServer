@@ -146,11 +146,11 @@ public abstract class AbstractWindow
             public AbstractWindow window;
             public Player player;
             public virtual void ClickOnSlot(ref Item item) { }
-            protected bool ItemEquals(Item a, Item b) =>
+            public static bool ItemEquals(Item a, Item b) =>
                 a != null && b != null &&
                 a.ItemID.value == b.ItemID.value &&
                 a.NBT.Bytes.SequenceEqual(b.NBT.Bytes);
-            protected bool TryMove(ref Item target, ref Item from, byte count)
+            public static bool TryMove(ref Item target, ref Item from, byte count)
             {
                 if (!ItemEquals(target, from) || count == 0) return false;
                 if (from.ItemCount - count < 0) return false;
@@ -172,19 +172,23 @@ public abstract class AbstractWindow
                     from = null;
                 return true;
             }
-            protected void Swap(ref Item a, ref Item b)
+            public static void Swap(ref Item a, ref Item b)
             {
                 var t = b;
                 b = a;
                 a = t;
             }
-            protected bool CanPlace(IndexedItem to, IndexedItem item)
+            public static bool CanPlace(IndexedItem to, Item item)
             {
-                bool has(SlotType type) => to.type.HasFlag(type) && item.item != null && item.item.allowedType.HasFlag(type);
+                bool has(SlotType type) =>
+                    to.type.HasFlag(type) &&
+                    item != null &&
+                    item.allowedType.HasFlag(type);
+
                 if (to.type == SlotType.Any) return true;
                 if (to.type == SlotType.ReadOnly) return false;
                 if (to.type == SlotType.CustomList && 
-                    to.allowedIDs.Contains(item.item.ItemID)) 
+                    to.allowedIDs.Contains(item.ItemID)) 
                     return true;
                 if (has(SlotType.Armor))
                 {
@@ -205,7 +209,7 @@ public abstract class AbstractWindow
                 {
                     if (item == null && CarriedItem != null)
                     {
-                        if (CanPlace(window.GetSlot(slot), window.pinv.CarriedItem))
+                        if (CanPlace(window.GetSlot(slot), CarriedItem))
                             Swap(ref item, ref CarriedItem);
                     }
                     else
@@ -227,7 +231,7 @@ public abstract class AbstractWindow
                 if (item == null)
                 {
                     //set item with count equal 1 from CI
-                    if (CanPlace(window.GetSlot(slot), window.pinv.CarriedItem))
+                    if (CanPlace(window.GetSlot(slot), CarriedItem))
                     {
                         item = (Item)CarriedItem.Clone();
                         item.ItemCount = 0;
@@ -239,7 +243,7 @@ public abstract class AbstractWindow
                     if (CarriedItem == null)
                     {
                         //grab clicked item with item.count / 2 count.
-                        if (CanPlace(window.GetSlot(slot), window.pinv.CarriedItem))
+                        if (CanPlace(window.GetSlot(slot), CarriedItem))
                         {
                             CarriedItem = (Item)item.Clone();
                             CarriedItem.ItemCount = 0;
@@ -256,7 +260,7 @@ public abstract class AbstractWindow
                         else
                         {
                             //Swap
-                            if (CanPlace(window.GetSlot(slot), window.pinv.CarriedItem))
+                            if (CanPlace(window.GetSlot(slot), CarriedItem))
                                 Swap(ref item, ref CarriedItem);
                         }
                     }
@@ -306,9 +310,16 @@ public abstract class AbstractWindow
                 int newindex = 36 + button;
                 if (button == 40)
                     newindex = 45;
-                if (!CanPlace(window.GetSlot(slot), window.GetSlot(newindex))) return;
                 if (slot != newindex)
                 {
+                    var hotbarSlot = window.GetSlot(newindex);
+                    var itemSlot = window.GetSlot(slot);
+
+                    if (itemSlot.item == null && hotbarSlot.item == null) return;
+                    if (itemSlot.item != null && !CanPlace(hotbarSlot, itemSlot.item))
+                        return;
+                    if (hotbarSlot.item != null && !CanPlace(itemSlot, hotbarSlot.item))
+                        return;
                     var t = window.GetItem(newindex);
                     Swap(ref item, ref t);
                     window.SetSlot(newindex, t);
@@ -322,15 +333,23 @@ public abstract class AbstractWindow
             bool isHotbar => slot >= 36 && slot <= 44;
             public override void ClickOnSlot(ref Item item)
             {
-                if (isArmor)
-                    if (!Move(9, 35, ref item))//MainInv
-                        Move(36, 44, ref item);//Hotbar
                 if (isMainInv)
+                {
+
                     if (!Move(5, 8, ref item))//Armor
                         Move(36, 44, ref item);//Hotbar
-                if (isHotbar)
+                }
+                else if (isHotbar)
+                {
+
                     if (!Move(5, 8, ref item))//Armor
                         Move(9, 35, ref item);//MainInv
+                }
+                else
+                {
+                    if (!Move(9, 35, ref item))//MainInv
+                        Move(36, 44, ref item);//Hotbar
+                }
             }
             bool Move(int start, int end, ref Item item)
             {
@@ -347,7 +366,7 @@ public abstract class AbstractWindow
                 {
                     var k_slot = window.GetSlot(k);
                     var k_item = k_slot.item;
-                    if (k_item == null && CanPlace(k_slot, window.GetSlot(slot)))
+                    if (k_item == null && CanPlace(k_slot, window.GetSlot(slot).item))
                     {
                         k_item = (Item)item.Clone();
                         k_item.ItemCount = 0;

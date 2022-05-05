@@ -1,11 +1,11 @@
 ﻿[ChatCommand]
-public class BornCommand : IChatCommand
+public class HealCommand : IChatCommand
 {
     public void Register()
     {
         Commands.Register(new Node()
         {
-            Name = "born",
+            Name = "heal",
             Flags = Node.FlagsEnum.literal | Node.FlagsEnum.IsExecutable,
             Childrens = new System.Collections.Generic.List<Node>()
             {
@@ -34,8 +34,8 @@ public class BornCommand : IChatCommand
         }
         if (target != null)
         {
-            target.SetFire(!((EntityMetadata.EntityStatus)target.meta["entityStatus"]).HasFlag(EntityMetadata.EntityStatus.IsOnFire));
-            player.EchoIntoChatFromServer($"&2Игрок{(target != player ? $" &f{target.data.username}&2" : "")} успешно подожжен! Да пусть горит он адским пламенем!");
+            player.Health = player.MaxHealth;
+            player.EchoIntoChatFromServer($"&2Игрок{(target != player ? $" &f{target.data.username}&2" : "")} вылечен &4♥");
         }
         else
         {

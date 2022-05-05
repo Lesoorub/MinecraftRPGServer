@@ -31,12 +31,10 @@ namespace Entities
 
             private void Execute(Entity entity, string[] args)
             {
-                int id = -1;
-                if (args.Length == 1 && global::Item.NameIDs.TryGetValue(args[0], out var _id))
-                    id = _id;
-                if (id == -1)
-                    id = global::Item.NameIDs["minecraft:ender_pearl"];
-                entity.meta["Item"] = new Slot(id, 1, null);
+                string nameid = "minecraft:ender_pearl";
+                if (args.Length == 1 && global::Item.NameIDs.ContainsKey(args[0]))
+                    nameid = args[0];
+                entity.meta["Item"] = global::Item.Create(nameid, 1);
             }
         }
     }
