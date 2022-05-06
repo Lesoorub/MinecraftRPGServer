@@ -63,7 +63,7 @@ public class GiveCommand : IChatCommand
                 else
                     player.EchoIntoChatFromServer("Not enought space");
 
-                if (newItem.Present)
+                if (newItem != null && newItem.Present)
                     Entities.Item.Spawn(player.world, newItem, player.Position);
             }
             catch (Exception ex)

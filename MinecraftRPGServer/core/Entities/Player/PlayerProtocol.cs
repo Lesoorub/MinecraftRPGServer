@@ -101,7 +101,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     private byte selectedSlot = 0;
     public byte SelectedSlot 
     { 
-        get => selectedSlot; 
+        get => selectedSlot;
         set
         {
             selectedSlot = Math.Max(Math.Min(value, (byte)9), (byte)0);

@@ -31,56 +31,34 @@ public class InventoryOfPlayer
 
     public bool AddItem(ref Item item)
     {
-        throw new System.NotImplementedException();
-        int find(Item i, IndexedItem[] to)
+        bool tryAdd(ref Item i, IndexedItem[] to)
         {
             for (int k = 0; k < to.Length; k++)
             {
                 var t = to[k];
-                if (t.item == null || (ItemEquals(i, t.item) && CanPlace(t, i)))
-                    return k;
-            }
-            return -1;
-        }
-        while (item.ItemCount > 0)
-        {
-            int index;
-            if ((index = find(item, hotbar)) != -1)
-            {
-                var slot = hotbar[index];
-                if (slot.item == null)
+                if (t.item == null)
                 {
-                    slot.item = item;
+                    to[k].item = i;
+                    i = null;
                     return true;
                 }
-                if (TryMove(ref slot.item, ref item, item.ItemCount))
-                    continue;
-            }
-            if ((index = find(item, mainInv)) != -1)
-            {
-                var slot = mainInv[index];
-                if (slot.item == null)
+                if (ItemEquals(i, t.item) && CanPlace(t, i))
                 {
-                    slot.item = item;
-                    return true;
+                    if (TryMove(ref to[k].item, ref i, i.ItemCount))
+                        if (i == null || i.ItemCount == 0)
+                            return true;
                 }
-                if (TryMove(ref slot.item, ref item, item.ItemCount))
-                    continue;
-            }
-            if (find(item, new IndexedItem[] { Offhand }) != -1)
-            {
-                var slot = Offhand;
-                if (slot.item == null)
-                {
-                    slot.item = item;
-                    return true;
-                }
-                if (TryMove(ref slot.item, ref item, item.ItemCount))
-                    continue;
             }
             return false;
         }
-        return true;
+
+        if (tryAdd(ref item, hotbar))
+            return true;
+        if (tryAdd(ref item, mainInv))
+            return true;
+        if (tryAdd(ref item, new IndexedItem[] { Offhand }))
+            return true;
+        return false;
     }
     public Item FindItem(string nameid)
     {
