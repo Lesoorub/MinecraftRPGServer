@@ -72,19 +72,19 @@ public class Gamemode : IChatCommand
             {
                 case GamemodeType.Survival:
                     player.Echo(default, Packets.Play.ChatMessage_clientbound.PositionType.chat,
-                        Chat.ColoredText("Change gamemode to Survival"));
+                        Chat.ColoredText("&6Change gamemode to Survival"));
                     break;
                 case GamemodeType.Creative:
                     player.Echo(default, Packets.Play.ChatMessage_clientbound.PositionType.chat,
-                        Chat.ColoredText("Change gamemode to Creative"));
+                        Chat.ColoredText("&6Change gamemode to Creative"));
                     break;
                 case GamemodeType.Adventure:
                     player.Echo(default, Packets.Play.ChatMessage_clientbound.PositionType.chat,
-                        Chat.ColoredText("Change gamemode to Adventure"));
+                        Chat.ColoredText("&6Change gamemode to Adventure"));
                     break;
                 case GamemodeType.Spectator:
                     player.Echo(default, Packets.Play.ChatMessage_clientbound.PositionType.chat,
-                        Chat.ColoredText("Change gamemode to Spectator"));
+                        Chat.ColoredText("&6Change gamemode to Spectator"));
                     break;
             }
         }

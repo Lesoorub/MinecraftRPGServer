@@ -12,7 +12,7 @@ public class BreakingCommand : IChatCommand
             player.Echo(
                 System.Guid.Empty, 
                 ChatMessage_clientbound.PositionType.system_message, 
-                Chat.ColoredText($"Braking now is {(player.rpgserver.config.AllowBreakBlocks ? "&aenabled" : "&cdisabled")}"));
+                Chat.ColoredText($"&6Braking now is {(player.rpgserver.config.AllowBreakBlocks ? "&aenabled" : "&cdisabled")}"));
         });
     }
 }

@@ -61,7 +61,7 @@ public class GiveCommand : IChatCommand
                 if (player.inventory.AddItem(ref newItem))
                     player.SendInventory();
                 else
-                    player.EchoIntoChatFromServer("Not enought space");
+                    player.EchoIntoChatFromServer("&6Not enought space");
 
                 if (newItem != null && newItem.Present)
                     Entities.Item.Spawn(player.world, newItem, player.Position);

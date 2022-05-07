@@ -79,7 +79,7 @@ public class InfoCommand : IChatCommand
 
         string Vector3Format(v3f x) => $"({x.x:N1};{x.y:N1};{x.z:N1})".Replace(",", ".").Replace(";", ",");
         string Vector2Format(v2i x) => $"({x.x:N1};{x.y:N1})".Replace(",", ".").Replace(";", ",");
-        string EntityFormat(Entity x) => $"&fEID=&7{x.EntityID}&f, ID=&7{x.ID}&f, Pos=&7{Vector3Format(x.Position)}&f, cpos=&7{Vector2Format(x.ChunkPos)}&f";
+        string EntityFormat(Entity x) => $"&6EID=&7{x.EntityID}&6, ID=&7{x.ID}&6, Pos=&7{Vector3Format(x.Position)}&6, cpos=&7{Vector2Format(x.ChunkPos)}&6";
 
         if (args[0].Equals("entities"))
         {
@@ -109,7 +109,7 @@ public class InfoCommand : IChatCommand
                         {
                             var ents = player.world.entities.GetEntitiesInCircle(player.Position, radius);
                             player.EchoIntoChatFromServer(
-                                $"&fIn radius found {ents.Count} entities:\n" +
+                                $"&6In radius found {ents.Count} entities:\n" +
                                 string.Join("\n", ents.Select(x => "   " + EntityFormat(x))));
                         }
                     }
@@ -122,7 +122,7 @@ public class InfoCommand : IChatCommand
                             if (ent != null)
                                 player.EchoIntoChatFromServer(EntityFormat(ent));
                             else
-                                player.EchoIntoChatFromServer($"Entity with eid={eid} not found");
+                                player.EchoIntoChatFromServer($"&6Entity with eid={eid} not found");
                         }
                     }
                     break;

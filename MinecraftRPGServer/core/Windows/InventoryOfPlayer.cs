@@ -21,8 +21,8 @@ namespace Inventory
         public delegate void ItemChangedArgs(IndexedItem slot);
         public event ItemChangedArgs OnSlotChanged;
 
-        public delegate void InventoryChangedArgs();
-        public event InventoryChangedArgs OnInventoryChanged;
+        //public delegate void InventoryChangedArgs();
+        //public event InventoryChangedArgs OnInventoryChanged;
 
         public bool AddItem(ref Item item)
         {

@@ -22,14 +22,17 @@ public class MCA
     public Chunk GetChunk(int rx, int rz)
     {
         var t = new v2i(rx, rz);
-        if (!chunks.ContainsKey(t))
+        lock (chunks)
         {
-            var c = LoadChunk(rx, rz);
-            if (c != null)
-                chunks.Add(t, c);
-            return c;
+            if (!chunks.ContainsKey(t))
+            {
+                var c = LoadChunk(rx, rz);
+                if (c != null)
+                    chunks.Add(t, c);
+                return c;
+            }
+            return chunks[t];
         }
-        return chunks[t];
     }
     public Chunk LoadChunk(int rx, int rz)
     {

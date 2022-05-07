@@ -30,6 +30,8 @@ public sealed partial class RPGServer : MineServer.MineServer
 
     public RPGServer(ushort port) : base(port)
     {
+        Chat.ColoredText("  &grad(000000,FFFFFF)TEST&6&grad(000000,FFFFFF)TEST2");
+
         var timer = new System.Diagnostics.Stopwatch();
         timer.Start();
 
@@ -49,8 +51,6 @@ public sealed partial class RPGServer : MineServer.MineServer
         Inventory.Item.InitItems(MinecraftRPGServer.Properties.Resources.items_1_18_2);
         //Init Commands
         Commands.Init();
-        //Init players tab
-        tab = new TabPlayerInfo(this);
 
         OnStart += RPGServer_OnStart;
         OnStop += RPGServer_OnStop;
@@ -62,6 +62,8 @@ public sealed partial class RPGServer : MineServer.MineServer
     private void RPGServer_OnStart()
     {
         BeginServerLoop();
+        //Init players tab
+        tab = new TabPlayerInfo(this);
     }
 
     private void RPGServer_OnStop()

@@ -93,7 +93,7 @@ public class EntitiesController : IModule
         player.SendDestroyEntities(new int[] { EID });//Удалить все выбранные у клиента и из загруженных
     }
     /// <summary>
-    /// Создает энтити появившихся в поле зрения клиента, и удаляет энтити которых уже нет в поле зрения
+    /// Создает энтити появившихся в поле зрения клиента и удаляет энтити которых уже нет в поле зрения
     /// </summary>
     public void UpdateLoadedEntitiesLoad()
     {
@@ -114,6 +114,16 @@ public class EntitiesController : IModule
 
         //Добавить все энтити находящиеся в зоне видимости
         foreach (var entity in player.GetEntityInRadius(player.Position, cfg.MaxDrawEntitiesRange))
+        {
             LoadEntity(entity);
+            //Отправить метаданные
+            var changes = entity.meta.GetMetadataChanges(0);
+            if (changes.Length == 1) continue;
+            network.Send(new Packets.Play.EntityMetadata()
+            {
+                EntityID = entity.EntityID,
+                Metadata = changes
+            });
+        }
     }
 }

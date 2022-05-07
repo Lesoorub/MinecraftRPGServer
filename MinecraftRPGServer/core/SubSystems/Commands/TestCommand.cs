@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Packets.Play;
+﻿using Packets.Play;
 using MineServer;
 
 [ChatCommand]

@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using MineServer;
+using System.Globalization;
 
 public struct Chat : ISerializable, IDeserializable
 {
@@ -45,8 +47,77 @@ public struct Chat : ISerializable, IDeserializable
         return JsonConvert.SerializeObject(this, Formatting.None, notNull);
     }
 
+    public static string Gradient(string text, int start_color, int end_color)
+    {
+        string ToColor(byte r, byte g, byte b) => 
+            r.ToString("X").PadLeft(2, '0') + 
+            g.ToString("X").PadLeft(2, '0') + 
+            b.ToString("X").PadLeft(2, '0');
+        void FromColor(int color, out byte r, out byte g, out byte b)
+        {
+            r = (byte)((color >> 16) & 0xFF);
+            g = (byte)((color >> 8) & 0xFF);
+            b = (byte)(color & 0xFF);
+        }
+        StringBuilder strb = new StringBuilder();
+        float lerp(float a, float b, float t) => a + (b - a) * t;
+        FromColor(start_color, out var sr, out var sg, out var sb);
+        FromColor(end_color, out var er, out var eg, out var eb);
+        for (int k = 0; k < text.Length; k++)
+        {
+            float t = (float)k / text.Length;
+            strb.Append($"&#{ToColor((byte)lerp(sr, er, t), (byte)lerp(sg, eg, t), (byte)lerp(sb, eb, t))}{text[k]}");
+        }
+        return strb.ToString();
+    }
     public static Chat ColoredText(string text)
     {
+        string pattern = "&grad(######,######)";//# - skip char
+
+        int[] findGrads()
+        {
+            List<int> results = new List<int>();
+
+            for (int k = 0; k < text.Length - pattern.Length; k++)
+            {
+                int i;
+                for (i = 0; i < pattern.Length; i++)
+                {
+                    if (pattern[i] == '#')
+                        continue;
+                    if (text[k + i] != pattern[i])
+                        break;
+                }
+                if (i == pattern.Length)
+                    results.Add(k);
+            }
+
+            return results.ToArray();
+        }
+
+        var grads = findGrads();
+        if (grads.Length > 0)
+        {
+            for (int k = grads.Length - 1; k >= 0; k--)
+            { 
+                int gradIndex = grads[k];
+                string a = text.Substring(gradIndex + 6, 6);
+                string b = text.Substring(gradIndex + 13, 6);
+                if (!int.TryParse(a, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int gradStartColor) ||
+                    !int.TryParse(b, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int gradEndColor))
+                    continue;
+                int gradTextIndex = gradIndex + pattern.Length;
+                string s = text.Substring(
+                    gradTextIndex,
+                    text.IndexOf('&', gradTextIndex) != -1 
+                    ? text.IndexOf('&', gradTextIndex) - gradTextIndex
+                    : text.Length - gradTextIndex);
+                text = text
+                    .Remove(gradIndex, pattern.Length + s.Length)
+                    .Insert(gradIndex, Gradient(s, gradStartColor, gradEndColor));
+            }
+        }
+
         var spl = text.Split('&');
         if (spl.Length == 1)
             return new Chat(text);

@@ -172,7 +172,10 @@
     <Compile Include="core\SubSystems\Commands\CreateCommand.cs" />
     <Compile Include="core\SubSystems\Commands\GiveCommand.cs" />
     <Compile Include="core\SubSystems\Commands\HealCommand.cs" />
+    <Compile Include="core\SubSystems\Commands\ParticleCommand.cs" />
+    <Compile Include="core\SubSystems\Hologram.cs" />
     <Compile Include="core\SubSystems\Commands\InfoCommand.cs" />
+    <Compile Include="core\SubSystems\Commands\PerfomanceCommand.cs" />
     <Compile Include="core\SubSystems\Commands\PrivateMessageCommand.cs" />
     <Compile Include="core\SubSystems\Commands\SavePlayerCommand.cs" />
     <Compile Include="core\SubSystems\Commands\UnloadCommand.cs" />

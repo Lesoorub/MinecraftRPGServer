@@ -64,39 +64,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
             SendMetadataUpdate();
         }
     }
-    public override float MaxHealth 
-    { 
-        get => base.MaxHealth; set 
-        { 
-            base.MaxHealth = value; 
-            if (Health > base.MaxHealth)
-                Health = base.MaxHealth;
-        } 
-    }
-    public override float Health 
-    { 
-        get => base.Health;
-        set
-        {
-            if (value < base.Health)
-            {
-                //Отправить видимым игрокам анимацию удара по мне
-                PlayAnimation(EntityAnimation_clientbound.AnimationType.TakeDamage);
-                
-                lastHealthReduced = Time.GetTime();
-            }
-            if (value > MaxHealth)
-                value = MaxHealth;
-            if (Math.Abs(value - base.Health) > RegenerationPerSecond)
-                Console.WriteLine($"EID: {EntityID}, HP: {base.Health} -> {value}");
-            base.Health = value;
 
-            if (base.Health <= 0)
-                RespawnPlayer();
-        }
-    }
-    public long lastHealthReduced;
-    public float RegenerationPerSecond = 1;
     public v3f ForwardDir => v3f.FromRotationInvertX(rotation);
     public v3f EyePosition => Position + new v3f(0, IsSneaking ? 1.5f : 1.62f, 0);
     private byte selectedSlot = 0;
@@ -139,9 +107,27 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         //Привязка функционала перемещения игрока на клиенте при изменении позиции чем-либо
         OnPositionChanged += PlayerProtocol_OnPositionChanged;
 
+        OnHealthChanged += PlayerProtocol_OnHealthChanged;
+
         keepAlive.Init(this as Player);
         worldController.Init(this as Player);
         entitiesController.Init(this as Player);
+    }
+
+    private void PlayerProtocol_OnHealthChanged(float newHealth, float oldHealth)
+    {
+        if (newHealth < oldHealth)
+        {
+            //Отправить видимым игрокам анимацию удара по мне
+            PlayAnimation(EntityAnimation_clientbound.AnimationType.TakeDamage);
+        }
+        if (newHealth > MaxHealth)
+            newHealth = MaxHealth;
+        if (Math.Abs(newHealth - oldHealth) > RegenerationPerSecond)
+            Console.WriteLine($"EID: {EntityID}, HP: {base.Health} -> {newHealth}");
+
+        if (oldHealth == 0)
+            RespawnPlayer();
     }
 
     private void PlayerProtocol_OnPositionChanged(v3f lastposition, v3f newposition)
@@ -180,7 +166,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
             data = Commands.DeclareCommands
         });//20
         SendPlayerPositionAndLook();//22
-        rpgserver.tab.SendPlayers(network);
+        rpgserver.tab?.SendPlayers(network);
         worldController.SendUpdateViewPosition();//25
         worldController.SendWorld();//26-27
         SendPlayerPositionAndLook();//30
@@ -474,6 +460,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
                 SendEquipments();
             }
         }
+
     }
     public void SendInventory()
     {
@@ -497,11 +484,10 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     }
     public void SendMetadataUpdate()
     {
-        var playermeta = (PlayerMetadata)meta;
         var now = Time.GetTime();
         bool Send(long last, NetworkProvider net)
         {
-            var changes = playermeta.GetMetadataChanges(last);
+            var changes = meta.GetMetadataChanges(last);
             if (changes.Length > 1)
             {
                 net.Send(new Packets.Play.EntityMetadata()

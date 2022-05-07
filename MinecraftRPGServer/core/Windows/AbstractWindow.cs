@@ -48,7 +48,7 @@ namespace Inventory
                     pinv.CarriedItem.item = null;
                 SetSlot(slot, item);
             }
-            Console.WriteLine($"mode={mode}, button={button}, slot={slot}, GetItem(slot)={(Slot)GetItem(slot)}, CI={(Slot)pinv.CarriedItem.item}");
+            //Console.WriteLine($"mode={mode}, button={button}, slot={slot}, GetItem(slot)={(Slot)GetItem(slot)}, CI={(Slot)pinv.CarriedItem.item}");
             if (slot != -1)
             {
                 switch (mode)

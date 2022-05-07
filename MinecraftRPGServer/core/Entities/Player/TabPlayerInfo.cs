@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using MineServer;
 using Packets.Play;
@@ -8,6 +9,9 @@ public class TabPlayerInfo
     public const int UpdateDelayMs = 5000;
     public RPGServer server;
     public Thread thread;
+    PerformanceCounter PC = new PerformanceCounter("Process", "Working Set - Private", ProcessName());
+    static readonly string header = Chat.ColoredText("&grad(fc4300,246bd8)ARHELLIUM").ToString();
+    static string footer;
     public TabPlayerInfo(RPGServer server)
     {
         this.server = server;
@@ -22,6 +26,7 @@ public class TabPlayerInfo
                 Thread.Sleep(UpdateDelayMs);
             }
         });
+        thread.Start();
     }
 
     public void SendPlayers(NetworkProvider network)
@@ -41,6 +46,11 @@ public class TabPlayerInfo
                     Ping = x.Value.keepAlive.ping,
                 }
             }).ToArray()
+        });
+        network.Send(new PlayerListHeaderAndFooter()
+        {
+            Header = header,
+            Footer = footer
         });
     }
     private void Server_OnLoginIn(Player player)
@@ -87,6 +97,7 @@ public class TabPlayerInfo
 
     public void Tick()
     {
+        UpdateFooter();
         //update ping and gamemode
         foreach (var pl in server.loginnedPlayers.Where(x => x.Value.isInit))
         {
@@ -114,6 +125,26 @@ public class TabPlayerInfo
                     }
                 }).ToArray()
             });
+            pl.Value.network.Send(new PlayerListHeaderAndFooter()
+            {
+                Header = header,
+                Footer = footer
+            });
         }
+    }
+    void UpdateFooter()
+    {
+        footer = Chat.ColoredText($"&6Memory: {GetRam():N1} Mb").ToString();
+    }
+    static string ProcessName()
+    {
+        var proc = Process.GetCurrentProcess();
+        string name = proc.ProcessName;
+        proc.Dispose();
+        return name;
+    }
+    public float GetRam()
+    {
+        return PC.NextValue() / (1024 * 1024);
     }
 }
