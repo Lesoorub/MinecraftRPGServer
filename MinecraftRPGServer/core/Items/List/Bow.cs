@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Items
+namespace Inventory.Items
 {
     [Item("minecraft:bow")]
     public partial class Bow : RPGItem, IUsable, IUsingFinish

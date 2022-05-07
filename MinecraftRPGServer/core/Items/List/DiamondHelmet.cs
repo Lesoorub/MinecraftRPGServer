@@ -1,11 +1,10 @@
 ﻿using System;
 
-namespace Items 
+namespace Inventory.Items 
 {
     [Item("minecraft:diamond_helmet")]
     public class DiamondHelmet : Helmet
     {
-        public override SlotType allowedType => SlotType.Armor | SlotType.Helmet;
         public DiamondHelmet()
         {
             Name = "&4Diamond helmet";
@@ -23,7 +22,6 @@ namespace Items
             };
             Health = 20;
             Damage = 1;
-            Console.WriteLine(NBT._ToString);
         }
     }
 }

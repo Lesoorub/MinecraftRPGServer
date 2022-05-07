@@ -15,7 +15,7 @@ namespace Entities
         public override bool HeadRotationSynchronization => false;
         public override bool TeleportSynchronization => false;
         public override bool PositionSynchronization => false;
-        public Items.Bow SenderBow;
+        public Inventory.Items.Bow SenderBow;
         public Player sender;
         bool skipTick = false;
         long CreateTime;
@@ -27,7 +27,7 @@ namespace Entities
         {
             if (skipTick) return;
             //Уничтожить если превышено время жизни
-            if (Time.GetTime() - CreateTime >= Items.Bow.ArrayLifetimeMs)
+            if (Time.GetTime() - CreateTime >= Inventory.Items.Bow.ArrayLifetimeMs)
             {
                 Destroy();
                 return;

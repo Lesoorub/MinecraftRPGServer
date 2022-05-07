@@ -114,8 +114,6 @@ public class EntitiesController : IModule
 
         //Добавить все энтити находящиеся в зоне видимости
         foreach (var entity in player.GetEntityInRadius(player.Position, cfg.MaxDrawEntitiesRange))
-        {
             LoadEntity(entity);
-        }
     }
 }

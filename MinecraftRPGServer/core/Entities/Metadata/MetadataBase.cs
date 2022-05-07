@@ -15,7 +15,7 @@ public class MetadataBase
         { typeof(Chat), 4 },
         { typeof(Chat?), 5 },
         { typeof(Slot), 6 },
-        { typeof(Item), 6 },
+        { typeof(Inventory.Item), 6 },
         { typeof(bool), 7 },
         { typeof(v3f), 8 },
         { typeof(Position), 9 },

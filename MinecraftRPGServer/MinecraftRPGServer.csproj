@@ -144,7 +144,7 @@
     <Compile Include="core\Entities\Metadata\ZoglinMetadata.cs" />
     <Compile Include="core\Entities\Metadata\ZombieMetadata.cs" />
     <Compile Include="core\Entities\Metadata\ZombieVillagerMetadata.cs" />
-    <Compile Include="core\Entities\Player\EntitiesController.cs" />
+    <Compile Include="core\Entities\Player\modules\EntitiesController.cs" />
     <Compile Include="core\Entities\Player\EntityView.cs" />
     <Compile Include="core\Entities\Player\modules\IModule.cs" />
     <Compile Include="core\Entities\Player\modules\KeepAliveModule.cs" />

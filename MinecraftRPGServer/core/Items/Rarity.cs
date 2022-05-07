@@ -1,4 +1,4 @@
-﻿namespace Items
+﻿namespace Inventory.Items
 {
     public enum Rarity : byte
     {

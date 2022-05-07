@@ -21,7 +21,7 @@ namespace Entities
         public bool PickUpReady => elapsedTicks >= PickUpDelayInTicks;
 
         public Item(World world) : base(world) { }
-        public Item(World world, global::Item item) : base(world) 
+        public Item(World world, Inventory.Item item) : base(world) 
         { 
             (meta as ItemMetadata)["Item"] = item;
         }
@@ -30,7 +30,7 @@ namespace Entities
             if (elapsedTicks < PickUpDelayInTicks)
                 elapsedTicks++;
         }
-        public static void Spawn(World world, global::Item item, v3f position)
+        public static void Spawn(World world, Inventory.Item item, v3f position)
         {
             int coly = (int)position.y;
             for (int y = coly; y >= -64; y--)

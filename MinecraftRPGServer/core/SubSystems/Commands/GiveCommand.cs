@@ -57,7 +57,7 @@ public class GiveCommand : IChatCommand
             {
                 if (!nameid.StartsWith("minecraft:"))
                     nameid = "minecraft:" + nameid;
-                var newItem = Item.Create(nameid, count);
+                var newItem = Inventory.Item.Create(nameid, count);
                 if (player.inventory.AddItem(ref newItem))
                     player.SendInventory();
                 else

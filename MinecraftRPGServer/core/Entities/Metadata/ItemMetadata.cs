@@ -2,5 +2,5 @@
 
 public class ItemMetadata : EntityMetadata
 {
-    [Index(8)] public Item Item;
+    [Index(8)] public Inventory.Item Item;
 }

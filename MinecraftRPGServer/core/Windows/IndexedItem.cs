@@ -1,13 +1,14 @@
-﻿public struct IndexedItem
+﻿namespace Inventory
 {
-    public Item item;
-    public SlotType type;
-    public int[] allowedIDs;
-
-    public IndexedItem(Item item, SlotType type = SlotType.Any)
+    public struct IndexedItem
     {
-        this.item = item;
-        this.type = type;
-        allowedIDs = new int[0];
+        public Item item;
+        public string[] allowedItems;//empty -> allow all, 
+
+        public IndexedItem(Item item, string[] allowed)
+        {
+            this.item = item;
+            this.allowedItems = allowed;
+        }
     }
 }

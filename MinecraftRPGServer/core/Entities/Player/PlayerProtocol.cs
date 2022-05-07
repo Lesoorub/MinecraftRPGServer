@@ -4,6 +4,7 @@ using MineServer;
 using Packets.Play;
 using System;
 using System.Threading.Tasks;
+using Inventory;
 
 public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
 {
@@ -613,7 +614,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     public float GetMaxHealth() => Player.baseMaxHealth;
     public void Attack(LivingEntity target)
     {
-        if (!(SelectedItem is Items.Sword sword))
+        if (!(SelectedItem is Inventory.Items.Sword sword))
         {
             target.Health -= Player.baseHandDamage;
             return;

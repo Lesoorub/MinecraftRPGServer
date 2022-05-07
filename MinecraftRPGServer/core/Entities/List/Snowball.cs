@@ -31,9 +31,9 @@ namespace Entities
             private void Execute(Entity entity, string[] args)
             {
                 string nameid = "minecraft:snowball";
-                if (args.Length == 1 && global::Item.NameIDs.ContainsKey(args[0]))
+                if (args.Length == 1 && Inventory.Item.NameIDs.ContainsKey(args[0]))
                     nameid = args[0];
-                entity.meta["Item"] = global::Item.Create(nameid, 1);
+                entity.meta["Item"] = Inventory.Item.Create(nameid, 1);
             }
         }
     }
