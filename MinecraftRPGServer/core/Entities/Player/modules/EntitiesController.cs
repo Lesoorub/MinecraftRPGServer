@@ -73,7 +73,7 @@ public class EntitiesController : IModule
             var ent = loaded_entity.Value.entity;
             bool PositionChanged = !loaded_entity.Value.PreviousPosition.Equals(ent.Position);
             bool RotationChanged = !loaded_entity.Value.PreviousRotation.Equals(ent.Rotation);
-            var idle = Time.GetTime() - loaded_entity.Value.PreviousPositionSyncTime <= 20;
+            var idle = (Time.GetTime() - loaded_entity.Value.PreviousPositionSyncTime) <= 20;
             if (idle)
                 PositionChanged = RotationChanged = true;
             if (PositionChanged || RotationChanged)

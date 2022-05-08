@@ -36,17 +36,19 @@ public class EntityWorld
     public void Remove(int EID)
     {
         lock (entities)
-        lock (chunks)
-        {
-            if (entities.TryRemove(EID, out var cpos) &&
-                chunks.TryGetValue(cpos, out var dict))
+            lock (chunks)
             {
-                Console.WriteLine($"Remove entity EID={EID}, cpos={cpos}");
-                dict.TryRemove(EID, out var entity);
+                if (entities.TryRemove(EID, out var cpos) &&
+                    chunks.TryGetValue(cpos, out var dict))
+                {
+                    Console.WriteLine($"Remove entity EID={EID}, cpos={cpos}");
+                    dict.TryRemove(EID, out var entity);
+                }
+                else
+                {
+                    //throw new Exception("Try remove unknown entity?");
+                }
             }
-            else
-                throw new Exception("Try remove unknown entity?");
-        }
     }
     public bool HasEID(int EID) 
     { 

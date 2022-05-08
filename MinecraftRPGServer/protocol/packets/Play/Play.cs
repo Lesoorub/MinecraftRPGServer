@@ -819,23 +819,31 @@ namespace Packets.Play
         public VarInt PickupItemCount;
     }
     [BoundToClientPackage]
+    public class SoundEffect : MSerializableToBytes, IPacket
+    {
+        public override int package_id => 0x5D;
+
+        public VarInt SoundID;
+        public Categories SoundCategory;
+        /// <summary>
+        /// Effect X multiplied by 8 (fixed-point number with only 3 bits dedicated to the fractional part).
+        /// </summary>
+        public int x;
+        /// <summary>
+        /// Effect Y multiplied by 8 (fixed-point number with only 3 bits dedicated to the fractional part).
+        /// </summary>
+        public int y;
+        /// <summary>
+        /// Effect Z multiplied by 8 (fixed-point number with only 3 bits dedicated to the fractional part).
+        /// </summary>
+        public int z;
+        public float Volume;
+        public float Pitch;
+    }
+    [BoundToClientPackage]
     public class NamedSoundEffect : MSerializableToBytes, IPacket
     {
         public override int package_id => 0x19;
-
-        public enum Categories : byte
-        {
-            MASTER = 0, 
-            MUSIC = 1, 
-            RECORDS = 2, 
-            WEATHER = 3, 
-            BLOCKS = 4, 
-            HOSTILE = 5, 
-            NEUTRAL = 6, 
-            PLAYERS = 7, 
-            AMBIENT = 8, 
-            VOICE = 9
-        }
 
         public string SoundName;
         public Categories SoundCategory;
@@ -869,7 +877,7 @@ namespace Packets.Play
         public override int package_id => 0x5C;
 
         public VarInt SoundID;
-        public NamedSoundEffect.Categories SoundCategory;
+        public Categories SoundCategory;
         public VarInt EntityID;
         public float Volume;
         public float Pitch;

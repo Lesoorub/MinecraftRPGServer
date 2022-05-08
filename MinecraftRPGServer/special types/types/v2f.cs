@@ -28,6 +28,7 @@ public class v2f
         return obj is v2f i && i.x == x && i.y == y;
     }
 
+    public v2f Clone() => new v2f(x, y);
     public override int GetHashCode()
     {
         int hashCode = 1502939027;

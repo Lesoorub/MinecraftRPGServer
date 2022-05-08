@@ -107,10 +107,24 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         OnConnected += PlayerProtocol_OnConnected;
         //Привязка функционала перемещения игрока на клиенте при изменении позиции чем-либо
         OnPositionChanged += PlayerProtocol_OnPositionChanged;
+        OnHealthChanged += PlayerProtocol_OnHealthChanged;
 
         keepAlive.Init(this as Player);
         worldController.Init(this as Player);
         entitiesController.Init(this as Player);
+    }
+
+    private void PlayerProtocol_OnHealthChanged(LivingEntity sender, float newHealth, float oldHealth)
+    {
+        if (isInit)
+        {
+            if (newHealth < oldHealth)
+                PlaySound(HurtSound, Position);
+            Echo(Guid.Empty,
+                ChatMessage_clientbound.PositionType.game_info,
+                Chat.ColoredText($"&c{Health:N1}/{MaxHealth:N1}&f"));
+            SendUpdateHealth();
+        }
     }
 
     private void PlayerProtocol_OnPositionChanged(v3f lastposition, v3f newposition)
@@ -320,30 +334,6 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
             Value = value
         });
     }
-    public void PlaySound(string name, NamedSoundEffect.Categories category, v3f position, float volume = 1, float pitch = 0.5f)
-    {
-        network.Send(new NamedSoundEffect()
-        {
-            SoundName = name,
-            SoundCategory = category,
-            EffectPositionX = (int)(position.x * 8),
-            EffectPositionY = (int)(position.y * 8),
-            EffectPositionZ = (int)(position.z * 8),
-            Volume = volume,
-            Pitch = pitch
-        });
-    }
-    public void PlaySound(int sound_id, NamedSoundEffect.Categories category, v3f position, float volume = 1, float pitch = 0.5f)
-    {
-        network.Send(new EntitySoundEffect()
-        {
-            SoundID = sound_id,
-            SoundCategory = category,
-            EntityID = EntityID,
-            Volume = volume,
-            Pitch = pitch
-        });
-    }
     public void StopAllSounds()
     {
         network.Send(new StopSound()
@@ -397,14 +387,6 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     protected void PlayerTick()
     {
         entitiesController.Tick();
-        //1 time per second
-        if (rpgserver.currentTick % 20 == 0)
-        {
-            Echo(Guid.Empty,
-                ChatMessage_clientbound.PositionType.game_info,
-                Chat.ColoredText($"&c{Health:N1}/{MaxHealth:N1}&f"));
-            SendUpdateHealth();
-        }
         foreach(var item in GetEntityInRadius(Position, PlayerSettings.ItemPickUpRadius)
             .Select(x => x as Entities.Item)
             .Where(x => x != null))
@@ -567,16 +549,19 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         if (SelectedItem is Inventory.Items.Sword sword)
             damage = RandomPlus.Range(sword.MinDamage, sword.MaxDamage + 1);
 
+        if (damage == 0)
+            PlayEntitySound(new Sound(804, Categories.PLAYERS));//entity.player.attack.nodamage
+        if (target == null) return;
         target.Health -= damage;
         Task.Run(async () =>
         {
             var h = Hologram.Create(
                 this as Player,
                 target.Position - ForwardDir + new v3f(
-                    RandomPlus.Range(-.5f, .5f),
-                    RandomPlus.Range(-.5f, .5f),
-                    RandomPlus.Range(-.5f, .5f)
-                ) + target.BoxCollider.y / 2 * v3f.up,
+                    RandomPlus.Range(-.25f, .25f),
+                    RandomPlus.Range(-.25f, .25f),
+                    RandomPlus.Range(-.25f, .25f)
+                ).Normalized + target.BoxCollider.y / 2 * v3f.up,
                 $"&c-{damage:N1}");
             await Task.Delay(1000);
             h.Destroy();
@@ -584,6 +569,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     }
     protected override void Death()
     {
+        PlaySound(DeathSound, Position);
         RespawnPlayer();
     }
     public void RespawnPlayer()
@@ -599,5 +585,29 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     public override void SendMaxHealth(NetworkProvider net)
     {
 
+    }
+    public void PlaySound(Sound sound, v3f position, float volume = 1, float pitch = 1)
+    {
+        network.Send(new SoundEffect()
+        {
+            SoundID = sound.ID,
+            x = (int)Math.Floor(position.x * 8),
+            y = (int)Math.Floor(position.y * 8),
+            z = (int)Math.Floor(position.z * 8),
+            SoundCategory = sound.category,
+            Volume = volume,
+            Pitch = pitch,
+        });
+    }
+    public void PlayEntitySound(Sound sound, float volume = 1, float pitch = 1)
+    {
+        network.Send(new EntitySoundEffect()
+        {
+            EntityID = EntityID,
+            SoundID = sound.ID,
+            SoundCategory = sound.category,
+            Volume = volume,
+            Pitch = pitch,
+        });
     }
 }

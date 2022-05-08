@@ -46,6 +46,9 @@ public class LivingEntity : Entity
 
     public List<Player> whoViewMe = new List<Player>();
 
+    public virtual Sound HurtSound => new Sound(812, Categories.PLAYERS);
+    public virtual Sound DeathSound => new Sound(811, Categories.PLAYERS);
+
     public delegate void HealthChangedArgs(LivingEntity sender, float newHealth, float oldHealth);
     public event HealthChangedArgs OnHealthChanged;
     public LivingEntity(World world) : base(world) 
@@ -62,7 +65,10 @@ public class LivingEntity : Entity
     private void LivingEntity_OnTick(Entity entity, long tick)
     {
         if (tick % 20 == 0)
-            Health += RegenerationPerSecond;
+        {
+            if (Health > 0 && Health < MaxHealth)
+                Health += RegenerationPerSecond;
+        }
         if (HealthHolo != null && health == maxHealth)
         {
             HealthHolo.Destroy();
@@ -78,8 +84,11 @@ public class LivingEntity : Entity
         }
         else
         {
-            meta["Health"] = newHealth / maxHealth * 20;
-            ForceUpdateMetadata();
+            lock (meta)
+            {
+                meta["Health"] = newHealth / maxHealth * 20;
+                ForceUpdateMetadata();
+            }
             if (newHealth < oldHealth)
                 TakeDamage();
             HealthHolo?.SetText(HoloText);
@@ -108,13 +117,19 @@ public class LivingEntity : Entity
             HealthHolo = Hologram.Create(world, position + v3f.up * BoxCollider.y + HoloOffset, HoloText);
         }
         foreach (var player in whoViewMe)
+        {
+            player.PlaySound(HurtSound, Position, 1f / v3f.Distance(position, player.position));
             SendPlayAnimation(EntityAnimation_clientbound.AnimationType.TakeDamage, player.network);
+        }
     }
     protected virtual void Death()
     {
-        meta["Health"] = 0;
-        meta["Pose"] = Pose.DYING;
-        ForceUpdateMetadata();
+        lock (meta)
+        {
+            meta["Health"] = 0;
+            meta["Pose"] = Pose.DYING;
+            ForceUpdateMetadata();
+        }
         HealthHolo?.Destroy();
         Task.Run(async () =>
         {

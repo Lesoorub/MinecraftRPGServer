@@ -6,6 +6,7 @@ namespace Inventory.Items
     {
         public float MinDamage;
         public float MaxDamage;
+        public virtual Sound AttackSound => new Sound(806, Categories.PLAYERS);
         public override List<string> GetOreDict()
         {
             var t = base.GetOreDict();
