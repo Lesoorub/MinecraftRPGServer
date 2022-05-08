@@ -38,9 +38,12 @@ public class MetadataBase
         get => GetFieldByName(nameindex, out var _).value;
         set
         {
-            var field = GetFieldByName(nameindex, out var index);
-            field.value = value;
-            changes[index] = Time.GetTime();
+            lock (changes)
+            {
+                var field = GetFieldByName(nameindex, out var index);
+                field.value = value;
+                changes[index] = Time.GetTime();
+            }
         }
     }
 
@@ -64,8 +67,11 @@ public class MetadataBase
     {
         var writer = new ArrayWriter(true);
 
-        foreach (var pair in changes.Where(x => x.Value > mintime))
-            WriteField(writer, pair.Key);
+        lock (changes)
+        {
+            foreach (var pair in changes.Where(x => x.Value > mintime))
+                WriteField(writer, pair.Key);
+        }
 
         writer.Write((byte)0xFF);
         return writer.ToArray();

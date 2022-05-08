@@ -22,8 +22,10 @@ namespace Entities
         public Arrow(World world) : base(world)
         {
             CreateTime = Time.GetTime();
+            OnTick += Arrow_OnTick;
         }
-        public override void Tick()
+
+        private void Arrow_OnTick(Entity entity, long tick)
         {
             if (skipTick) return;
             //Уничтожить если превышено время жизни

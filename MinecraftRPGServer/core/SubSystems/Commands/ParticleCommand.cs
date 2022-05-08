@@ -84,7 +84,7 @@ public class ParticleCommand : IChatCommand
                         float angle = k / allPossibleParticles.Length;
                         var pos = position + new v3f(
                                 (float)Math.Sin(angle * Math.PI * 2) * radius,
-                                1,
+                                1 + (k % 3),
                                 (float)Math.Cos(angle * Math.PI * 2) * radius);
 
                         Particle.Spawn(
@@ -96,10 +96,7 @@ public class ParticleCommand : IChatCommand
                             count: 1);
 
                         if (i == 0)
-                            holograms.Add(particleID, Hologram.Create(player.world, pos, names[(int)particleID]));
-
-                        var height = Math.Max(5 - v3f.Distance(pos, player.Position), 0) / 5;
-                        holograms[particleID].Position = pos + v3f.up * height;
+                            holograms.Add(particleID, Hologram.Create(player.world, pos + v3f.up, names[(int)particleID]));
                     }
                     await Task.Delay(100);
                 }

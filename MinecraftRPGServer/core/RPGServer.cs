@@ -30,8 +30,6 @@ public sealed partial class RPGServer : MineServer.MineServer
 
     public RPGServer(ushort port) : base(port)
     {
-        Chat.ColoredText("  &grad(000000,FFFFFF)TEST&6&grad(000000,FFFFFF)TEST2");
-
         var timer = new System.Diagnostics.Stopwatch();
         timer.Start();
 
@@ -229,13 +227,12 @@ public sealed partial class RPGServer : MineServer.MineServer
                     .SelectMany(x => x.Value.view.entities))
                 {
                     var ent = loaded_ent_pair.Value.entity;
-                    if (ent is Player player) continue;
 
                     if (!ent.Velocity.Equals(new v3f(0, 0, 0)))
                         ent.Position += ent.Velocity;
 
                     if (!ent.isDestroyed)
-                        ent.Tick();
+                        ent.Tick(currentTick);
                 }
                 lastProcessingTick = currentTick;
             }

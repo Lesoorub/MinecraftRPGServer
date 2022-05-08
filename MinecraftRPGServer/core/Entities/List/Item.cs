@@ -24,8 +24,10 @@ namespace Entities
         public Item(World world, Inventory.Item item) : base(world) 
         { 
             (meta as ItemMetadata)["Item"] = item;
+            OnTick += Item_OnTick;
         }
-        public override void Tick()
+
+        private void Item_OnTick(Entity entity, long tick)
         {
             if (elapsedTicks < PickUpDelayInTicks)
                 elapsedTicks++;

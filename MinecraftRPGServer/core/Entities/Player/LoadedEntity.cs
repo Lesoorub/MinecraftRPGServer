@@ -13,7 +13,8 @@ public class LoadedEntity<T> where T : Entity
         this.entity = entity;
         PreviousPosition = entity.Position.Clone();
         PreviousRotation = new v2f(entity.Rotation.x, entity.Rotation.y);
-        PreviousMetadataTime = Time.GetTime();
-        PreviousPositionSyncTime = PreviousMetadataTime;
+        var now = Time.GetTime();
+        PreviousMetadataTime = now;
+        PreviousPositionSyncTime = now;
     }
 }

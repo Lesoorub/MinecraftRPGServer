@@ -64,7 +64,6 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
             SendMetadataUpdate();
         }
     }
-
     public v3f ForwardDir => v3f.FromRotationInvertX(rotation);
     public v3f EyePosition => Position + new v3f(0, IsSneaking ? 1.5f : 1.62f, 0);
     private byte selectedSlot = 0;
@@ -97,6 +96,8 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
 
     public long PreviousRecievedMetadata = 0;
 
+    protected override v3f HoloOffset => new v3f(0, -.2f, 0);
+
     public delegate void ConnectedArgs();
     public event ConnectedArgs OnConnected;
 
@@ -107,27 +108,9 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         //Привязка функционала перемещения игрока на клиенте при изменении позиции чем-либо
         OnPositionChanged += PlayerProtocol_OnPositionChanged;
 
-        OnHealthChanged += PlayerProtocol_OnHealthChanged;
-
         keepAlive.Init(this as Player);
         worldController.Init(this as Player);
         entitiesController.Init(this as Player);
-    }
-
-    private void PlayerProtocol_OnHealthChanged(float newHealth, float oldHealth)
-    {
-        if (newHealth < oldHealth)
-        {
-            //Отправить видимым игрокам анимацию удара по мне
-            PlayAnimation(EntityAnimation_clientbound.AnimationType.TakeDamage);
-        }
-        if (newHealth > MaxHealth)
-            newHealth = MaxHealth;
-        if (Math.Abs(newHealth - oldHealth) > RegenerationPerSecond)
-            Console.WriteLine($"EID: {EntityID}, HP: {base.Health} -> {newHealth}");
-
-        if (oldHealth == 0)
-            RespawnPlayer();
     }
 
     private void PlayerProtocol_OnPositionChanged(v3f lastposition, v3f newposition)
@@ -202,13 +185,12 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     {
         rpgserver.OnLogOut -= Rpgserver_OnLogOut;
 
-        var arrayWithSelf = new int[] { EntityID };
         Player.players.TryRemove(player.data.username, out var _);
         //Уничтожить себя у других игроков
         foreach (var entitypair in view.players)
         {
             if (entitypair.Value.entity.isInit)
-                entitypair.Value.entity.SendDestroyEntities(arrayWithSelf);
+                entitypair.Value.entity.entitiesController.UnloadEntity(EntityID);
         }
     }
 
@@ -245,6 +227,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     {
         if (position.Equals(newposition)) return;
         var lastcpos = ChunkPos;
+        LivingEntity_OnPositionChanged(position, newposition);
         position = newposition;
         if (!lastcpos.Equals(ChunkPos))
             OnChunkChanged_Invoke(lastcpos, ChunkPos);
@@ -400,19 +383,6 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         foreach (var network in networks)
             network.Send(t);
     }
-    public void SendDestroyEntities(IEnumerable<int> entities)
-    {
-        if (entities.Count() == 0) return;
-        network.Send(new DestroyEntities()
-        {
-            Entities = entities.Select(x => new VarInt(x)).ToArray()
-        });
-        view.Remove(entities);
-        foreach (var entity in entities)
-        {
-            Console.WriteLine($"Destroy entity with EID={entity}");
-        }
-    }
     public void SendCollectItem(int WhoIED, int ItemEID, int count)
     {
         network.Send(new CollectItem()
@@ -423,14 +393,13 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         });
     }
 
-    public override void Tick()
+
+    protected void PlayerTick()
     {
         entitiesController.Tick();
-        //2 times per second
-        if (rpgserver.currentTick % 10 == 0)
+        //1 time per second
+        if (rpgserver.currentTick % 20 == 0)
         {
-            Health += RegenerationPerSecond / 2;
-
             Echo(Guid.Empty,
                 ChatMessage_clientbound.PositionType.game_info,
                 Chat.ColoredText($"&c{Health:N1}/{MaxHealth:N1}&f"));
@@ -482,6 +451,9 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
 
         SendMetadataUpdate();
     }
+    /// <summary>
+    /// Обновить метаданные на своем клиенте и клиентах которые видят игрока
+    /// </summary>
     public void SendMetadataUpdate()
     {
         var now = Time.GetTime();
@@ -509,14 +481,6 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
                 loaded_ent_pair.Value.PreviousMetadataTime = now;
     } 
 
-    public void SendPlayAnimation(EntityAnimation_clientbound.AnimationType animation, NetworkProvider net)
-    {
-        net.Send(new EntityAnimation_clientbound()
-        {
-            EntityID = EntityID,
-            Animation = animation
-        });
-    }
     public void PlayAnimation(EntityAnimation_clientbound.AnimationType animation) =>
         BroadcastInLoadedPlayers((other_player) => SendPlayAnimation(animation, other_player.network));
 
@@ -587,7 +551,6 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
                 });
             }
     }
-
     public void SendUpdateHealth()
     {
         network.Send(new UpdateHealth()
@@ -600,18 +563,41 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     public float GetMaxHealth() => Player.baseMaxHealth;
     public void Attack(LivingEntity target)
     {
-        if (!(SelectedItem is Inventory.Items.Sword sword))
+        var damage = Player.baseHandDamage;
+        if (SelectedItem is Inventory.Items.Sword sword)
+            damage = RandomPlus.Range(sword.MinDamage, sword.MaxDamage + 1);
+
+        target.Health -= damage;
+        Task.Run(async () =>
         {
-            target.Health -= Player.baseHandDamage;
-            return;
-        }
-        target.Health -= RandomPlus.Range(sword.MinDamage, sword.MaxDamage + 1);
+            var h = Hologram.Create(
+                this as Player,
+                target.Position - ForwardDir + new v3f(
+                    RandomPlus.Range(-.5f, .5f),
+                    RandomPlus.Range(-.5f, .5f),
+                    RandomPlus.Range(-.5f, .5f)
+                ) + target.BoxCollider.y / 2 * v3f.up,
+                $"&c-{damage:N1}");
+            await Task.Delay(1000);
+            h.Destroy();
+        });
+    }
+    protected override void Death()
+    {
+        RespawnPlayer();
     }
     public void RespawnPlayer()
     {
         MaxHealth = GetMaxHealth();
         Health = MaxHealth;
+        meta["Health"] = Health / MaxHealth * 20;
+        meta["Pose"] = Pose.STANDING;
+        ForceUpdateMetadata();
         PlayerTitle.SetTitles(network, Chat.ColoredText($"&4Вы умерли"), 0, 5 * 20, 20);
         Position = world.SpawnPoint.Clone();
+    }
+    public override void SendMaxHealth(NetworkProvider net)
+    {
+
     }
 }

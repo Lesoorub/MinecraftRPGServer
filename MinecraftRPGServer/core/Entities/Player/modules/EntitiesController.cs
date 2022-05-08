@@ -2,6 +2,7 @@
 using MineServer;
 using System;
 using System.Linq;
+using Packets.Play;
 
 public class EntitiesController : IModule
 {
@@ -9,9 +10,44 @@ public class EntitiesController : IModule
     EntityView view => player.view;
     NetworkProvider network => player.network;
     RPGServer rpgserver => player.rpgserver;
+
+    public delegate void EntitySpawnArgs(Entity entity);
+    public event EntitySpawnArgs OnEntitySpawn;
+
+    public delegate void EntityDespawnArgs(Entity entity);
+    public event EntityDespawnArgs OnEntityDespawn;
+
     public void Init(Player player)
     {
         this.player = player;
+        OnEntitySpawn += EntitiesController_OnEntitySpawn;
+        OnEntityDespawn += EntitiesController_OnEntityDespawn;
+    }
+
+
+    private void EntitiesController_OnEntitySpawn(Entity entity)
+    {
+        Console.WriteLine($"Spawn entity with EID={entity.EntityID} {entity.GetType()}");
+        if (entity is LivingEntity living)
+        {
+            lock (living.whoViewMe)
+            {
+                living.whoViewMe.Add(player);
+            }
+
+            living.SendMaxHealth(player.network);
+        }
+    }
+    private void EntitiesController_OnEntityDespawn(Entity entity)
+    {
+        Console.WriteLine($"Destroy entity with EID={entity.EntityID} {entity.GetType()}");
+        if (entity is LivingEntity living)
+        {
+            lock (living.whoViewMe)
+            {
+                living.whoViewMe.Remove(player);
+            }
+        }
     }
 
     public void Tick()
@@ -23,18 +59,12 @@ public class EntitiesController : IModule
             //Обновление метадаты клиента всех видимых ентити
             foreach (var entity in view.entities)
             {
-                var changes = entity.Value.entity.meta.GetMetadataChanges(entity.Value.PreviousMetadataTime);
-                if (changes.Length == 1) continue;
+                SendMetadataChanges(entity.Value.entity, entity.Value.PreviousMetadataTime);
                 entity.Value.PreviousMetadataTime = Time.GetTime();
-                network.Send(new Packets.Play.EntityMetadata()
-                {
-                    EntityID = entity.Key,
-                    Metadata = changes
-                });
             }
         }
         //Удалить всех кто уже не числится в реестре энтити
-        player.SendDestroyEntities(view.entities
+        player.entitiesController.UnloadEntities(view.entities
             .Where(x => x.Value.entity.isDestroyed)
             .Select(x => x.Key));
         //Обновление позиций всех загруженных(видимых) энтити
@@ -76,21 +106,38 @@ public class EntitiesController : IModule
     /// Создает энтити на клиенте
     /// </summary>
     /// <param name="entity"></param>
-    public void LoadEntity(Entity entity)
+    public bool LoadEntity(Entity entity)
     {
-        if (entity.EntityID == player.EntityID) return;//Пропускаем себя
-        if (view.entities.ContainsKey(entity.EntityID)) return;//Пропускаем всех уже загруженных
+        if (entity.EntityID == player.EntityID) return false;//Пропускаем себя
+        if (view.entities.ContainsKey(entity.EntityID)) return false;//Пропускаем всех уже загруженных
         if (entity is IEntityProtocol protocol)//Выбираем только тех кто в зоне видимости и которых можно создать
         {
             var nets = new NetworkProvider[] { network };
             protocol.SendSpawn(nets);//Создать на клиенте
             view.Add(entity);//Добавить в загруженные
-            Console.WriteLine($"Spawn entity with EID={entity.EntityID}");
+            OnEntitySpawn?.Invoke(entity);
+            return true;
         }
+        return false;
+    }
+    public void UnloadEntities(IEnumerable<int> EIDs)
+    {
+        foreach (var EID in EIDs)
+        {
+            var entity = player.world.entities.GetByEID(EID);
+            if (entity != null)
+                OnEntityDespawn?.Invoke(entity);
+        }
+        SendDestroyEntities(EIDs);//Удалить все выбранные у клиента и из загруженных
     }
     public void UnloadEntity(int EID)
     {
-        player.SendDestroyEntities(new int[] { EID });//Удалить все выбранные у клиента и из загруженных
+        var entity = player.world.entities.GetByEID(EID);
+        if (entity != null)
+        {
+            OnEntityDespawn?.Invoke(entity);
+        }
+        SendDestroyEntities(new int[] { EID });//Удалить все выбранные у клиента и из загруженных
     }
     /// <summary>
     /// Создает энтити появившихся в поле зрения клиента и удаляет энтити которых уже нет в поле зрения
@@ -107,7 +154,7 @@ public class EntitiesController : IModule
                 x.Value.entity.isDestroyed || //Ентити уничтожено
                 v3f.SqrDistance(x.Value.entity.Position, player.Position) >= unloadSqrDistance; //Ентити дальше радиуса выгрузки
             if (view.entities.Any(x => f(x)))
-                player.SendDestroyEntities(view.entities
+                UnloadEntities(view.entities
                     .Where(x => f(x))
                     .Select(x => x.Key));
         }
@@ -115,15 +162,32 @@ public class EntitiesController : IModule
         //Добавить все энтити находящиеся в зоне видимости
         foreach (var entity in player.GetEntityInRadius(player.Position, cfg.MaxDrawEntitiesRange))
         {
-            LoadEntity(entity);
-            //Отправить метаданные
-            var changes = entity.meta.GetMetadataChanges(0);
-            if (changes.Length == 1) continue;
-            network.Send(new Packets.Play.EntityMetadata()
+            if (LoadEntity(entity))
             {
-                EntityID = entity.EntityID,
-                Metadata = changes
-            });
+                //Отправить метаданные
+                SendMetadataChanges(entity);
+            }
         }
+    }
+
+    public void SendMetadataChanges(Entity entity, long lastupdate = 0)
+    {
+        var changes = entity.meta.GetMetadataChanges(lastupdate);
+        if (changes.Length == 1) return;
+        network.Send(new Packets.Play.EntityMetadata()
+        {
+            EntityID = entity.EntityID,
+            Metadata = changes
+        });
+    }
+
+    public void SendDestroyEntities(IEnumerable<int> entities)
+    {
+        if (entities.Count() == 0) return;
+        network.Send(new DestroyEntities()
+        {
+            Entities = entities.Select(x => new VarInt(x)).ToArray()
+        });
+        view.Remove(entities);
     }
 }

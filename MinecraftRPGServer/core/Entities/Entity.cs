@@ -10,7 +10,7 @@ public abstract class Entity
 {
     private static int global_id = 1;
 
-    public int EntityID;
+    public int EntityID { get; set; }
     /// <summary>
     /// What's is it?
     /// </summary>
@@ -61,15 +61,13 @@ public abstract class Entity
     public delegate void DestroyArgs();
     public event DestroyArgs OnDestroy;
 
+    public delegate void TickArgs(Entity entity, long tick);
+    public event TickArgs OnTick;
+
     public Entity(World world)
     {
         this.world = world;
-        while (world.entities.HasEID(global_id))
-        {
-            global_id++;
-            global_id %= int.MaxValue - 1;
-        }
-        EntityID = global_id;
+        EntityID = GetUniqEnityID();
         meta.InitFields();
         world.entities.Add(this);
         //Реализация тригера при перемещении между чанками для корректной работы системы энтити в мире
@@ -218,7 +216,10 @@ public abstract class Entity
                 pl_pair.Value.entitiesController.LoadEntity(this);
     }
 
-    public virtual void Tick() { }
+    public void Tick(long tick) 
+    {
+        OnTick?.Invoke(this, tick);
+    }
 
     public static Dictionary<string, Type> EntityList = new Dictionary<string, Type>();
     public static void InitEntities()
@@ -227,5 +228,14 @@ public abstract class Entity
         {
             EntityList.Add(ent_type.GetCustomAttribute<EntityAttribute>().nameid, ent_type);
         }
+    }
+    public static int GetUniqEnityID()
+    {
+        //while (world.entities.HasEID(global_id))
+        //{
+        //    global_id++;
+        //    global_id %= int.MaxValue - 1;
+        //}
+        return global_id++;
     }
 }

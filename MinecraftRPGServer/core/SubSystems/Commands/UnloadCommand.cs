@@ -22,6 +22,6 @@ public class UnloadCommand : IChatCommand
     void Execute(Player player, string[] args)
     {
         if (args.Length >= 1 && args[0].Equals("entities"))
-            player.SendDestroyEntities(player.view.entities.Select(x => x.Key));
+            player.entitiesController.UnloadEntities(player.view.entities.Select(x => x.Key));
     }
 }

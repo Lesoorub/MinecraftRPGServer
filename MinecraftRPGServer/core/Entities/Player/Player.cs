@@ -14,7 +14,7 @@ public class Player : PlayerProtocol
     public override EntityMetadata meta { get; set; } = new PlayerMetadata();
     public PlayerData data;
     public const float baseMaxHealth = 100;
-    public const float baseHandDamage = 5;
+    public const float baseHandDamage = 1;
 
     /// <summary>
     /// Перенос значений из даты в игрока
@@ -49,7 +49,7 @@ public class Player : PlayerProtocol
         keepAlive.Tick();
 
         if (isInit)
-            Tick();
+            PlayerTick();
     }
     public static IEnumerable<Player> GetInWorld(World world) => players.Where(x => x.Value.world.Equals(world)).Select(x => x.Value);
     public static IEnumerable<Player> GetInWorldWithDistance(World world, v3f point, float radius) => players

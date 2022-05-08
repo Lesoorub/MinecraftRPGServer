@@ -875,5 +875,31 @@ namespace Packets.Play
         public float Pitch;
 
     }
+    [BoundToClientPackage]
+    public class EntityProperties : MSerializableToBytes, IPacket
+    {
+        public override int package_id => 0x64;
+
+        public VarInt EntityID;
+        public Property[] Properties;
+        public class Property : SerializableToBytesBigEndian
+        {
+            public string Key;
+            public double Value;
+            public ModiferData[] Modifers;
+        }
+        public class ModiferData : SerializableToBytesBigEndian
+        {
+            public Guid UUID;
+            public double Amount;
+            public ModiferOperation Operation;
+        }
+        public enum ModiferOperation : byte
+        {
+            Add_Subtract_amount = 0,
+            Add_Subtract_amount_percent_of_the_current_value = 1,
+            Multiply_by_amount_percent = 2,
+        }
+    }
     #endregion
 }

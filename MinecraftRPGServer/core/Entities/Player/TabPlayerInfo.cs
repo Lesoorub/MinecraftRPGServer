@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using MineServer;
 using Packets.Play;
 
@@ -9,7 +10,7 @@ public class TabPlayerInfo
     public const int UpdateDelayMs = 5000;
     public RPGServer server;
     public Thread thread;
-    PerformanceCounter PC = new PerformanceCounter("Process", "Working Set - Private", ProcessName());
+    PerformanceCounter PC;
     static readonly string header = Chat.ColoredText("&grad(fc4300,246bd8)ARHELLIUM").ToString();
     static string footer;
     public TabPlayerInfo(RPGServer server)
@@ -20,6 +21,7 @@ public class TabPlayerInfo
 
         thread = new Thread(() =>
         {
+            PC = new PerformanceCounter("Process", "Working Set - Private", ProcessName());
             while (server.isStarted)
             {
                 Tick();
@@ -145,6 +147,8 @@ public class TabPlayerInfo
     }
     public float GetRam()
     {
-        return PC.NextValue() / (1024 * 1024);
+        if (PC != null)
+            return PC.NextValue() / (1024 * 1024);
+        return float.NaN;
     }
 }

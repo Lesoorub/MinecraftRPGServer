@@ -1,5 +1,8 @@
-﻿using System;
+﻿using MineServer;
+using Packets.Play;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 public class LivingEntity : Entity
 {
@@ -9,10 +12,16 @@ public class LivingEntity : Entity
     public virtual float HeadYaw { get; set; }
     public virtual float MaxHealth 
     {
-        get => maxHealth; set
+        get => maxHealth; 
+        set
         {
             maxHealth = value;
             Health = Math.Min(Health, maxHealth);
+            lock (whoViewMe)
+            {
+                foreach (var player in whoViewMe)
+                    SendMaxHealth(player.network);
+            }
         }
     }
     public virtual float RegenerationPerSecond { get; set; } = 1;
@@ -26,12 +35,128 @@ public class LivingEntity : Entity
             {
                 var oldHealth = health;
                 health = value;
-                OnHealthChanged?.Invoke(health, oldHealth);
+                OnHealthChanged?.Invoke(this, health, oldHealth);
             }
         }
     }
-    
-    public delegate void HealthChangedArgs(float newHealth, float oldHealth);
+
+    protected Hologram HealthHolo;
+    protected virtual bool HasHealthHolo => true;
+    protected virtual v3f HoloOffset => v3f.zero;
+
+    public List<Player> whoViewMe = new List<Player>();
+
+    public delegate void HealthChangedArgs(LivingEntity sender, float newHealth, float oldHealth);
     public event HealthChangedArgs OnHealthChanged;
-    public LivingEntity(World world) : base(world) { }
+    public LivingEntity(World world) : base(world) 
+    {
+        if (HasHealthHolo)
+        {
+            OnPositionChanged += LivingEntity_OnPositionChanged;
+            OnDestroy += LivingEntity_OnDestroy;
+            OnHealthChanged += LivingEntity_OnHealthChanged;
+        }
+        OnTick += LivingEntity_OnTick;
+    }
+
+    private void LivingEntity_OnTick(Entity entity, long tick)
+    {
+        if (tick % 20 == 0)
+            Health += RegenerationPerSecond;
+        if (HealthHolo != null && health == maxHealth)
+        {
+            HealthHolo.Destroy();
+            HealthHolo = null;
+        }
+    }
+
+    private void LivingEntity_OnHealthChanged(LivingEntity sender, float newHealth, float oldHealth)
+    {
+        if (newHealth <= 0)
+        {
+            Death();
+        }
+        else
+        {
+            meta["Health"] = newHealth / maxHealth * 20;
+            ForceUpdateMetadata();
+            if (newHealth < oldHealth)
+                TakeDamage();
+            HealthHolo?.SetText(HoloText);
+        }
+    }
+
+    private void LivingEntity_OnDestroy()
+    {
+        OnPositionChanged -= LivingEntity_OnPositionChanged;
+        OnHealthChanged -= LivingEntity_OnHealthChanged;
+        OnTick -= LivingEntity_OnTick;
+        OnDestroy -= LivingEntity_OnDestroy;
+        HealthHolo?.Destroy();
+    }
+
+    protected void LivingEntity_OnPositionChanged(v3f lastposition, v3f newposition)
+    {
+        if (HealthHolo != null)
+            HealthHolo.Position = newposition + v3f.up * BoxCollider.y + HoloOffset;
+    }
+    protected virtual void TakeDamage()
+    {
+        if (HealthHolo == null && 
+            health != maxHealth)
+        {
+            HealthHolo = Hologram.Create(world, position + v3f.up * BoxCollider.y + HoloOffset, HoloText);
+        }
+        foreach (var player in whoViewMe)
+            SendPlayAnimation(EntityAnimation_clientbound.AnimationType.TakeDamage, player.network);
+    }
+    protected virtual void Death()
+    {
+        meta["Health"] = 0;
+        meta["Pose"] = Pose.DYING;
+        ForceUpdateMetadata();
+        HealthHolo?.Destroy();
+        Task.Run(async () =>
+        {
+            await Task.Delay(1000);
+            Destroy();
+        });
+    }
+
+    public void SendPlayAnimation(EntityAnimation_clientbound.AnimationType animation, NetworkProvider net)
+    {
+        net.Send(new EntityAnimation_clientbound()
+        {
+            EntityID = EntityID,
+            Animation = animation
+        });
+    }
+    public void ForceUpdateMetadata()
+    {
+        foreach (var player in whoViewMe)
+            player.entitiesController.SendMetadataChanges(this);
+    }
+    private string HoloText
+    {
+        get
+        {
+            const int len = 20;
+            return "&c" + new string('|', len).Insert((int)(health / maxHealth * len), "&4");
+        }
+    }
+    public virtual void SendMaxHealth(NetworkProvider net)
+    {
+        //net.Send(new EntityProperties()
+        //{
+        //    EntityID = EntityID,
+        //    Properties = new EntityProperties.Property[]
+        //    {
+        //            new EntityProperties.Property()
+        //            {
+        //                Key = "generic.max_health",
+        //                Value = MaxHealth,
+        //            }
+        //    }
+        //});
+    }
 }
