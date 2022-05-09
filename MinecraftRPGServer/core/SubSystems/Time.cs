@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 public static class Time
 {
-    public static long GetTime() => new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
+    public static long Now() => new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds();
 }

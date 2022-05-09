@@ -42,15 +42,16 @@ public class ParticleCommand : IChatCommand
                         {
                             Flags = Node.FlagsEnum.literal | Node.FlagsEnum.IsExecutable,
                             Name = "ID",
-                            Childrens = 
-                                Enum.GetNames(typeof(Particles))
-                                .Where(x => !ignore.Contains((int)(Particles)Enum.Parse(typeof(Particles), x)))
-                                .Select(x => new Node()
-                                {
-                                    Name = x,
-                                    Flags = Node.FlagsEnum.literal | Node.FlagsEnum.IsExecutable
-                                })
-                                .ToList()
+                            Parser = Node.Parsers.particle,
+                            //Childrens = 
+                            //    Enum.GetNames(typeof(Particles))
+                            //    .Where(x => !ignore.Contains((int)(Particles)Enum.Parse(typeof(Particles), x)))
+                            //    .Select(x => new Node()
+                            //    {
+                            //        Name = x,
+                            //        Flags = Node.FlagsEnum.literal | Node.FlagsEnum.IsExecutable
+                            //    })
+                            //    .ToList()
                         }
                     }
                 }
@@ -106,7 +107,25 @@ public class ParticleCommand : IChatCommand
         }
         if (args.Length == 2 && args[0] == "spawn")
         {
-
+            var particle_names = Enum.GetNames(typeof(Particles));
+            var particle_index = Array.IndexOf(particle_names, args[1].Replace("minecraft:", ""));
+            if (particle_index == -1)
+            {
+                player.EchoIntoChatFromServer($"&4Particle not found");
+                return;
+            }
+            if (new int[] { 2, 3, 14, 15, 24, 35, 36 }.Contains(particle_index))
+            {
+                player.EchoIntoChatFromServer($"&4Can't spawn this particle");
+                return;
+            }
+            Particle.Spawn(
+                world: player.world,
+                id: (Particles)particle_index,
+                player.Position,
+                offset: v3f.zero,
+                data: 0,
+                1);
         }
     }
 }

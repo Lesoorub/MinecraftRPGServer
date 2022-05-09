@@ -17,7 +17,7 @@ namespace Inventory
     {
         [JsonIgnore]
         public bool Present { get => itemCount != 0; }
-        public ItemID ItemID { get; set; }
+        public virtual ItemID ItemID { get; set; }
         private byte itemCount = 0;
         public byte ItemCount
         {
@@ -58,11 +58,11 @@ namespace Inventory
         }
         
         [JsonIgnore]
-        public string Name;
+        public virtual string Name { get; set; }
         [JsonIgnore]
         public Chat ChatName;
         [JsonIgnore]
-        public string[] Lore;
+        public virtual string[] Lore { get; set; }
         public int Damage;
 
         public virtual List<string> GetOreDict() => new List<string>() { GetNameID(ItemID) };
@@ -90,12 +90,12 @@ namespace Inventory
         {
             var timer = new Stopwatch();
             timer.Start();
-
             foreach (var item_type in RPGServer.GetTypesWithAttribute<ItemAttribute>())
             {
                 var attr = item_type.GetCustomAttribute<ItemAttribute>();
                 itemTypes.Add(attr.itemID, item_type);
             }
+            Items.RPGItem.Init();
             timer.Stop();
             Console.WriteLine($"{itemTypes.Count} Items loaded for {((double)timer.ElapsedTicks / TimeSpan.TicksPerMillisecond):N3} ms");
         }

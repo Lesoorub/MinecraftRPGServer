@@ -8,5 +8,4 @@
             player.EchoIntoChatFromServer("use");
         }
     }
-
 }

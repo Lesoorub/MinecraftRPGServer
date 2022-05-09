@@ -13,5 +13,7 @@ namespace Inventory.Items
             t.Add("minecraft:sword");
             return t;
         }
+
+        public Sword(ItemID itemID) : base(itemID) { }
     }
 }

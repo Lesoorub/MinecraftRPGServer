@@ -166,11 +166,11 @@ public class LivingEntity : Entity
             EntityID = EntityID,
             Properties = new EntityProperties.Property[]
             {
-                    new EntityProperties.Property()
-                    {
-                        Key = "generic.max_health",
-                        Value = MaxHealth,
-                    }
+                new EntityProperties.Property()
+                {
+                    Key = "generic.max_health",
+                    Value = 20,
+                }
             }
         });
     }

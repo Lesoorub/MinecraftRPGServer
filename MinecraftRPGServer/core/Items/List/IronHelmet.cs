@@ -3,10 +3,6 @@
     [Item(ItemID.iron_helmet)]
     public class IronHelmet : Helmet
     {
-        public IronHelmet()
-        {
-            Health = 10;
-        }
+        public IronHelmet() : base(ItemID.iron_helmet) { }
     }
-
 }

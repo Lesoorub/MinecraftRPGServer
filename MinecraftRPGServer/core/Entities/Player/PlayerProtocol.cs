@@ -440,7 +440,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     /// </summary>
     public void SendMetadataUpdate()
     {
-        var now = Time.GetTime();
+        var now = Time.Now();
         bool Send(long last, NetworkProvider net)
         {
             var changes = meta.GetMetadataChanges(last);
@@ -547,12 +547,21 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     public float GetMaxHealth() => Player.baseMaxHealth;
     public void Attack(LivingEntity target)
     {
+        if (Time.Now() - LastAttackTime < AttackDelayTime) return;
+        LastAttackTime = Time.Now();
+
+        var sound = new Sound(SoundID.entity_player_attack_weak, Categories.PLAYERS);
         var damage = Player.baseHandDamage;
         if (SelectedItem is Inventory.Items.Sword sword)
+        {
             damage = RandomPlus.Range(sword.MinDamage, sword.MaxDamage + 1);
+            sound = sword.AttackSound;
+        }
 
         if (damage == 0)
             PlayEntitySound(new Sound(SoundID.entity_player_attack_nodamage, Categories.PLAYERS));
+        else
+            PlayEntitySound(sound);
         if (target == null) return;
         target.Health -= damage;
         Task.Run(async () =>

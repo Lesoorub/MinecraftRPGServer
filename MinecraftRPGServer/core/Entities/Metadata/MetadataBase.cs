@@ -42,7 +42,7 @@ public class MetadataBase
             {
                 var field = GetFieldByName(nameindex, out var index);
                 field.value = value;
-                changes[index] = Time.GetTime();
+                changes[index] = Time.Now();
             }
         }
     }

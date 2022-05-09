@@ -5,6 +5,7 @@ namespace Inventory.Items
 {
     public class Helmet : Armor
     {
+        public Helmet(ItemID itemID) : base(itemID) { }
         public override List<string> GetOreDict()
         {
             var t = base.GetOreDict();

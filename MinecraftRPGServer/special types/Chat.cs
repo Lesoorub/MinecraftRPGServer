@@ -185,6 +185,24 @@ public struct Chat : ISerializable, IDeserializable
                 continue;
             }
         }
+        if (!string.IsNullOrEmpty(str))
+        {
+            if (list.Count == 0)
+                list.Add(new Chat(str)
+                {
+                    bold = bold,
+                    italic = italic,
+                    underlined = underlined,
+                    strikethrough = strikethrough,
+                    obfuscated = obfuscated,
+                });
+            else
+            {
+                var t = list[list.Count - 1];
+                t.text += str;
+                list[list.Count - 1] = t;
+            }
+        }
         return new Chat()
         {
             text = "",

@@ -74,8 +74,8 @@ public class Node : ISerializable
         public readonly static string nbt_tag            = "minecraft:nbt_tag";
         public readonly static string nbt_compound_tag   = "minecraft:nbt_compound_tag";
         public readonly static string time               = "minecraft:time";
-        public readonly static string modid              = "forge:modid";
-        public readonly static string @enum              = "forge:enum";
+        //public readonly static string modid              = "forge:modid";
+        //public readonly static string @enum              = "forge:enum";
 
         public class DoubleParser : ParserProp
         {

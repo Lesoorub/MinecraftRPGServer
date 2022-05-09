@@ -21,7 +21,7 @@ namespace Entities
         long CreateTime;
         public Arrow(World world) : base(world)
         {
-            CreateTime = Time.GetTime();
+            CreateTime = Time.Now();
             OnTick += Arrow_OnTick;
         }
 
@@ -29,7 +29,7 @@ namespace Entities
         {
             if (skipTick) return;
             //Уничтожить если превышено время жизни
-            if (Time.GetTime() - CreateTime >= Inventory.Items.Bow.ArrayLifetimeMs)
+            if (Time.Now() - CreateTime >= Inventory.Items.Bow.ArrayLifetimeMs)
             {
                 Destroy();
                 return;
@@ -58,7 +58,7 @@ namespace Entities
                     foreach (var block in hit.blocks)
                         Particle.Spawn(sender.world, Particles.glow_squid_ink,
                             (v3f)block + new v3f(.5f, .5f, .5f), new v3f(0, 0, 0), 0, 10);
-                    CreateTime = Time.GetTime();
+                    CreateTime = Time.Now();
                 }
 
             }

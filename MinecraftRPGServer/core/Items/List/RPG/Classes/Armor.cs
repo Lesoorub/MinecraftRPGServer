@@ -4,7 +4,9 @@ namespace Inventory.Items
 {
     public class Armor : RPGItem, IUsable
     {
-        public float Health;
+        public virtual float Health { get; set; }
+
+        public Armor(ItemID itemID) : base(itemID) { }
 
         public override List<string> GetOreDict()
         {
