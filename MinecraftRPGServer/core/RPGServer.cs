@@ -24,7 +24,7 @@ public sealed partial class RPGServer : MineServer.MineServer
     public long currentTick = 0;
     public DateTime lastTickTime;
     public TabPlayerInfo tab;
-
+    public const int TicksPerSecond = 20;
     public RPGServer(ushort port) : base(port)
     {
         var timer = new System.Diagnostics.Stopwatch();

@@ -68,6 +68,7 @@ public class Hologram
     {
         protected override bool HasHealthHolo => false;
         public bool visible = true;
+        public override float Health { get => 0; set { } }
         public bool Visible 
         { 
             get => visible;

@@ -36,4 +36,9 @@ public class v2f
         hashCode = hashCode * -1521134295 + y.GetHashCode();
         return hashCode;
     }
+    public static v2f FromAngle(float radianAngle)
+    {
+        var t = (2 * Math.PI * radianAngle) / 360;
+        return new v2f((float)Math.Cos(t), (float)Math.Sin(t));
+    }
 }

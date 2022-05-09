@@ -12,6 +12,24 @@ public abstract class Particle : SerializableToBytesBigEndian
         bytes = new byte[0]
     };
 
+    public static void SpawnHorizontalCircle(
+        World world, 
+        Particles id, 
+        v3f position, 
+        v3f offset, 
+        float data, 
+        int count, 
+        float Radius, 
+        float circleParticles = 36, 
+        params object[] additive)
+    {
+        for (float k = 0; k < circleParticles; k++)
+        {
+            var t = v2f.FromAngle(k / circleParticles * 360f) * Radius;
+            Spawn(world, id, position + new v3f(t.x, 0, t.y), offset, data, count, additive);
+        }
+    }
+
     /// <summary>
     /// Send all players in world (in visible range)
     /// </summary>

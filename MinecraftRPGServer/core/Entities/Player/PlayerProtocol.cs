@@ -99,6 +99,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     public long PreviousRecievedMetadata = 0;
     public long LastAttackTime = 0;
     public const int AttackDelayTime = 200;
+    public Dictionary<ItemID, long> Cooldowns = new Dictionary<ItemID, long>();
 
     protected override v3f HoloOffset => new v3f(0, -.2f, 0);
 
@@ -180,6 +181,8 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
 
         SendEquipments();
         SendMetadataUpdate();
+
+        inventory.Init(this as Player);
     }
     public void DropItem(ref Item item, byte count)
     {
@@ -566,20 +569,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         else
             PlayEntitySound(sound);
         if (target == null) return;
-        target.Health -= damage;
-        Task.Run(async () =>
-        {
-            var h = Hologram.Create(
-                this as Player,
-                target.Position - ForwardDir + new v3f(
-                    RandomPlus.Range(-.25f, .25f),
-                    RandomPlus.Range(-.25f, .25f),
-                    RandomPlus.Range(-.25f, .25f)
-                ).Normalized + target.BoxCollider.y / 2 * v3f.up,
-                $"&c-{damage:N1}");
-            await Task.Delay(1000);
-            h.Destroy();
-        });
+        ApplyDamageToTarget(target, damage);
     }
     protected override void Death()
     {
@@ -622,6 +612,32 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
             SoundCategory = sound.category,
             Volume = volume,
             Pitch = pitch,
+        });
+    }
+    public void SendCooldown(ItemID ItemID, int ticks)
+    {
+        network.Send(new SetCooldown()
+        {
+            ItemID = (int)ItemID,
+            CooldownTicks = ticks
+        });
+    }
+
+    public void ApplyDamageToTarget(LivingEntity target, float damage)
+    {
+        target.Health -= damage;
+        Task.Run(async () =>
+        {
+            var h = Hologram.Create(
+                this as Player,
+                target.Position + new v3f(
+                    RandomPlus.Range(-.25f, .25f),
+                    RandomPlus.Range(-.25f, .25f),
+                    RandomPlus.Range(-.25f, .25f)
+                ).Normalized + target.BoxCollider.y / 2 * v3f.up,
+                $"&c-{damage:N1}");
+            await Task.Delay(1000);
+            h.Destroy();
         });
     }
 }

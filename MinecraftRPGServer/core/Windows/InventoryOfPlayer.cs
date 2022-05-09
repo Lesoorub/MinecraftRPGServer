@@ -1,4 +1,5 @@
 ﻿using static Inventory.Item;
+using System.Linq;
 
 namespace Inventory
 {
@@ -23,6 +24,20 @@ namespace Inventory
 
         //public delegate void InventoryChangedArgs();
         //public event InventoryChangedArgs OnInventoryChanged;
+
+        public void Init(Player player)
+        {
+            foreach (var rpgItem in mainInv
+                .Concat(hotbar)
+                .Concat(Armor)
+                .Concat(Craft)
+                .Concat(new IndexedItem[] { Offhand, CarriedItem })
+                .Select(x => x.item as Items.RPGItem)
+                .Where(x => x != null))
+            {
+                rpgItem.Init(player);
+            }
+        }
 
         public bool AddItem(ref Item item)
         {

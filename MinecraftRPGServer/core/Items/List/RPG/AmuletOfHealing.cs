@@ -11,7 +11,7 @@ namespace Inventory.Items
         [JsonIgnore]
         int ReloadTime = 5;
         [JsonIgnore]
-        int ReloadTicks => ReloadTime * 20;
+        int ReloadTicks => ReloadTime * RPGServer.TicksPerSecond;
         public override string Type => "Amulet";
         public AmuletOfHealing()
         {
@@ -31,6 +31,8 @@ namespace Inventory.Items
                 Particle.Spawn(player.world, Particles.happy_villager, player.Position + v3f.up, v3f.one, 0, 10);
                 player.EchoIntoChatFromServer($"&c+{power} ♥");
             }
+            else
+                player.EchoIntoChatFromServer($"Reloading {(player.Cooldowns[ItemID] - player.rpgserver.currentTick) / RPGServer.TicksPerSecond} second(s)");
         }
     }
 }

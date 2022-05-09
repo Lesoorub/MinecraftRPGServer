@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
+using Newtonsoft.Json;
 
 namespace Inventory.Items
 {
@@ -20,10 +21,11 @@ namespace Inventory.Items
             Chat.ColorIndexes.gold,
             Chat.ColorIndexes.light_purple,
         };
-        public static Dictionary<ItemID, long> Cooldowns = new Dictionary<ItemID, long>();
+        [JsonIgnore]
         public virtual string Type { get; } = "Item";
         public override bool sendNBT => true;
         public override string Name { get => GetPrefix() + base.Name; set => base.Name = value; }
+        [JsonIgnore]
         public override string[] Lore
         {
             get
@@ -46,6 +48,10 @@ namespace Inventory.Items
             return $"&{rarity_color[(int)rarity]}{qualirty_prefix[(int)quality]} ";
         }
         protected virtual void GetTooltip(ref List<Parameter> list) { }
+        public void Init(Player player)
+        {
+
+        }
         public void BeginItemTick(Player player)
         {
             player.OnItemTick += OnTick;
@@ -73,14 +79,10 @@ namespace Inventory.Items
         public bool SetCooldown(Player player, int ticks)
         {
             var now = player.rpgserver.currentTick;
-            
-            if (Cooldowns.TryGetValue(ItemID, out var cooldown) && cooldown > now) return false;
-            Cooldowns[ItemID] = now + ticks;
-            player.network.Send(new Packets.Play.SetCooldown()
-            {
-                ItemID = (int)ItemID,
-                CooldownTicks = ticks
-            });
+            if (player.Cooldowns.TryGetValue(ItemID, out var cooldown) && cooldown > now) 
+                return false;
+            player.Cooldowns[ItemID] = now + ticks;
+            player.SendCooldown(ItemID, ticks);
             return true;
         }
 
