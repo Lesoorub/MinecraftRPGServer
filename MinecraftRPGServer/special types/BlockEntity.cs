@@ -35,20 +35,16 @@ public class BlockEntity : ISerializable, IDeserializable
         return writer.ToArray();
     }
 
-    public static Dictionary<string, VarInt> Types;
-
-    public static void Init(byte[] block_entity_types_json)
+    public static string[] BlockEntityNames = Enum.GetNames(typeof(BlockEntityID));
+    public static bool GetByNameID(string nameid, out VarInt BlockEntity)
     {
-        var timer = new System.Diagnostics.Stopwatch();
-        timer.Start();
-
-        if (Types != null) return;
-        Types = new Dictionary<string, VarInt>();
-        var t = JsonConvert.DeserializeObject<Dictionary<string, int>>(Encoding.UTF8.GetString(block_entity_types_json));
-        foreach (var type in t)
-            Types.Add(type.Key, type.Value);
-
-        timer.Stop();
-        Console.WriteLine($"Block entities loaded for {((double)timer.ElapsedTicks / TimeSpan.TicksPerMillisecond):N3} ms");
+        int index = Array.IndexOf(BlockEntityNames, nameid);
+        BlockEntity = default;
+        if (index != -1)
+        {
+            BlockEntity = new VarInt(index);
+            return true;
+        }
+        return false;
     }
 }

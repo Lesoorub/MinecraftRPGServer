@@ -121,9 +121,6 @@
   <data name="blocks" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\blocks.json;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="block_entity_type_1_18_2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\block_entity_type_1.18.2.json;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="Dimension1_18_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Dimension1.18.1.nbt;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -135,9 +132,6 @@
   </data>
   <data name="DimensionCodec1_18_2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DimensionCodec1.18.2.nbt;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="items_1_18_2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\items 1.18.2.json;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="Tags1_18_2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Tags1.18.2.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>

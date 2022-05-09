@@ -39,8 +39,6 @@ public sealed partial class RPGServer : MineServer.MineServer
         errorLoger.OnMessage += (msg) => Console.WriteLine(msg);
         //Load config
         config = ServerConfig.Load();
-        //Init blockEntities
-        BlockEntity.Init(MinecraftRPGServer.Properties.Resources.block_entity_type_1_18_2);
         //Load world
         LoadWorlds();
         //Init Entities

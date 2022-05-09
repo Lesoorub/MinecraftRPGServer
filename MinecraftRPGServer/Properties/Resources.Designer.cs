@@ -63,16 +63,6 @@ namespace MinecraftRPGServer.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
-        internal static byte[] block_entity_type_1_18_2 {
-            get {
-                object obj = ResourceManager.GetObject("block_entity_type_1_18_2", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Byte[].
-        /// </summary>
         internal static byte[] blocks {
             get {
                 object obj = ResourceManager.GetObject("blocks", resourceCulture);
@@ -116,16 +106,6 @@ namespace MinecraftRPGServer.Properties {
         internal static byte[] DimensionCodec1_18_2 {
             get {
                 object obj = ResourceManager.GetObject("DimensionCodec1_18_2", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Byte[].
-        /// </summary>
-        internal static byte[] items_1_18_2 {
-            get {
-                object obj = ResourceManager.GetObject("items_1_18_2", resourceCulture);
                 return ((byte[])(obj));
             }
         }

@@ -225,9 +225,7 @@ public abstract class Entity
     public static void InitEntities()
     {
         foreach (var ent_type in RPGServer.GetTypesWithAttribute<EntityAttribute>())
-        {
             EntityList.Add(ent_type.GetCustomAttribute<EntityAttribute>().nameid, ent_type);
-        }
     }
     public static int GetUniqEnityID()
     {

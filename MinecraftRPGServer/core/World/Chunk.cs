@@ -45,14 +45,17 @@ public class Chunk
             int index = 0;
             foreach (var ent in block_entities.data)
             {
-                BlockEntities[index++] = new BlockEntity()
+                if (BlockEntity.GetByNameID(ent["id"] as TAG_String, out var type))
                 {
-                    blockX = f(ent["x"] as TAG_Int),
-                    blockZ = f(ent["z"] as TAG_Int),
-                    Y = (short)(ent["y"] as TAG_Int),
-                    Type = BlockEntity.Types[ent["id"] as TAG_String],
-                    Data = (ent as TAG_Compound).RemoveTags(new string[] { "x", "y", "z", "id" })
-                };
+                    BlockEntities[index++] = new BlockEntity()
+                    {
+                        blockX = f(ent["x"] as TAG_Int),
+                        blockZ = f(ent["z"] as TAG_Int),
+                        Y = (short)(ent["y"] as TAG_Int),
+                        Type = type,
+                        Data = (ent as TAG_Compound).RemoveTags(new string[] { "x", "y", "z", "id" })
+                    };
+                }
             }
         }
 

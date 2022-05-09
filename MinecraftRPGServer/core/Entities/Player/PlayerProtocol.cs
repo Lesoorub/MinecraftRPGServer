@@ -95,6 +95,8 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     public int LastStateID = 1;
 
     public long PreviousRecievedMetadata = 0;
+    public long LastAttackTime = 0;
+    public const int AttackDelayTime = 200;
 
     protected override v3f HoloOffset => new v3f(0, -.2f, 0);
 
