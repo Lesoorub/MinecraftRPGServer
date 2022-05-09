@@ -151,6 +151,8 @@
     <Compile Include="core\Entities\Player\modules\KeepAliveModule.cs" />
     <Compile Include="core\Entities\Player\modules\WorldLoaderController.cs" />
     <Compile Include="core\Entities\sound\Sound.cs" />
+    <Compile Include="core\Entities\sound\SoundID.cs" />
+    <Compile Include="core\Items\ItemID.cs" />
     <Compile Include="core\Items\IUsingFinish.cs" />
     <Compile Include="core\Items\Classes\Armor.cs" />
     <Compile Include="core\Items\List\Bow.cs" />

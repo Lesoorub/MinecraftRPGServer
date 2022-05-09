@@ -550,7 +550,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
             damage = RandomPlus.Range(sword.MinDamage, sword.MaxDamage + 1);
 
         if (damage == 0)
-            PlayEntitySound(new Sound(804, Categories.PLAYERS));//entity.player.attack.nodamage
+            PlayEntitySound(new Sound(SoundID.entity_player_attack_nodamage, Categories.PLAYERS));
         if (target == null) return;
         target.Health -= damage;
         Task.Run(async () =>
@@ -590,7 +590,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     {
         network.Send(new SoundEffect()
         {
-            SoundID = sound.ID,
+            SoundID = (int)sound.ID,
             x = (int)Math.Floor(position.x * 8),
             y = (int)Math.Floor(position.y * 8),
             z = (int)Math.Floor(position.z * 8),
@@ -604,7 +604,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         network.Send(new EntitySoundEffect()
         {
             EntityID = EntityID,
-            SoundID = sound.ID,
+            SoundID = (int)sound.ID,
             SoundCategory = sound.category,
             Volume = volume,
             Pitch = pitch,

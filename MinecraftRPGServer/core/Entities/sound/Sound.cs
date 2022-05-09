@@ -2,12 +2,12 @@
 
 public struct Sound
 {
-    public int ID;
+    public SoundID ID;
     public Categories category;
 
-    public Sound(int iD, Categories category)
+    public Sound(SoundID ID, Categories category)
     {
-        ID = iD;
+        this.ID = ID;
         this.category = category;
     }
 }

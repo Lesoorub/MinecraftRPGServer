@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Inventory.Items
 {
-    [Item("minecraft:bow")]
+    [Item(ItemID.bow)]
     public partial class Bow : RPGItem, IUsable, IUsingFinish
     {
         [JsonIgnore]
@@ -43,7 +43,7 @@ namespace Inventory.Items
             long deltaTicks = player.rpgserver.currentTick - startTicks;
             if (deltaTicks < minChargeTicks) return;
 
-            var arrowItem = player.inventory.FindItem("minecraft:arrow");
+            var arrowItem = player.inventory.FindItem(ItemID.arrow);
             if (arrowItem == null) return;
             arrowItem.ItemCount--;
             player.SendInventory();

@@ -46,7 +46,7 @@ public sealed partial class RPGServer : MineServer.MineServer
         //Init Entities
         Entity.InitEntities();
         //Init items
-        Inventory.Item.InitItems(MinecraftRPGServer.Properties.Resources.items_1_18_2);
+        Inventory.Item.InitItems();
         //Init Commands
         Commands.Init();
 

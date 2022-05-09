@@ -1,6 +1,6 @@
 ﻿namespace Inventory.Items
 {
-    [Item("minecraft:apple")]
+    [Item(ItemID.apple)]
     public class Apple : Item, IUsable
     {
         public void Use(Player player)

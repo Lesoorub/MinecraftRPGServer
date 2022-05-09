@@ -1,6 +1,6 @@
 ﻿namespace Inventory.Items
 {
-    [Item("minecraft:netherite_sword")]
+    [Item(ItemID.netherite_sword)]
     public class NetheriteSword : Sword
     {
         public NetheriteSword()

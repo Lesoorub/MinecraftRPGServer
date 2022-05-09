@@ -46,8 +46,8 @@ public class LivingEntity : Entity
 
     public List<Player> whoViewMe = new List<Player>();
 
-    public virtual Sound HurtSound => new Sound(812, Categories.PLAYERS);
-    public virtual Sound DeathSound => new Sound(811, Categories.PLAYERS);
+    public virtual Sound HurtSound => new Sound(SoundID.entity_player_hurt, Categories.PLAYERS);
+    public virtual Sound DeathSound => new Sound(SoundID.entity_player_death, Categories.PLAYERS);
 
     public delegate void HealthChangedArgs(LivingEntity sender, float newHealth, float oldHealth);
     public event HealthChangedArgs OnHealthChanged;
@@ -161,17 +161,17 @@ public class LivingEntity : Entity
     }
     public virtual void SendMaxHealth(NetworkProvider net)
     {
-        //net.Send(new EntityProperties()
-        //{
-        //    EntityID = EntityID,
-        //    Properties = new EntityProperties.Property[]
-        //    {
-        //            new EntityProperties.Property()
-        //            {
-        //                Key = "generic.max_health",
-        //                Value = MaxHealth,
-        //            }
-        //    }
-        //});
+        net.Send(new EntityProperties()
+        {
+            EntityID = EntityID,
+            Properties = new EntityProperties.Property[]
+            {
+                    new EntityProperties.Property()
+                    {
+                        Key = "generic.max_health",
+                        Value = MaxHealth,
+                    }
+            }
+        });
     }
 }

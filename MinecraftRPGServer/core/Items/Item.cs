@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,8 +15,9 @@ namespace Inventory
 {
     public class Item : ICloneable, ISerializable
     {
+        [JsonIgnore]
         public bool Present { get => itemCount != 0; }
-        public VarInt ItemID { get; set; }
+        public ItemID ItemID { get; set; }
         private byte itemCount = 0;
         public byte ItemCount
         {
@@ -64,75 +65,69 @@ namespace Inventory
         public string[] Lore;
         public int Damage;
 
-        public virtual List<string> GetOreDict() => new List<string>() { IDNames[ItemID] };
+        public virtual List<string> GetOreDict() => new List<string>() { GetNameID(ItemID) };
 
         public static implicit operator Item(Slot slot) => FromSlot(slot);
-        public static implicit operator Slot(Item item) => item != null ? new Slot(item.ItemID, item.ItemCount, item.sendNBT ? item.NBT : null) : default(Slot);
+        public static implicit operator Slot(Item item) => item != null ? new Slot((int)item.ItemID, item.ItemCount, item.sendNBT ? item.NBT : null) : default(Slot);
 
-        public static Dictionary<int, string> IDNames = new Dictionary<int, string>();
-        public static Dictionary<string, int> NameIDs = new Dictionary<string, int>();
-        public static Dictionary<int, Type> itemTypes = new Dictionary<int, Type>();
-        public static string GetNameID(int id) => IDNames[id];
 
-        public static void InitItems(byte[] ItemsRawData)
+        public static string[] ItemIDNames = Enum.GetNames(typeof(ItemID));
+        public static string GetNameID(ItemID itemID) => ItemIDNames[(int)itemID];
+        public static bool GetItemID(string nameID, out ItemID ItemID)
+        {
+            ItemID = ItemID.air;
+            int id = Array.IndexOf(ItemIDNames, nameID);
+            if (id == -1) 
+                return false;
+            ItemID = (ItemID)id;
+            return true;
+        }
+
+
+        public static Dictionary<ItemID, Type> itemTypes = new Dictionary<ItemID, Type>();
+
+        public static void InitItems()
         {
             var timer = new Stopwatch();
             timer.Start();
-            using (var ms = new MemoryStream(ItemsRawData))
-            using (StreamReader streamReader = new StreamReader(ms))
-            using (JsonTextReader reader = new JsonTextReader(streamReader))
-            {
-                var serializer = new JsonSerializer();
-                while (reader.Read())
-                {
-                    if (reader.TokenType == JsonToken.StartObject)
-                    {
-                        foreach (var prop in ((JObject)((JObject)serializer.Deserialize(reader))["entries"]).Properties())
-                        {
-                            int id = (int)prop.Value["protocol_id"];
-                            NameIDs.Add(prop.Name, id);
-                            IDNames.Add(id, prop.Name);
-                        }
-                    }
-                }
-            }
+
             foreach (var item_type in RPGServer.GetTypesWithAttribute<ItemAttribute>())
             {
                 var attr = item_type.GetCustomAttribute<ItemAttribute>();
-                itemTypes.Add(NameIDs[attr.nameid], item_type);
+                itemTypes.Add(attr.itemID, item_type);
             }
             timer.Stop();
-            Console.WriteLine($"{NameIDs.Count} Items loaded for {((double)timer.ElapsedTicks / TimeSpan.TicksPerMillisecond):N3} ms");
+            Console.WriteLine($"{itemTypes.Count} Items loaded for {((double)timer.ElapsedTicks / TimeSpan.TicksPerMillisecond):N3} ms");
         }
         public static Item FromSlot(Slot slot)
         {
-            if (slot.Present && itemTypes.TryGetValue(slot.ItemID, out var item_type))
+            ItemID itemID = (ItemID)(int)slot.ItemID;
+            if (slot.Present && itemTypes.TryGetValue(itemID, out var item_type))
             {
                 var item = (Item)Activator.CreateInstance(item_type);
-                item.ItemID = slot.ItemID;
+                item.ItemID = itemID;
                 item.ItemCount = slot.ItemCount;
                 return item;
             }
             return new Item()
             {
-                ItemID = slot.ItemID,
+                ItemID = itemID,
                 ItemCount = slot.ItemCount,
             };
         }
-        public static Item Create(string nameid, byte count = 1)
+        public static Item Create(ItemID itemID, byte count = 1)
         {
             if (count < 0 || count > 64) return null;
-            if (!NameIDs.TryGetValue(nameid, out var id)) return null;
-            if (itemTypes.TryGetValue(id, out var item_type))
+            if (itemTypes.TryGetValue(itemID, out var item_type))
             {
                 var item = Activator.CreateInstance(item_type) as Item;
-                item.ItemID = id;
+                item.ItemID = itemID;
                 item.ItemCount = count;
                 return item;
             }
             return new Item()
             {
-                ItemID = id,
+                ItemID = itemID,
                 ItemCount = count
             };
         }
@@ -148,7 +143,7 @@ namespace Inventory
 
         public static bool ItemEquals(Item a, Item b) =>
             a != null && b != null &&
-            a.ItemID.value == b.ItemID.value &&
+            a.ItemID == b.ItemID &&
             a.NBT.Bytes.SequenceEqual(b.NBT.Bytes);
         public static bool TryMove(ref Item target, ref Item from, byte count)
         {
@@ -180,6 +175,7 @@ namespace Inventory
         }
         public static bool CanPlace(IndexedItem to, Item item)
         {
+            if (item == null) return false;
             var item_oreDict = item.GetOreDict();
             if (to.allowedItems == null || to.allowedItems.Length == 0) 
                 return true;

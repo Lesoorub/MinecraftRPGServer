@@ -170,6 +170,10 @@ namespace Inventory
                     {
                         TryMove(ref item, ref CarriedItem, CarriedItem.ItemCount);
                     }
+                    else
+                    {
+                        Swap(ref item, ref CarriedItem);
+                    }
                 }
             }
             public sealed class RightClick : AbstractClick
@@ -192,12 +196,9 @@ namespace Inventory
                         if (CarriedItem == null)
                         {
                             //grab clicked item with item.count / 2 count.
-                            if (CanPlace(window.GetSlot(slot), CarriedItem))
-                            {
-                                CarriedItem = (Item)item.Clone();
-                                CarriedItem.ItemCount = 0;
-                                TryMove(ref CarriedItem, ref item, (byte)Math.Ceiling(item.ItemCount / 2f));
-                            }
+                            CarriedItem = (Item)item.Clone();
+                            CarriedItem.ItemCount = 0;
+                            TryMove(ref CarriedItem, ref item, (byte)Math.Ceiling(item.ItemCount / 2f));
                         }
                         else
                         {

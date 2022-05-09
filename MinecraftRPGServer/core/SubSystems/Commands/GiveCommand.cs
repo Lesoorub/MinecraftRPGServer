@@ -55,16 +55,19 @@ public class GiveCommand : IChatCommand
             if (string.IsNullOrEmpty(nameid)) return;
             try
             {
-                if (!nameid.StartsWith("minecraft:"))
-                    nameid = "minecraft:" + nameid;
-                var newItem = Inventory.Item.Create(nameid, count);
-                if (player.inventory.AddItem(ref newItem))
-                    player.SendInventory();
-                else
-                    player.EchoIntoChatFromServer("&6Not enought space");
+                if (nameid.StartsWith("minecraft:"))
+                    nameid = nameid.Replace("minecraft:", "");
+                if (Inventory.Item.GetItemID(nameid, out var ItemID))
+                {
+                    var newItem = Inventory.Item.Create(ItemID, count);
+                    if (player.inventory.AddItem(ref newItem))
+                        player.SendInventory();
+                    else
+                        player.EchoIntoChatFromServer("&6Not enought space");
 
-                if (newItem != null && newItem.Present)
-                    Entities.Item.Spawn(player.world, newItem, player.Position);
+                    if (newItem != null && newItem.Present)
+                        Entities.Item.Spawn(player.world, newItem, player.Position);
+                }
             }
             catch (Exception ex)
             {

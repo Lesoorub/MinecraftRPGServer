@@ -3,9 +3,9 @@
 [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 sealed class ItemAttribute : Attribute
 {
-    public string nameid;
-    public ItemAttribute(string nameid) 
+    public ItemID itemID;
+    public ItemAttribute(ItemID itemID) 
     { 
-        this.nameid = nameid;
+        this.itemID = itemID;
     }
 }

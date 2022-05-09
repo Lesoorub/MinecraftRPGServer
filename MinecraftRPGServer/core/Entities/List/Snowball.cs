@@ -30,10 +30,10 @@ namespace Entities
 
             private void Execute(Entity entity, string[] args)
             {
-                string nameid = "minecraft:snowball";
-                if (args.Length == 1 && Inventory.Item.NameIDs.ContainsKey(args[0]))
-                    nameid = args[0];
-                entity.meta["Item"] = Inventory.Item.Create(nameid, 1);
+                var itemID = ItemID.snowball;
+                if (args.Length == 1 && Inventory.Item.GetItemID(args[0], out var id))
+                    itemID = id;
+                entity.meta["Item"] = Inventory.Item.Create(itemID, 1);
             }
         }
     }

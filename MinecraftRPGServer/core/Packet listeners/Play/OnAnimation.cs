@@ -13,7 +13,7 @@ public class OnAnimation : PacketListener
             EntityAnimation_clientbound.AnimationType.SwingMainArm : 
             EntityAnimation_clientbound.AnimationType.SwingOffhand);
 
-        var sound = new Sound(807, Categories.PLAYERS);//entity.player.attack.weak
+        var sound = new Sound(SoundID.entity_player_attack_weak, Categories.PLAYERS);
         if (player.SelectedItem is Inventory.Items.Sword sword)
             sound = sword.AttackSound;
         player.PlayEntitySound(sound);

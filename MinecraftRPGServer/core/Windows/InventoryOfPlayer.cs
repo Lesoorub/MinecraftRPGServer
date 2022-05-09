@@ -57,13 +57,17 @@ namespace Inventory
         }
         public Item FindItem(string nameid)
         {
-            if (!Item.NameIDs.TryGetValue(nameid, out var itemid)) return null;
+            if (!GetItemID(nameid, out var itemid)) return null;
+            return FindItem(itemid);
+        }
+        public Item FindItem(ItemID itemid)
+        {
             int find(IndexedItem[] arr)
             {
                 for (int k = 0; k < arr.Length; k++)
                 {
                     var i = arr[k];
-                    if (i.item != null && i.item.ItemID.value.Equals(itemid))
+                    if (i.item != null && i.item.ItemID.Equals(itemid))
                     {
                         return k;
                     }
@@ -73,7 +77,7 @@ namespace Inventory
             int t;
             if ((t = find(mainInv)) != -1) return mainInv[t].item;
             if ((t = find(hotbar)) != -1) return hotbar[t].item;
-            if (Offhand.item != null && Offhand.item.ItemID.value.Equals(itemid)) return Offhand.item;
+            if (Offhand.item != null && Offhand.item.ItemID.Equals(itemid)) return Offhand.item;
             return null;
         }
     }
