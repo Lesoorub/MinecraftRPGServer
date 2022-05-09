@@ -2,7 +2,7 @@
 {
     public enum Quality : byte
     {
-        Poor,
+        Bad,
         Normal,
         Good,
         Excelant,

@@ -909,5 +909,13 @@ namespace Packets.Play
             Multiply_by_amount_percent = 2,
         }
     }
+    [BoundToClientPackage]
+    public class SetCooldown : MSerializableToBytes, IPacket
+    {
+        public override int package_id => 0x17;
+
+        public VarInt ItemID;
+        public VarInt CooldownTicks;
+    }
     #endregion
 }

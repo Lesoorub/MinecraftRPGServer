@@ -21,9 +21,6 @@ public sealed partial class RPGServer : MineServer.MineServer
     public ConcurrentDictionary<string, World> worlds = new ConcurrentDictionary<string, World>();
     public string spawnWorldName = "overworld";
     public World spawnWorld => worlds[spawnWorldName];
-    Thread ServerLoop;
-    Thread PlayersLoop;
-    Thread EntitiesLoop;
     public long currentTick = 0;
     public DateTime lastTickTime;
     public TabPlayerInfo tab;
@@ -193,33 +190,45 @@ public sealed partial class RPGServer : MineServer.MineServer
     }
     public void BeginServerLoop()
     {
-        void WaitTick(long lastProcessingTick)
+        async Task WaitTick(long lastProcessingTick)
         {
             if (lastProcessingTick == currentTick)
-                Thread.Sleep(Math.Max(50 - (int)(DateTime.Now - lastTickTime).TotalMilliseconds, 0));
+                await Task.Delay(Math.Max(50 - (int)(DateTime.Now - lastTickTime).TotalMilliseconds, 0));
             if (lastProcessingTick == currentTick)
             {
                 while (lastProcessingTick == currentTick)
                     Thread.Sleep(5);
             }
         }
-        PlayersLoop = new Thread(() =>
+        //Server loop
+        Task.Factory.StartNew(async () =>
+        {
+            while (isStarted)
+            {
+                await Task.Delay(50);
+                currentTick++;
+                lastTickTime = DateTime.Now;
+            }
+        }, TaskCreationOptions.LongRunning);
+        //Player loop
+        Task.Factory.StartNew(async () =>
         {
             long lastProcessingTick = 0;
             while (isStarted)
             {
-                WaitTick(lastProcessingTick);
+                await WaitTick(lastProcessingTick);
                 foreach (var player_pair in loginnedPlayers)
                     player_pair.Value.PlayerUpdate();
                 lastProcessingTick = currentTick;
             }
-        });
-        EntitiesLoop = new Thread(() =>
+        }, TaskCreationOptions.LongRunning);
+        //Entity loop
+        Task.Factory.StartNew(async () =>
         {
             long lastProcessingTick = 0;
             while (isStarted)
             {
-                WaitTick(lastProcessingTick);
+                await WaitTick(lastProcessingTick);
                 //TODO OPTIMIZE THIS!
                 foreach (var loaded_ent_pair in loginnedPlayers
                     .SelectMany(x => x.Value.view.entities))
@@ -234,20 +243,7 @@ public sealed partial class RPGServer : MineServer.MineServer
                 }
                 lastProcessingTick = currentTick;
             }
-        });
-        ServerLoop = new Thread(() =>
-        {
-            PlayersLoop.Start();
-            EntitiesLoop.Start();
-            while (isStarted)
-            {
-                Thread.Sleep(50);
-                currentTick++;
-                lastTickTime = DateTime.Now;
-            }
-        });
-
-        ServerLoop.Start();
+        }, TaskCreationOptions.LongRunning);
     }
     public Player FindByUsername(string username) => 
         Player.players.TryGetValue(username, out var player) ? player : null;

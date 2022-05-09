@@ -1,17 +1,23 @@
-﻿namespace Inventory.Items
+﻿using System.Collections.Generic;
+
+namespace Inventory.Items
 {
     [RPGItem("bow")]
     public class RPGBow : Bow
     {
-        public override string[] Lore => new string[]
-        {
-            $"Type: Bow",
-            $"Damage: {ArrowDamage}",
-            $"Arrow speed: {ArrowSpeed}",
-        };
         public RPGBow()
         {
             Name = "bow";
+        }
+        protected override void GetTooltip(ref List<Parameter> list)
+        {
+            base.GetTooltip(ref list);
+            list.Add(new Parameter("Damage", ArrowDamage.ToString()));
+            list.Add(new Parameter("Arrow speed", ArrowSpeed.ToString()));
+        }
+        protected override bool CanShot(Player player)
+        {
+            return true;
         }
         public override void Shot(Player player, float charge)
         {

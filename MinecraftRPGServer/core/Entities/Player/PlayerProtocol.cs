@@ -92,6 +92,8 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     public PlayerInventoryWindow inventoryWindow;
     public Item SelectedItem => inventory.hotbar[selectedSlot].item;
     public Item OffHandSelectedItem => inventory.Offhand.item;
+    public delegate void ItemTickArgs(Player player);
+    public event ItemTickArgs OnItemTick;
     public int LastStateID = 1;
 
     public long PreviousRecievedMetadata = 0;
@@ -208,6 +210,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
             if (entitypair.Value.entity.isInit)
                 entitypair.Value.entity.entitiesController.UnloadEntity(EntityID);
         }
+        OnItemTick?.Invoke(null);
     }
 
     public static Guid FromLoginName(string login) => new Guid(login.GetSha1().Take(16));
@@ -413,7 +416,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
                 SendEquipments();
             }
         }
-
+        OnItemTick?.Invoke(this as Player);
     }
     public void SendInventory()
     {

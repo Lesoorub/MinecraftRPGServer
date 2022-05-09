@@ -35,6 +35,7 @@ public class ConnectedClient : IClient
         var minecraft_packets = MinecraftPacket.Parse(packet);
         foreach (var mpacket in minecraft_packets)
         {
+
             if (RPGServer.registered.TryGetValue(current_state, out var dict) &&
                 dict.TryGetValue(mpacket.packet_id, out var listeners))
             {

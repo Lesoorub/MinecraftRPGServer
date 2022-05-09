@@ -170,7 +170,7 @@ public class CreateCommand : IChatCommand
                 quality = Array.IndexOf(QualityNames, args[2]);
 
             if (rarity == -1)
-                rarity = (int)Inventory.Items.Rarity.Common;
+                rarity = (int)Inventory.Items.Rarity.Trash;
             if (quality == -1)
                 quality = (int)Inventory.Items.Quality.Normal;
 

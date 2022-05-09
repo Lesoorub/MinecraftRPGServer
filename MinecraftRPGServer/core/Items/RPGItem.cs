@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -8,19 +9,32 @@ namespace Inventory.Items
     {
         public Rarity rarity = Rarity.Legendary;
         public Quality quality = Quality.Excelant;
-        public override bool sendNBT => true;
-
-        public override string Name { get => GetPrefix() + base.Name; set => base.Name = value; }
-
-        readonly string[] qualirty_prefix = new string[] { "Poor", "Normal", "Good", "Excelant", "Perfect" };
+        readonly string[] rarityNames = Enum.GetNames(typeof(Rarity));
+        readonly string[] qualirty_prefix = Enum.GetNames(typeof(Quality));
         readonly char[] rarity_color = new char[]
         {
-            Chat.ColorIndexes.white,
-            Chat.ColorIndexes.green,
+            Chat.ColorIndexes.gray,
+            Chat.ColorIndexes.dark_green,
+            Chat.ColorIndexes.aqua,
             Chat.ColorIndexes.dark_red,
+            Chat.ColorIndexes.gold,
             Chat.ColorIndexes.light_purple,
-            Chat.ColorIndexes.yellow,
         };
+        public static Dictionary<ItemID, long> Cooldowns = new Dictionary<ItemID, long>();
+        public virtual string Type { get; } = "Item";
+        public override bool sendNBT => true;
+        public override string Name { get => GetPrefix() + base.Name; set => base.Name = value; }
+        public override string[] Lore
+        {
+            get
+            {
+                var l = new List<Parameter>();
+                l.Add(new Parameter("Type", Type));
+                GetTooltip(ref l);
+                l.Add(new Parameter("Rarity", rarityNames[(int)rarity]));
+                return l.Select(x => x.ToString()).ToArray();
+            }
+        }
 
         public RPGItem(ItemID itemID)
         {
@@ -31,6 +45,45 @@ namespace Inventory.Items
         {
             return $"&{rarity_color[(int)rarity]}{qualirty_prefix[(int)quality]} ";
         }
+        protected virtual void GetTooltip(ref List<Parameter> list) { }
+        public void BeginItemTick(Player player)
+        {
+            player.OnItemTick += OnTick;
+        }
+
+        public void EndItemTick(Player player)
+        {
+            player.OnItemTick -= OnTick;
+        }
+
+        private void OnTick(Player player)
+        {
+            if (player == null)
+            {
+                player.OnItemTick -= OnTick;
+                PlayerLogout();
+                return;
+            }
+            Tick(player);
+        }
+
+        protected virtual void Tick(Player player) { }
+        protected virtual void PlayerLogout() { }
+
+        public bool SetCooldown(Player player, int ticks)
+        {
+            var now = player.rpgserver.currentTick;
+            
+            if (Cooldowns.TryGetValue(ItemID, out var cooldown) && cooldown > now) return false;
+            Cooldowns[ItemID] = now + ticks;
+            player.network.Send(new Packets.Play.SetCooldown()
+            {
+                ItemID = (int)ItemID,
+                CooldownTicks = ticks
+            });
+            return true;
+        }
+
         public static Dictionary<string, Type> rpgItems = new Dictionary<string, Type>();
         public static void Init()
         {
@@ -41,7 +94,7 @@ namespace Inventory.Items
             }
         }
         public static bool Has(string nameid) => rpgItems.ContainsKey(nameid);
-        public static RPGItem Create(string nameid, Rarity rarity = Rarity.Common, Quality quality = Quality.Normal)
+        public static RPGItem Create(string nameid, Rarity rarity = Rarity.Trash, Quality quality = Quality.Normal)
         {
             if (!Has(nameid)) return null;
             var item = (RPGItem)Activator.CreateInstance(rpgItems[nameid]);
@@ -49,6 +102,20 @@ namespace Inventory.Items
             item.rarity = rarity;
             item.quality = quality;
             return item;
+        }
+
+        public struct Parameter
+        {
+            public string Name;
+            public string Value;
+
+            public Parameter(string name, string value)
+            {
+                Name = name;
+                Value = value;
+            }
+
+            public override string ToString() => $"{Name}: {Value}";
         }
     }
 }

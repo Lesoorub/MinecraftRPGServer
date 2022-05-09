@@ -14,6 +14,12 @@ namespace Inventory.Items
             return t;
         }
 
+        public override string Type => "Sword";
         public Sword(ItemID itemID) : base(itemID) { }
+        protected override void GetTooltip(ref List<Parameter> list)
+        {
+            base.GetTooltip(ref list);
+            list.Add(new Parameter("Damage", $"{MinDamage}-{MaxDamage}"));
+        }
     }
 }

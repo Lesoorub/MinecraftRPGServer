@@ -29,6 +29,11 @@ public sealed class MinecraftPacket
         List<MinecraftPacket> list = new List<MinecraftPacket>();
         do
         {
+            if (reader.buffer[reader.offset] == 0xFE && reader.buffer[reader.offset + 1] == 0x01)
+            {
+                reader.ReadBytes(2);//Skip 2 bytes
+                continue;
+            }
             VarInt packet_len = reader.ReadVarInt();
             if (packet_len > 2097151 ||
                 packet_len < 1 ||

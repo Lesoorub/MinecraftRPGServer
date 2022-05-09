@@ -21,6 +21,7 @@ namespace Inventory.Items
 
         public virtual float ArrowSpeed { get; set; } = 3;
         public virtual float ArrowDamage { get; set; } = 15;
+        public override string Type => "Bow";
 
         public Bow() : base(ItemID.bow) { }
 

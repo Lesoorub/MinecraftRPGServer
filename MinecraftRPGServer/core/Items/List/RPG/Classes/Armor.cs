@@ -23,5 +23,10 @@ namespace Inventory.Items
         {
 
         }
+        protected override void GetTooltip(ref List<Parameter> list)
+        {
+            base.GetTooltip(ref list);
+            list.Add(new Parameter("Health", Health.ToString()));
+        }
     }
 }

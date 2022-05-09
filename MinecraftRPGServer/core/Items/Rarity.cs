@@ -2,10 +2,11 @@
 {
     public enum Rarity : byte
     {
-        Common,//white
-        Uncommon,//green
-        Rare,//red
-        Mystic,//magenta
-        Legendary//yellow
+        Trash,
+        Unusual,
+        Rare,
+        Epic,
+        Legendary,
+        Mystic,
     }
 }
