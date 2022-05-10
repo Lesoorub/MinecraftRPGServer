@@ -36,6 +36,7 @@ public class EntitiesController : IModule
             }
 
             living.SendMaxHealth(player.network);
+            living.SendEquipments(player.network);
         }
     }
     private void EntitiesController_OnEntityDespawn(Entity entity)

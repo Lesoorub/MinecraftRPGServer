@@ -73,7 +73,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         set
         {
             selectedSlot = Math.Max(Math.Min(value, (byte)9), (byte)0);
-            SendEquipments();
+            SendEquipments();//Если выбраный слот изменен
         }
     }
     public EntityView view = new EntityView();
@@ -90,10 +90,12 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
 
     public InventoryOfPlayer inventory;
     public PlayerInventoryWindow inventoryWindow;
-    public Item SelectedItem => inventory.hotbar[selectedSlot].item;
-    public Item OffHandSelectedItem => inventory.Offhand.item;
+    public InventoryWindowWatcher inventoryWatcher;
+    public override Item[] Armor => inventory.Armor.Select(x => x.item).ToArray();
+    public override Item MainHand => inventory.hotbar[selectedSlot].item;
+    public override Item OffHand => inventory.Offhand.item;
     public delegate void ItemTickArgs(Player player);
-    public event ItemTickArgs OnItemTick;
+    public event ItemTickArgs OnPlayerTick;
     public int LastStateID = 1;
 
     public long PreviousRecievedMetadata = 0;
@@ -152,11 +154,13 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     {
         rpgserver.OnLogOut += Rpgserver_OnLogOut;
         inventoryWindow = new PlayerInventoryWindow(inventory);
-        inventoryWindow.OnItemChanged += (item, index) =>
+        inventoryWatcher = new InventoryWindowWatcher(inventoryWindow);
+        inventoryWatcher.OnChange += (window, args) =>
         {
-            if ((index >= 5 && index <= 8) ||
-                (index >= 36 && index <= 45))
-                SendEquipments();
+            Console.WriteLine($"index={args.index} item={args.item?.GetType()}");
+            if ((args.index >= 5 && args.index <= 8) ||
+                (args.index >= 36 && args.index <= 45))
+                SendEquipments();//Если инвентарь изменен
         };
         SendHeldItemChanged();//16
         network.Send(new Tags()
@@ -179,8 +183,8 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         var player = this as Player;
         Player.players.TryAdd(player.data.username, player);
 
-        SendEquipments();
-        SendMetadataUpdate();
+        //SendEquipments();
+        //SendMetadataUpdate();
 
         inventory.Init(this as Player);
     }
@@ -213,7 +217,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
             if (entitypair.Value.entity.isInit)
                 entitypair.Value.entity.entitiesController.UnloadEntity(EntityID);
         }
-        OnItemTick?.Invoke(null);
+        OnPlayerTick?.Invoke(null);
     }
 
     public static Guid FromLoginName(string login) => new Guid(login.GetSha1().Take(16));
@@ -416,10 +420,10 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
                 SendCollectItem(EntityID, item.EntityID, count);
                 foreach (var other_player in view.players)
                     other_player.Value.entity.SendCollectItem(EntityID, item.EntityID, count);
-                SendEquipments();
+                SendEquipments();//При поднятии предмета (игрок сам должен определять что инвентарь изменен и отправлять в другом месте)
             }
         }
-        OnItemTick?.Invoke(this as Player);
+        OnPlayerTick?.Invoke(this as Player);
     }
     public void SendInventory()
     {
@@ -471,76 +475,12 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
                 loaded_ent_pair.Value.PreviousMetadataTime = now;
     } 
 
-    public void PlayAnimation(EntityAnimation_clientbound.AnimationType animation) =>
-        BroadcastInLoadedPlayers((other_player) => SendPlayAnimation(animation, other_player.network));
-
-    public void BroadcastInLoadedPlayers(IPacket packet)
+    public void PlayAnimation(EntityAnimation_clientbound.AnimationType animation)
     {
-        foreach (var loaded_entity in view.players)
-            loaded_entity.Value.entity.network.Send(packet);
-    }
-    public void BroadcastInLoadedPlayers(IPacket packet, Func<Player, bool> predicate)
-    {
-        foreach (var loaded_entity in view.players)
-            if (predicate(loaded_entity.Value.entity))
-                loaded_entity.Value.entity.network.Send(packet);
-    }
-    public void BroadcastInLoadedPlayers(Action<Player> action)
-    {
-        foreach (var loaded_entity in view.players)
-            action(loaded_entity.Value.entity);
-    }
-    public void BroadcastInLoadedPlayers(Action<Player> action, Func<Player, bool> predicate)
-    {
-        foreach (var loaded_entity in view.players)
-            if (predicate(loaded_entity.Value.entity))
-                action(loaded_entity.Value.entity);
+        foreach (var other_player in whoViewMe)
+            SendPlayAnimation(animation, other_player.network);
     }
 
-    /// <summary>
-    /// Send player equipments for each viewd player, include me.
-    /// </summary>
-    public void SendEquipments()
-    {
-        Item[] equipments = new Item[]
-        {
-            SelectedItem,
-            OffHandSelectedItem,
-            inventory.Armor[3].item,
-            inventory.Armor[2].item,
-            inventory.Armor[1].item,
-            inventory.Armor[0].item,
-        };
-        List<EntityEquipment.Equipment> list = new List<EntityEquipment.Equipment>();
-        for (int k = 0; k < equipments.Length; k++)
-        {
-            list.Add(new EntityEquipment.Equipment()
-            {
-                Item = equipments[k] != null ? equipments[k] : default,
-                Slot = (EntityEquipment.EquipmentSlot)k
-            });
-        }
-        //list.RemoveAll(x => !x.Item.Present);
-        var writer = new ArrayWriter(true);
-        int index = 0;
-        foreach (var t in list)
-        {
-            if (index < list.Count - 1)
-                t.Slot |= EntityEquipment.EquipmentSlot.NextPresent;
-            writer.Write(t);
-            index++;
-        }
-        var data = writer.ToArray();
-        if (data.Length > 0)
-            foreach (var player in view.players)
-            {
-                player.Value.entity.network.Send(new EntityEquipment()
-                {
-                    EntityID = EntityID,
-                    equipmentArray = data
-                });
-            }
-    }
     public void SendUpdateHealth()
     {
         network.Send(new UpdateHealth()
@@ -558,7 +498,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
 
         var sound = new Sound(SoundID.entity_player_attack_weak, Categories.PLAYERS);
         var damage = Player.baseHandDamage;
-        if (SelectedItem is Inventory.Items.Sword sword)
+        if (MainHand is Inventory.Items.Sword sword)
         {
             damage = RandomPlus.Range(sword.MinDamage, sword.MaxDamage + 1);
             sound = sword.AttackSound;
@@ -586,10 +526,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         PlayerTitle.SetTitles(network, Chat.ColoredText($"&4Вы умерли"), 0, 5 * 20, 20);
         Position = world.SpawnPoint.Clone();
     }
-    public override void SendMaxHealth(NetworkProvider net)
-    {
-
-    }
+    public override void SendMaxHealth(NetworkProvider net) { }
     public void PlaySound(Sound sound, v3f position, float volume = 1, float pitch = 1)
     {
         network.Send(new SoundEffect()
@@ -626,18 +563,13 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     public void ApplyDamageToTarget(LivingEntity target, float damage)
     {
         target.Health -= damage;
-        Task.Run(async () =>
-        {
-            var h = Hologram.Create(
+        Hologram.Create(
                 this as Player,
                 target.Position + new v3f(
                     RandomPlus.Range(-.25f, .25f),
                     RandomPlus.Range(-.25f, .25f),
                     RandomPlus.Range(-.25f, .25f)
                 ).Normalized + target.BoxCollider.y / 2 * v3f.up,
-                $"&c-{damage:N1}");
-            await Task.Delay(1000);
-            h.Destroy();
-        });
+                $"&c-{damage:N1}", RPGServer.TicksPerSecond * 1);
     }
 }

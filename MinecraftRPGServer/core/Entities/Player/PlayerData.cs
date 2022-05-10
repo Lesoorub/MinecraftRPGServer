@@ -23,6 +23,7 @@ public class PlayerData
     {
         Formatting = Formatting.Indented,
         TypeNameHandling = TypeNameHandling.All,
+        DefaultValueHandling = DefaultValueHandling.Ignore,
         CheckAdditionalContent = true,
     };
     public PlayerData() { }
@@ -52,7 +53,25 @@ public class PlayerData
         string path = save_path(uuid);
         new DirectoryInfo(players_save_path).Create();
         if (File.Exists(path))
-            return JsonConvert.DeserializeObject<PlayerData>(File.ReadAllText(path), jsonSerializerSettings);
+        {
+            var text = File.ReadAllText(path);
+            try
+            {
+                return JsonConvert.DeserializeObject<PlayerData>(text, jsonSerializerSettings);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Can't read PlayerData! ... Replace and create new.");
+                var json = new
+                {
+                    exception = ex,
+                    wrongJson = text
+                };
+                File.WriteAllText(path + ".wrong", JsonConvert.SerializeObject(json));
+                File.Delete(path);
+                return new PlayerData(name, server);
+            }
+        }
 
         return new PlayerData(name, server);
     }

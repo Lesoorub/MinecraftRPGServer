@@ -18,9 +18,9 @@ namespace Inventory
         public IndexedItem Offhand;
         public IndexedItem CarriedItem;
 
-        public void OnItemChange_Invoke(IndexedItem slot) => OnSlotChanged?.Invoke(slot);
-        public delegate void ItemChangedArgs(IndexedItem slot);
-        public event ItemChangedArgs OnSlotChanged;
+        //public void OnItemChange_Invoke(IndexedItem slot) => OnSlotChanged?.Invoke(slot);
+        //public delegate void ItemChangedArgs(IndexedItem slot);
+        //public event ItemChangedArgs OnSlotChanged;
 
         //public delegate void InventoryChangedArgs();
         //public event InventoryChangedArgs OnInventoryChanged;

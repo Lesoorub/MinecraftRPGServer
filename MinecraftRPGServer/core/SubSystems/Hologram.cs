@@ -13,9 +13,9 @@ public class Hologram
         get => entity.Position;
         set => entity.Position = value;
     }
-    public Hologram(Player player, v3f position, string text)
+    public Hologram(Player player, v3f position, string text, int lifetime = -1)
     {
-        entity = new ClientboundHologram(player, position, text);
+        entity = new ClientboundHologram(player, position, text, lifetime);
         SetText(text);
     }
     public Hologram(World world, v3f position, string text)
@@ -45,9 +45,17 @@ public class Hologram
         list.TryAdd(h.entity.EntityID, h);
         return h;
     }
-    public static Hologram Create(Player player, v3f position, string text)
+    /// <summary>
+    /// Create client-site hologram
+    /// </summary>
+    /// <param name="player">Player who will view hologram</param>
+    /// <param name="position">Initial position</param>
+    /// <param name="text">Initial text</param>
+    /// <param name="lifetime">Lifetime in ticks</param>
+    /// <returns>Managed instance of hologram</returns>
+    public static Hologram Create(Player player, v3f position, string text, int lifetime = -1)
     {
-        var h = new Hologram(player, position, text);
+        var h = new Hologram(player, position, text, lifetime);
         list.TryAdd(h.entity.EntityID, h);
         return h;
     }
@@ -83,7 +91,6 @@ public class Hologram
         public HologramEntity(World world) : base(world)
         {
             meta.SetFlag("entityStatus", (byte)EntityMetadata.EntityStatus.IsInvisible);
-            //meta.SetFlag("armorStandStatus", (byte)(ArmorStandMetadata.ArmorStandStatus.isSmall | ArmorStandMetadata.ArmorStandStatus.IsMarker));
             meta.SetFlag("armorStandStatus", (byte) ArmorStandMetadata.ArmorStandStatus.IsMarker);
         }
 
@@ -121,10 +128,11 @@ public class Hologram
             get => position;
             set => SetPosition(value);
         }
+        long DestroyTick;
 
         public EntityMetadata meta { get; }
         MineServer.NetworkProvider network;
-        public ClientboundHologram(Player player, v3f position, string text)
+        public ClientboundHologram(Player player, v3f position, string text, int lifetime = -1)
         {
             EntityID = Entity.GetUniqEnityID();
             network = player.network;
@@ -158,6 +166,21 @@ public class Hologram
 
             this.position = position.Clone();
             SetText(text);
+
+            if (lifetime != -1)
+            {
+                DestroyTick = lifetime + player.rpgserver.currentTick;
+                player.OnPlayerTick += Player_OnTick;
+            }
+        }
+
+        private void Player_OnTick(Player player)
+        {
+            if (player.rpgserver.currentTick >= DestroyTick)
+            {
+                Destroy();
+                player.OnPlayerTick -= Player_OnTick;
+            }
         }
 
         public void Destroy()

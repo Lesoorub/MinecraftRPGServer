@@ -21,13 +21,13 @@ public class OnPlayerDigging : PacketListener
         switch (playerDigging.status)
         {
             case PlayerDigging.Status.ShootArrowOrFinishEathing:
-                (player.SelectedItem as IUsingFinish)?.UsingFinish(player);
+                (player.MainHand as IUsingFinish)?.UsingFinish(player);
                 break;
             case PlayerDigging.Status.DropItem:
                 player.DropItem(36 + player.SelectedSlot, 1);
                 break;
             case PlayerDigging.Status.DropItemStack:
-                player.DropItem(36 + player.SelectedSlot, player.SelectedItem.ItemCount);
+                player.DropItem(36 + player.SelectedSlot, player.MainHand.ItemCount);
                 break;
         }
     }

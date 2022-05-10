@@ -7,7 +7,7 @@ using Packets.Play;
 
 public class TabPlayerInfo
 {
-    public const int UpdateDelayMs = 5000;
+    public const int UpdateDelayMs = 10000;
     public RPGServer server;
     public Thread thread;
     PerformanceCounter PC;

@@ -8,8 +8,8 @@ namespace Inventory.Items
 {
     public abstract class RPGItem : Item
     {
-        public Rarity rarity = Rarity.Legendary;
-        public Quality quality = Quality.Excelant;
+        public Rarity rarity;
+        public Quality quality;
         readonly string[] rarityNames = Enum.GetNames(typeof(Rarity));
         readonly string[] qualirty_prefix = Enum.GetNames(typeof(Quality));
         readonly char[] rarity_color = new char[]
@@ -54,19 +54,19 @@ namespace Inventory.Items
         }
         public void BeginItemTick(Player player)
         {
-            player.OnItemTick += OnTick;
+            player.OnPlayerTick += OnTick;
         }
 
         public void EndItemTick(Player player)
         {
-            player.OnItemTick -= OnTick;
+            player.OnPlayerTick -= OnTick;
         }
 
         private void OnTick(Player player)
         {
             if (player == null)
             {
-                player.OnItemTick -= OnTick;
+                player.OnPlayerTick -= OnTick;
                 PlayerLogout();
                 return;
             }

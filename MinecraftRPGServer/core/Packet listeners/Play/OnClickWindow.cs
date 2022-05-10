@@ -15,5 +15,6 @@ public class OnClickWindow : PacketListener
         if (player == null || clickWindow == null) return;
         if (!player.inventoryWindow.ClickWindow(player, clickWindow))
             player.SendInventory();
+        player.inventoryWatcher.Update();
     }
 }

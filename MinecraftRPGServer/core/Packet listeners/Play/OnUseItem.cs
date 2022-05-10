@@ -10,7 +10,7 @@ public class OnUseItem : PacketListener
         var player = client as Player;
         var pack = packet as UseItem;
         if (player == null) return; 
-        (player.SelectedItem as IUsable)?.Use(player);
+        (player.MainHand as IUsable)?.Use(player);
         player.PlayAnimation(pack.Hand == 0 ? 
             EntityAnimation_clientbound.AnimationType.SwingMainArm : 
             EntityAnimation_clientbound.AnimationType.SwingOffhand);

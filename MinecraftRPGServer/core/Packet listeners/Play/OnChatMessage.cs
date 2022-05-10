@@ -11,6 +11,7 @@ public sealed class OnChatMessage : PacketListener
     {
         var msg = packet as Packets.Play.ChatMessage_serverbound;
         var player = client as Player;
+        if (msg == null || player == null) return;
         Console.WriteLine($"[{player.data.username}] {msg.Message}");
         if (msg.Message.StartsWith("/"))
         {

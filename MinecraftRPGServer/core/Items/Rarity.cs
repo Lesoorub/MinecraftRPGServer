@@ -2,11 +2,11 @@
 {
     public enum Rarity : byte
     {
-        Trash,
-        Unusual,
-        Rare,
-        Epic,
-        Legendary,
-        Mystic,
+        Trash = 0,
+        Unusual = 1,
+        Rare = 2,
+        Epic = 3,
+        Legendary = 4,
+        Mystic = 5,
     }
 }

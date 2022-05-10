@@ -47,32 +47,9 @@ public struct Chat : ISerializable, IDeserializable
         return JsonConvert.SerializeObject(this, Formatting.None, notNull);
     }
 
-    public static string Gradient(string text, int start_color, int end_color)
+    public static string ParseGradients(string text)
     {
-        string ToColor(byte r, byte g, byte b) => 
-            r.ToString("X").PadLeft(2, '0') + 
-            g.ToString("X").PadLeft(2, '0') + 
-            b.ToString("X").PadLeft(2, '0');
-        void FromColor(int color, out byte r, out byte g, out byte b)
-        {
-            r = (byte)((color >> 16) & 0xFF);
-            g = (byte)((color >> 8) & 0xFF);
-            b = (byte)(color & 0xFF);
-        }
-        StringBuilder strb = new StringBuilder();
-        float lerp(float a, float b, float t) => a + (b - a) * t;
-        FromColor(start_color, out var sr, out var sg, out var sb);
-        FromColor(end_color, out var er, out var eg, out var eb);
-        for (int k = 0; k < text.Length; k++)
-        {
-            float t = (float)k / text.Length;
-            strb.Append($"&#{ToColor((byte)lerp(sr, er, t), (byte)lerp(sg, eg, t), (byte)lerp(sb, eb, t))}{text[k]}");
-        }
-        return strb.ToString();
-    }
-    public static Chat ColoredText(string text)
-    {
-        string pattern = "&grad(######,######)";//# - skip char
+        const string pattern = "&grad(######,######)";//# - skip char
 
         int[] findGrads()
         {
@@ -99,7 +76,7 @@ public struct Chat : ISerializable, IDeserializable
         if (grads.Length > 0)
         {
             for (int k = grads.Length - 1; k >= 0; k--)
-            { 
+            {
                 int gradIndex = grads[k];
                 string a = text.Substring(gradIndex + 6, 6);
                 string b = text.Substring(gradIndex + 13, 6);
@@ -109,7 +86,7 @@ public struct Chat : ISerializable, IDeserializable
                 int gradTextIndex = gradIndex + pattern.Length;
                 string s = text.Substring(
                     gradTextIndex,
-                    text.IndexOf('&', gradTextIndex) != -1 
+                    text.IndexOf('&', gradTextIndex) != -1
                     ? text.IndexOf('&', gradTextIndex) - gradTextIndex
                     : text.Length - gradTextIndex);
                 text = text
@@ -117,7 +94,34 @@ public struct Chat : ISerializable, IDeserializable
                     .Insert(gradIndex, Gradient(s, gradStartColor, gradEndColor));
             }
         }
-
+        return text;
+    }
+    public static string Gradient(string text, int start_color, int end_color)
+    {
+        string ToColor(byte r, byte g, byte b) => 
+            r.ToString("X").PadLeft(2, '0') + 
+            g.ToString("X").PadLeft(2, '0') + 
+            b.ToString("X").PadLeft(2, '0');
+        void FromColor(int color, out byte r, out byte g, out byte b)
+        {
+            r = (byte)((color >> 16) & 0xFF);
+            g = (byte)((color >> 8) & 0xFF);
+            b = (byte)(color & 0xFF);
+        }
+        StringBuilder strb = new StringBuilder();
+        float lerp(float a, float b, float t) => a + (b - a) * t;
+        FromColor(start_color, out var sr, out var sg, out var sb);
+        FromColor(end_color, out var er, out var eg, out var eb);
+        for (int k = 0; k < text.Length; k++)
+        {
+            float t = (float)k / text.Length;
+            strb.Append($"&#{ToColor((byte)lerp(sr, er, t), (byte)lerp(sg, eg, t), (byte)lerp(sb, eb, t))}{text[k]}");
+        }
+        return strb.ToString();
+    }
+    public static Chat ColoredText(string text)
+    {
+        text = ParseGradients(text);
         var spl = text.Split('&');
         if (spl.Length == 1)
             return new Chat(text);

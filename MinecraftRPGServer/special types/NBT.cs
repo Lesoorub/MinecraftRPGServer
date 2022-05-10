@@ -54,7 +54,29 @@ public class NBTTag : ISerializable, IDeserializable
         body = TAG.Read(bytes[offset++], bytes, ref offset, true);
         length = offset - init_offset;
     }
+    /// <summary>
+    /// Need tests
+    /// </summary>
+    /// <param name="obj"></param>
+    /// <returns></returns>
+    public override bool Equals(object obj)
+    {
+        if (!(obj is NBTTag tag)) return false;
+        if (tag.body == null && body == null) return true;
+        if (!(tag.body != null && body != null)) return false;
 
+        if (tag.body is TAG_Compound obj_compound && body is TAG_Compound compound)
+        {
+            if (obj_compound.body.Count != compound.body.Count) return false;
+        }
+        return tag.body.Equals(body);
+    }
+    public static bool Equals(NBTTag a, NBTTag b)
+    {
+        if (a == null && b == null) return true;
+        if (a != null && b != null) return a.Equals(b);
+        return false;
+    }
     public static NBTTag emptyCompaund => new NBTTag(new TAG_Compound(new List<TAG>()));
     public static implicit operator TAG_Compound(NBTTag nbt) => nbt == null ? null : nbt.body as TAG_Compound;
 }
@@ -142,6 +164,16 @@ public class TAG
     {
         return $"TAG({namelen}'{name}')";
     }
+    public virtual bool Equals(TAG tag)
+    {
+        return name.Equals(tag.name);
+    }
+    public static bool Equals(TAG a, TAG b)
+    {
+        if (a == null && b == null) return true;
+        if (a != null && b != null) return a.Equals(b);
+        return false;
+    }
 }
 public class TAG_END : TAG
 {
@@ -151,6 +183,10 @@ public class TAG_END : TAG
     public override string ToString()
     {
         return $"TAG_END";
+    }
+    public override bool Equals(TAG tag)
+    {
+        return tag is TAG_END;
     }
 }
 public class TAG_Byte : TAG
@@ -178,6 +214,10 @@ public class TAG_Byte : TAG
     {
         return $"TAG_Byte({namelen}'{name}'): {data}b";
     }
+    public override bool Equals(TAG tag)
+    {
+        return tag is TAG_Byte t && data == t.data;
+    }
 }
 public class TAG_Short : TAG
 {
@@ -204,6 +244,10 @@ public class TAG_Short : TAG
     public override string ToString()
     {
         return $"TAG_Short({namelen}'{name}'): {data}";
+    }
+    public override bool Equals(TAG tag)
+    {
+        return tag is TAG_Short t && data == t.data;
     }
 }
 public class TAG_Int : TAG
@@ -233,6 +277,10 @@ public class TAG_Int : TAG
     {
         return $"TAG_Int({namelen}'{name}'): {data}";
     }
+    public override bool Equals(TAG tag)
+    {
+        return tag is TAG_Int t && data == t.data;
+    }
 }
 public class TAG_Long : TAG
 {
@@ -260,6 +308,10 @@ public class TAG_Long : TAG
     {
         return $"TAG_Long({namelen}'{name}'): {data}";
     }
+    public override bool Equals(TAG tag)
+    {
+        return tag is TAG_Long t && data == t.data;
+    }
 }
 public class TAG_Float : TAG
 {
@@ -286,6 +338,10 @@ public class TAG_Float : TAG
     {
         return $"TAG_Float({namelen}'{name}'): {data}";
     }
+    public override bool Equals(TAG tag)
+    {
+        return tag is TAG_Float t && data == t.data;
+    }
 }
 public class TAG_Double : TAG
 {
@@ -311,6 +367,10 @@ public class TAG_Double : TAG
     public override string ToString()
     {
         return $"TAG_Double({namelen}'{name}'): {data}";
+    }
+    public override bool Equals(TAG tag)
+    {
+        return tag is TAG_Double t && data == t.data;
     }
 }
 public class TAG_Byte_Array : TAG
@@ -348,6 +408,10 @@ public class TAG_Byte_Array : TAG
     {
         return $"TAG_Byte_Array({namelen}'{name}'): {data.Length} longs";
     }
+    public override bool Equals(TAG tag)
+    {
+        return tag is TAG_Byte_Array t && data.SequenceEqual(t.data);
+    }
 }
 public class TAG_String : TAG
 {
@@ -374,10 +438,47 @@ public class TAG_String : TAG
     }
     public static implicit operator TAG_String(string t) => new TAG_String(t);
     public static implicit operator string(TAG_String tag) => tag.data;
-    public override byte[] Bytes => BitConverter.GetBytes(datalen).Reverse().Combine(Encoding.UTF8.GetBytes(data));
+    public override byte[] Bytes => ModifiedUTF8WithLen(data);
     public override string ToString()
     {
         return $"TAG_String({namelen}'{name}'): {datalen}'{data}'";
+    }
+    public override bool Equals(TAG tag)
+    {
+        return tag is TAG_String t && string.Equals(data, t.data);
+    }
+    private static byte[] ModifiedUTF8WithLen(string text)
+    {
+        char[] chars = text.ToCharArray();
+        byte[] result = new byte[chars.Length * 3 + 2];
+        result[0] = (byte)((text.Length << 8) & 0xFF);
+        result[1] = (byte)( text.Length       & 0xFF);
+        int offset = 2;
+        foreach (var c in chars)
+        {
+            int t = c;
+            if (t == 0)//zero is encoded by two bytes
+            {
+                offset += 2;
+                continue;
+            }
+            if (t <= 0x007F)//single byte
+            {
+                result[offset++] = (byte)(t & 0b0111_1111);
+                continue;
+            }
+            if (t <= 0x07FF)//pair bytes
+            {
+                result[offset++] = (byte)(((t >> 6) & 0b0001_1111) | 0b1100_0000);//Byte 1
+                result[offset++] = (byte)(( t       & 0b0011_1111) | 0b1000_0000);//Byte 2
+                continue;
+            }
+            //three bytes
+            result[offset++] = (byte)(((t >> 12) & 0b0000_1111) | 0b1110_0000);//Byte 1
+            result[offset++] = (byte)(((t >> 6)  & 0b0011_1111) | 0b1000_0000);//Byte 2
+            result[offset++] = (byte)(( t        & 0b0011_1111) | 0b1000_0000);//Byte 3
+        }
+        return result.Take(offset);
     }
 }
 public class TAG_List : TAG
@@ -462,6 +563,21 @@ public class TAG_List : TAG
 
         sb.AppendLine(d + "}");
         return sb.ToString();
+    }
+    public override bool Equals(TAG tag)
+    {
+        if (tag is TAG_List t &&
+            elementsType == t.elementsType &&
+            data.Count == t.data.Count)
+        {
+            for (int k = 0; k < data.Count; k++)
+            {
+                if (!Equals(data[k], t.data[k])) 
+                    return false;
+            }
+            return true;
+        }
+        return false;
     }
 }
 public class TAG_Compound : TAG, IList<TAG>
@@ -556,6 +672,20 @@ public class TAG_Compound : TAG, IList<TAG>
     {
         body.RemoveAll(x => names.Contains(x.name));
         return this;
+    }
+    public override bool Equals(TAG tag)
+    {
+        if (tag is TAG_Compound t &&
+            body.Count == t.body.Count)
+        {
+            for (int k = 0; k < body.Count; k++)
+            {
+                if (!Equals(body[k], t.body[k]))
+                    return false;
+            }
+            return true;
+        }
+        return false;
     }
 
     #region listinterface
@@ -657,6 +787,10 @@ public class TAG_Int_Array : TAG
     {
         return $"TAG_Int_Array({namelen}'{name}'): {data.Length} longs";
     }
+    public override bool Equals(TAG tag)
+    {
+        return tag is TAG_Int_Array t && data.SequenceEqual(t.data);
+    }
 }
 public class TAG_Long_Array : TAG
 {
@@ -700,5 +834,9 @@ public class TAG_Long_Array : TAG
     public override string ToString()
     {
         return $"TAG_Long_Array({namelen}'{name}'): {data.Length} longs";
+    }
+    public override bool Equals(TAG tag)
+    {
+        return tag is TAG_Long_Array t && data.SequenceEqual(t.data);
     }
 }

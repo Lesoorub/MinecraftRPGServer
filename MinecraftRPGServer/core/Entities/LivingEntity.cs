@@ -3,6 +3,8 @@ using Packets.Play;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Inventory.Items;
+using Inventory;
 
 public class LivingEntity : Entity
 {
@@ -45,6 +47,10 @@ public class LivingEntity : Entity
     protected virtual v3f HoloOffset => v3f.zero;
 
     public List<Player> whoViewMe = new List<Player>();
+
+    public virtual Item[] Armor { get; } = new Item[4];
+    public virtual Item MainHand { get; } = null;
+    public virtual Item OffHand { get; } = null;
 
     public virtual Sound HurtSound => new Sound(SoundID.entity_player_hurt, Categories.PLAYERS);
     public virtual Sound DeathSound => new Sound(SoundID.entity_player_death, Categories.PLAYERS);
@@ -173,5 +179,55 @@ public class LivingEntity : Entity
                 }
             }
         });
+    }
+
+    private EntityEquipment getEquipments()
+    {
+        Item[] equipments = new Item[]
+        {
+            MainHand,
+            OffHand,
+            Armor[3],
+            Armor[2],
+            Armor[1],
+            Armor[0],
+        };
+        List<EntityEquipment.Equipment> list = new List<EntityEquipment.Equipment>();
+        for (int k = 0; k < equipments.Length; k++)
+        {
+            list.Add(new EntityEquipment.Equipment()
+            {
+                Item = equipments[k] != null ? equipments[k] : default,
+                Slot = (EntityEquipment.EquipmentSlot)k
+            });
+        }
+        var writer = new ArrayWriter(true);
+        int index = 0;
+        foreach (var t in list)
+        {
+            if (index < list.Count - 1)
+                t.Slot |= EntityEquipment.EquipmentSlot.NextPresent;
+            writer.Write(t);
+            index++;
+        }
+        var data = writer.ToArray();
+        return new EntityEquipment()
+        {
+            EntityID = EntityID,
+            equipmentArray = data
+        };
+    }
+    public void SendEquipments()
+    {
+        var packet = getEquipments();
+        if (packet.equipmentArray.bytes.Length > 0)
+            foreach (var player in whoViewMe)
+                player.network.Send(packet);
+    }
+    public void SendEquipments(NetworkProvider net)
+    {
+        var packet = getEquipments();
+        if (packet.equipmentArray.bytes.Length > 0)
+            net.Send(packet);
     }
 }
