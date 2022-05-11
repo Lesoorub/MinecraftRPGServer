@@ -21,18 +21,19 @@ namespace Inventory.Items
             base.GetTooltip(ref list);
             list.Add(new Parameter("Power", $"{power * 100:N0}%"));
             list.Add(new Parameter("Cooldown", $"{ReloadTime} Seconds"));
-            if (Scroll != null)
-                list.Add(new Parameter("Description", Scroll.Description));
+            list.Add(new Parameter("- " + (Scroll != null ? Scroll.Name : "none")));
         }
         public void Use(Player player)
         {
             if (player.IsSneaking)
             {
                 //Open interface
+                OpenWindow(player);
                 return;
             }
+            if (Scroll == null) return;
             if (SetCooldown(player, ReloadTicks))
-                Scroll?.Execute(player, power);
+                Scroll.Execute(player, player.Position, power);
             else
                 player.EchoIntoChatFromServer($"Reloading {(player.Cooldowns[ItemID] - player.rpgserver.currentTick) / RPGServer.TicksPerSecond} second(s)");
         }

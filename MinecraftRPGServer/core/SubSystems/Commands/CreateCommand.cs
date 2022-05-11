@@ -106,9 +106,9 @@ public class CreateCommand : IChatCommand
         if (args[0] == "entity")
             SpawnEntity(player, args.Skip(1).ToArray());
         else if (args[0] == "item")
-            GiveItem(player, args.Skip(1).ToArray());
+            CreateItem(player, args.Skip(1).ToArray());
         else if (args[0] == "rpg_item")
-            GiveRPGItem(player, args.Skip(1).ToArray());
+            CreateRPGItem(player, args.Skip(1).ToArray());
     }
     private void SpawnEntity(Player player, string[] args)
     {
@@ -122,7 +122,7 @@ public class CreateCommand : IChatCommand
                 attr.customCmd.onExecute(entity, args.Skip(1).ToArray());
         }
     }
-    private void GiveItem(Player player, string[] args)
+    private void CreateItem(Player player, string[] args)
     {
         string nameid;
         byte count = 1;
@@ -155,7 +155,7 @@ public class CreateCommand : IChatCommand
     }
     static readonly string[] RarityNames = Enum.GetNames(typeof(Inventory.Items.Rarity));
     static readonly string[] QualityNames = Enum.GetNames(typeof(Inventory.Items.Quality));
-    private void GiveRPGItem(Player player, string[] args)
+    private void CreateRPGItem(Player player, string[] args)
     {
         if (args.Length == 0 || string.IsNullOrEmpty(args[0])) return;
         string nameid = args[0].Replace("minecraft:", "");

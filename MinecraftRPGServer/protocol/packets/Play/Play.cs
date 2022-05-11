@@ -917,5 +917,14 @@ namespace Packets.Play
         public VarInt ItemID;
         public VarInt CooldownTicks;
     }
+    [BoundToClientPackage]
+    public class OpenWindow : MSerializableToBytes, IPacket
+    {
+        public override int package_id => 0x2E;
+
+        public VarInt WindowID;
+        public VarInt WindowType;
+        public Chat WindowTitle;
+    }
     #endregion
 }

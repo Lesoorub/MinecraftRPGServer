@@ -79,7 +79,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     public EntityView view = new EntityView();
 
     public Weather currentWeather;
-
+    //Modules
     public KeepAliveModule keepAlive = new KeepAliveModule();
     public WorldLoaderController worldController = new WorldLoaderController();
     public EntitiesController entitiesController = new EntitiesController();
@@ -87,10 +87,12 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     public PlayerSettings settings;
     public bool isInit => settings.ViewDistance != 0;
     public Guid PlayerUUID;
-
+    //Inventory
     public InventoryOfPlayer inventory;
     public PlayerInventoryWindow inventoryWindow;
     public InventoryWindowWatcher inventoryWatcher;
+    public AbstractWindow SecondWindow;
+    public byte LastWindowID = 1;
     public override Item[] Armor => inventory.Armor.Select(x => x.item).ToArray();
     public override Item MainHand => inventory.hotbar[selectedSlot].item;
     public override Item OffHand => inventory.Offhand.item;
@@ -571,5 +573,15 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
                     RandomPlus.Range(-.25f, .25f)
                 ).Normalized + target.BoxCollider.y / 2 * v3f.up,
                 $"&c-{damage:N1}", RPGServer.TicksPerSecond * 1);
+    }
+    public void OpenWindow(AbstractWindow window)
+    {
+        if (window.Type == -1) return;//Anyway ignore PlayerInventoryWindow
+        window.Open(this as Player);
+    }
+    public void CloseWindow(int WindowID)
+    {
+        if (WindowID == 0) return;//Ignore PlayerInventoryWindow
+        SecondWindow = null;
     }
 }

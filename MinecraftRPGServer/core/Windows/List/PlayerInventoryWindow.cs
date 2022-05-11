@@ -11,8 +11,9 @@ namespace Inventory
                 pinv.mainInv,
                 pinv.hotbar,
                 pinv.Offhand);
+        public override int hotbarIndex => 36;
+        public override int mainInvIndex => 9;
         public override int Type => -1;
-        public override string Name => null;
         public PlayerInventoryWindow(InventoryOfPlayer player) : base(player) { }
         public override IndexedItem GetSlot(int index)
         {

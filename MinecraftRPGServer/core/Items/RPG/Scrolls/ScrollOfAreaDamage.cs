@@ -1,23 +1,28 @@
-﻿namespace Scrolls
+﻿using System.Text.Json.Serialization;
+
+namespace Inventory.Items
 {
-    public class ScrollOfDamage : Scroll
+    [RPGItem("scroll_of_area_damage")]
+    public class ScrollOfAreaDamage : Scroll
     {
+        [JsonIgnore]
         public float Radius = 3;
+        [JsonIgnore]
         public float BaseDamage = 1;
 
-        public override string Description => $"Damage all enemies within radius of {Radius} blocks.";
-        public ScrollOfDamage(float radius, float baseDamage)
+        public override string Description => $"Deal {BaseDamage} damage within radius of {Radius} blocks.";
+
+        public ScrollOfAreaDamage()
         {
-            Radius = radius;
-            BaseDamage = baseDamage;
+            Name = "Scroll of area damage";
         }
 
-        public override void Execute(Player player, float Power)
+        public override void Execute(Player player, v3f position, float Power)
         {
             Particle.SpawnHorizontalCircle(
                 player.world,
                 Particles.soul,
-                player.Position + v3f.up * 0.1f,
+                position + v3f.up * 0.1f,
                 v3f.zero,
                 0,
                 1,

@@ -13,8 +13,20 @@ public class OnClickWindow : PacketListener
         var player = client as Player;
         var clickWindow = packet as Packets.Play.ClickWindow;
         if (player == null || clickWindow == null) return;
-        if (!player.inventoryWindow.ClickWindow(player, clickWindow))
-            player.SendInventory();
+        if (clickWindow.WindowID == 0)
+        {
+            if (!player.inventoryWindow.ClickWindow(player, clickWindow))
+                player.SendInventory();
+        }
+        else
+        {
+            if (player.SecondWindow != null && 
+                clickWindow.WindowID == player.SecondWindow.WindowID)
+            {
+                if (!player.SecondWindow.ClickWindow(player, clickWindow))
+                    player.SecondWindow.SendItems(player);
+            }
+        }
         player.inventoryWatcher.Update();
     }
 }

@@ -8,19 +8,24 @@ namespace Inventory
 {
     public abstract class AbstractWindow
     {
+        public byte WindowID;
+        public virtual Chat WindowTitle { get; set; } = Chat.ColoredText("Window");
         public virtual Slot[] Slots => Combine(inventory, pinv.mainInv, pinv.hotbar);
         public IndexedItem[] inventory { get; set; }
         public virtual int Type { get; }
-        public virtual string Name { get; }
         protected InventoryOfPlayer pinv;
         public void OnItemChanged_Invoke(Item item, int index) => OnItemChanged?.Invoke(item, index);
         public delegate void ItemChangedArgs(Item item, int index);
         public event ItemChangedArgs OnItemChanged;
+        public ItemMovement movement = new ItemMovement();
+        public virtual int hotbarIndex => inventory.Length + 27;
+        public virtual int mainInvIndex => inventory.Length;
+
+
         public AbstractWindow(InventoryOfPlayer player)
         {
             this.pinv = player;
         }
-        public ItemMovement movement = new ItemMovement();
         public virtual Item GetItem(int index) => null;
         public virtual IndexedItem GetSlot(int index) => default;
         public virtual void SetSlot(int index, Item newItem) { }
@@ -41,7 +46,7 @@ namespace Inventory
                 abs.button = button;
                 abs.CarriedItem = pinv.CarriedItem.item;
                 abs.window = this;
-                abs.player = player;
+                abs.player = player;     
                 abs.ClickOnSlot(ref item);
                 pinv.CarriedItem.item = abs.CarriedItem;
                 if (pinv.CarriedItem.item != null && pinv.CarriedItem.item.ItemCount == 0)
@@ -49,6 +54,8 @@ namespace Inventory
                 SetSlot(slot, item);
             }
             //Console.WriteLine($"mode={mode}, button={button}, slot={slot}, GetItem(slot)={(Slot)GetItem(slot)}, CI={(Slot)pinv.CarriedItem.item}");
+            if (GetSlot(slot).readOnly) 
+                return false;
             if (slot != -1)
             {
                 switch (mode)
@@ -84,7 +91,20 @@ namespace Inventory
                         break;
                     case 2://Number key {BUTTON}
                            //if Button == 40 it is Offhand swap key F
-                        Invoke(movement.numKeyClick);
+                        {
+                            int newindex = hotbarIndex + button;
+                            if (button == 40)
+                                newindex = hotbarIndex + 9;
+                            if (slot != newindex)
+                            {
+                                var hotbarSlot = GetSlot(newindex);
+                                var itemSlot = GetSlot(slot);
+
+                                if (hotbarSlot.readOnly || itemSlot.readOnly)
+                                    return false;
+                            }
+                            Invoke(movement.numKeyClick);
+                        }
                         break;
                     case 3://Middle click, only creative in non-player inventory
                         if (player.Gamemode != GamemodeType.Creative) break;
@@ -110,8 +130,10 @@ namespace Inventory
                         Invoke(movement.painting);
                         break;
                     case 6://Double click
-                        if (button == 0)
-                            Invoke(movement.doubleClick);
+                        {
+                            if (button == 0)
+                                Invoke(movement.doubleClick);
+                        }
                         break;
                     default:
                         return false;
@@ -123,7 +145,28 @@ namespace Inventory
 
             return true;
         }
-
+        public virtual void Open(Player player)
+        {
+            WindowID = player.LastWindowID++;
+            player.SecondWindow = this;
+            player.network.Send(new OpenWindow()
+            {
+                WindowID = WindowID,
+                WindowType = Type,
+                WindowTitle = WindowTitle,
+            });
+            SendItems(player);
+        }
+        public virtual void SendItems(Player player)
+        {
+            player.network.Send(new WindowItems()
+            {
+                WindowID = WindowID,
+                StateID = player.LastStateID++,
+                slots = Slots,
+                CarriedItem = player.inventory.CarriedItem.item
+            });
+        }
         protected Slot[] Combine(params object[] items)
         {
             return items
@@ -156,12 +199,12 @@ namespace Inventory
                     if (item == null && CarriedItem == null) return;
                     if (item == null || CarriedItem == null)//Drop from CI
                     {
-                        if (item == null && CarriedItem != null)
+                        if (item == null && CarriedItem != null)//CI != null && item == null
                         {
                             if (CanPlace(window.GetSlot(slot), CarriedItem))
                                 Swap(ref item, ref CarriedItem);
                         }
-                        else
+                        else//CI == null && item != null
                         {
                             Swap(ref item, ref CarriedItem);
                         }
@@ -222,11 +265,13 @@ namespace Inventory
                 public override void ClickOnSlot(ref Item item)
                 {
                     if (CarriedItem == null) return;
-                    for (int k = 9; k <= 44; k++)
+                    for (int k = window.mainInvIndex; k < window.mainInvIndex + 36; k++)
                     {
                         if (k == slot)
                             continue;
-                        var k_item = window.GetItem(k);
+                        var k_slot = window.GetSlot(k);
+                        if (k_slot.readOnly) continue;
+                        var k_item = k_slot.item;
                         if (!ItemEquals(k_item, CarriedItem))
                             continue;
                         if (k_item.ItemCount == 64) continue;
@@ -237,11 +282,13 @@ namespace Inventory
                                 return;
                         }
                     }
-                    for (int k = 9; k <= 44; k++)
+                    for (int k = window.mainInvIndex; k < window.mainInvIndex + 36; k++)
                     {
                         if (k == slot)
                             continue;
-                        var k_item = window.GetItem(k);
+                        var k_slot = window.GetSlot(k);
+                        if (k_slot.readOnly) continue;
+                        var k_item = k_slot.item;
                         if (!ItemEquals(k_item, CarriedItem))
                             continue;
                         if (TryMove(ref CarriedItem, ref k_item, k_item.ItemCount))
@@ -257,13 +304,15 @@ namespace Inventory
             {
                 public override void ClickOnSlot(ref Item item)
                 {
-                    int newindex = 36 + button;
+                    int newindex = window.hotbarIndex + button;
                     if (button == 40)
-                        newindex = 45;
+                        newindex = window.hotbarIndex + 9;
                     if (slot != newindex)
                     {
                         var hotbarSlot = window.GetSlot(newindex);
                         var itemSlot = window.GetSlot(slot);
+
+                        if (hotbarSlot.readOnly || itemSlot.readOnly) return;
 
                         if (itemSlot.item == null && hotbarSlot.item == null) return;
                         if (itemSlot.item != null && !CanPlace(hotbarSlot, itemSlot.item))
@@ -278,43 +327,68 @@ namespace Inventory
             }
             public sealed class ShiftClick : AbstractClick
             {
-                bool isArmor => slot >= 5 && slot <= 8;
-                bool isMainInv => slot >= 9 && slot <= 35;
-                bool isHotbar => slot >= 36 && slot <= 44;
+                bool isMainInv => slot >= window.mainInvIndex && slot < window.mainInvIndex + 27;
+                bool isHotbar => slot >= window.hotbarIndex && slot < window.hotbarIndex + 9;
+                bool isInventory => slot >= 0 && slot < window.inventory.Length;
                 public override void ClickOnSlot(ref Item item)
                 {
-                    if (isMainInv)
+                    if (window.GetSlot(slot).readOnly) return;
+                    if (window.Type == -1)
                     {
-
-                        if (!Move(5, 8, ref item))//Armor
-                            Move(36, 44, ref item);//Hotbar
-                    }
-                    else if (isHotbar)
-                    {
-
-                        if (!Move(5, 8, ref item))//Armor
-                            Move(9, 35, ref item);//MainInv
+                        if (isMainInv)
+                        {
+                            if (!Move(5, 8, ref item))//Armor
+                                Move(window.hotbarIndex, window.hotbarIndex + 8, ref item);//Hotbar
+                        }
+                        else if (isHotbar)
+                        {
+                            if (!Move(5, 8, ref item))//Armor
+                                Move(window.mainInvIndex, window.mainInvIndex + 26, ref item);//MainInv
+                        }
+                        else//Armor
+                        {
+                            if (!Move(window.mainInvIndex, window.mainInvIndex + 26, ref item))//MainInv
+                                Move(window.hotbarIndex, window.hotbarIndex + 8, ref item);//Hotbar
+                        }
                     }
                     else
                     {
-                        if (!Move(9, 35, ref item))//MainInv
-                            Move(36, 44, ref item);//Hotbar
+                        if (isInventory)
+                        {
+                            if (!Move(window.hotbarIndex, window.hotbarIndex + 8, ref item))//Hotbar
+                                Move(window.mainInvIndex, window.mainInvIndex + 26, ref item);//MainInv
+                        }
+                        else if (isMainInv)
+                        {
+                            if (!Move(0, window.inventory.Length - 1, ref item))//Inventory
+                                Move(window.hotbarIndex, window.hotbarIndex + 8, ref item);//Hotbar
+                        }
+                        else//Hotbar
+                        {
+                            if (!Move(0, window.inventory.Length - 1, ref item))//Inventory
+                                Move(window.mainInvIndex, window.mainInvIndex + 26, ref item);//MainInv
+                        }
                     }
                 }
                 bool Move(int start, int end, ref Item item)
                 {
                     if (item == null) return false;
+                    //Попытка добавить в существующие стаки
                     for (int k = start; k <= end; k++)
                     {
-                        var k_item = window.GetItem(k);
+                        var k_slot = window.GetSlot(k);
+                        if (k_slot.readOnly) continue;
+                        var k_item = k_slot.item;
                         if (k_item != null)
                             TryMove(ref k_item, ref item, item.ItemCount);
                         window.SetSlot(k, k_item);
                         if (item == null) return true;
                     }
+                    //Попытка положить в пустой слот
                     for (int k = start; k <= end; k++)
                     {
                         var k_slot = window.GetSlot(k);
+                        if (k_slot.readOnly) continue;
                         var k_item = k_slot.item;
                         if (k_item == null && CanPlace(k_slot, window.GetSlot(slot).item))
                         {
@@ -366,6 +440,7 @@ namespace Inventory
                                     foreach (var k in slots)
                                     {
                                         var k_slot = window.GetSlot(k);
+                                        if (k_slot.readOnly) continue;
                                         if (k_slot.item == null)
                                         {
                                             k_slot.item = (Item)CarriedItem.Clone();
@@ -384,6 +459,7 @@ namespace Inventory
                                 {
                                     byte count = 1;
                                     var k_slot = window.GetSlot(k);
+                                    if (k_slot.readOnly) continue;
                                     if (k_slot.item == null)
                                     {
                                         k_slot.item = (Item)CarriedItem.Clone();
@@ -404,6 +480,7 @@ namespace Inventory
                                     foreach (var k in slots)
                                     {
                                         var k_slot = window.GetSlot(k);
+                                        if (k_slot.readOnly) continue;
                                         if (k_slot.item == null)
                                         {
                                             k_slot.item = (Item)CarriedItem.Clone();
@@ -437,6 +514,7 @@ namespace Inventory
                             foreach (var k in slots)
                             {
                                 var s = window.GetSlot(k);
+                                if (s.readOnly) continue;
                                 s.item = (Item)CarriedItem.Clone();
                                 window.SetSlot(k, s.item);
                             }

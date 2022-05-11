@@ -116,8 +116,13 @@ namespace Inventory.Items
                 Name = name;
                 Value = value;
             }
+            public Parameter(string name)
+            {
+                Name = name;
+                Value = null;
+            }
 
-            public override string ToString() => $"{Name}: {Value}";
+            public override string ToString() => !string.IsNullOrEmpty(Value) ? $"{Name}: {Value}" : Name;
         }
     }
 }

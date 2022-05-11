@@ -96,9 +96,10 @@
     <Compile Include="core\Entities\Player\datawatchers\InventoryWindowWatcher.cs" />
     <Compile Include="core\Entities\sound\Categories.cs" />
     <Compile Include="core\Items\BaseClasses\Scroll.cs" />
-    <Compile Include="core\Items\RPG\Scrolls\Scroll.cs" />
-    <Compile Include="core\Items\RPG\Scrolls\ScrollOfDamage.cs" />
+    <Compile Include="core\Items\RPG\Scrolls\ScrollOfAreaDamage.cs" />
+    <Compile Include="core\Items\RPG\Scrolls\ScrollOfHealing.cs" />
     <Compile Include="core\Items\Vanilla\Paper.cs" />
+    <Compile Include="core\Items\Vanilla\WhiteStainedGlassPane.cs" />
     <Compile Include="core\SubSystems\Commands\lib\CustomCommandNode.cs" />
     <Compile Include="core\Entities\EntityAttribute.cs" />
     <Compile Include="core\Entities\List\Arrow.cs" />
@@ -163,7 +164,6 @@
     <Compile Include="core\Items\IUsingFinish.cs" />
     <Compile Include="core\Items\Vanilla\RPGIronHelmet.cs" />
     <Compile Include="core\Items\RPG\UniversalAmulet.cs" />
-    <Compile Include="core\Items\RPG\AmuletOfHealing.cs" />
     <Compile Include="core\Items\BaseClasses\Armor.cs" />
     <Compile Include="core\Items\BaseClasses\Amulet.cs" />
     <Compile Include="core\Items\Vanilla\Bow.cs" />
@@ -192,7 +192,6 @@
     <Compile Include="core\SubSystems\Commands\BornCommand.cs" />
     <Compile Include="core\SubSystems\Commands\ColorsCommand.cs" />
     <Compile Include="core\SubSystems\Commands\CreateCommand.cs" />
-    <Compile Include="core\SubSystems\Commands\GiveCommand.cs" />
     <Compile Include="core\SubSystems\Commands\HealCommand.cs" />
     <Compile Include="core\SubSystems\Commands\ParticleCommand.cs" />
     <Compile Include="core\SubSystems\Hologram.cs" />
