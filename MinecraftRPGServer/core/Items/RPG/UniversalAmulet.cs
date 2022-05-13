@@ -12,6 +12,7 @@ namespace Inventory.Items
         int ReloadTime = 1;
         [JsonIgnore]
         int ReloadTicks => ReloadTime * RPGServer.TicksPerSecond;
+        public override CustomModelData model => CustomModelData.amulet1;
         public UniversalAmulet()
         {
             Name = "Universal amulet";

@@ -96,6 +96,7 @@
     <Compile Include="core\Entities\Player\datawatchers\InventoryWindowWatcher.cs" />
     <Compile Include="core\Entities\sound\Categories.cs" />
     <Compile Include="core\Items\BaseClasses\Scroll.cs" />
+    <Compile Include="core\Items\CustomModelData.cs" />
     <Compile Include="core\Items\RPG\Scrolls\ScrollOfAreaDamage.cs" />
     <Compile Include="core\Items\RPG\Scrolls\ScrollOfHealing.cs" />
     <Compile Include="core\Items\Vanilla\Paper.cs" />

@@ -10,6 +10,7 @@ namespace Inventory.Items
         [JsonIgnore]
         public float BaseDamage = 1;
 
+        [JsonIgnore]
         public override string Description => $"Deal {BaseDamage} damage within radius of {Radius} blocks.";
 
         public ScrollOfAreaDamage()

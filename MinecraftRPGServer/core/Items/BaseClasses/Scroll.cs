@@ -12,8 +12,10 @@ namespace Inventory.Items
             t.Add("scroll");
             return t;
         }
+        public override CustomModelData model => CustomModelData.scroll0;
         public Scroll()
         {
+
         }
         public virtual void Execute(Player player, v3f position, float Power) { }
         protected override void GetTooltip(ref List<Parameter> list)

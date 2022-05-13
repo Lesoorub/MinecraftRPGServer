@@ -27,7 +27,7 @@ namespace Inventory
         [JsonIgnore]
         public virtual bool sendNBT { get; } = false;
         [JsonIgnore]
-        public virtual int CustomModelData { get; }
+        public virtual CustomModelData model { get; }
         [JsonIgnore]
         public NBTTag NBT
         {
@@ -53,8 +53,8 @@ namespace Inventory
                         "Lore"));
                 }
 
-                if (CustomModelData != 0)
-                    nbt["CustomModelData"] = new TAG_Int(CustomModelData, "CustomModelData");
+                if (model != 0)
+                    nbt["CustomModelData"] = new TAG_Int((int)model, "CustomModelData");
 
                 if (display.Count > 0)
                     nbt["display"] = new TAG_Compound(display, "display");
