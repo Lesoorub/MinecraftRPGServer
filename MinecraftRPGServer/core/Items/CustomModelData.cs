@@ -2,6 +2,7 @@
 {
     amulet0 = 1297424970,
     amulet1 = 1070633577,
+    backpack0 = 1641814594,
     scroll0 = 1817903581,
     stafforiginal_1 = 1924176815,
     stafforiginal_10 = 422474049,

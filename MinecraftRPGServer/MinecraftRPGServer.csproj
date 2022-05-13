@@ -95,11 +95,15 @@
     <Compile Include="core\Entities\Player\datawatchers\InventoryWatcher.cs" />
     <Compile Include="core\Entities\Player\datawatchers\InventoryWindowWatcher.cs" />
     <Compile Include="core\Entities\sound\Categories.cs" />
+    <Compile Include="core\Items\BaseClasses\Backpack.cs" />
+    <Compile Include="core\Items\BaseClasses\IContainer.cs" />
     <Compile Include="core\Items\BaseClasses\Scroll.cs" />
     <Compile Include="core\Items\CustomModelData.cs" />
     <Compile Include="core\Items\RPG\Scrolls\ScrollOfAreaDamage.cs" />
     <Compile Include="core\Items\RPG\Scrolls\ScrollOfHealing.cs" />
+    <Compile Include="core\Items\Vanilla\Leather.cs" />
     <Compile Include="core\Items\Vanilla\Paper.cs" />
+    <Compile Include="core\Items\Vanilla\Stick.cs" />
     <Compile Include="core\Items\Vanilla\WhiteStainedGlassPane.cs" />
     <Compile Include="core\SubSystems\Commands\lib\CustomCommandNode.cs" />
     <Compile Include="core\Entities\EntityAttribute.cs" />
