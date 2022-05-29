@@ -11,12 +11,41 @@ public class OnPlayerDigging : PacketListener
         var player = client as Player;
         if (playerDigging == null || player == null) return;
 
-        if (!player.rpgserver.config.AllowBreakBlocks)
-            player.network.Send(new BlockChange()
+        if (playerDigging.status == PlayerDigging.Status.FinishedDigging ||
+            playerDigging.status == PlayerDigging.Status.CancelledDigging ||
+            playerDigging.status == PlayerDigging.Status.StartedDigging)
+        {
+            if (!player.rpgserver.config.AllowBreakBlocks)
+                player.network.Send(new BlockChange()
+                {
+                    BlockID = new VarInt(player.world.GetBlock((v3i)playerDigging.Location).StateID),
+                    Location = playerDigging.Location,
+                });
+            else
             {
-                BlockID = new VarInt(player.world.GetBlock((v3i)playerDigging.Location).StateID),
-                Location = playerDigging.Location,
-            });
+                switch (playerDigging.status)
+                {
+                    case PlayerDigging.Status.StartedDigging:
+                        player.worldController.StartBreakBlock(playerDigging.Location);
+                        break;
+                    case PlayerDigging.Status.CancelledDigging:
+                        player.worldController.EndlBreakBlock();
+                        break;
+                    case PlayerDigging.Status.FinishedDigging:
+                        if (player.worldController.canBreak(playerDigging.Location))
+                        {
+                            player.world.SetBlock(player,
+                                playerDigging.Location.x,
+                                playerDigging.Location.y,
+                                playerDigging.Location.z,
+                                new BlockState(0));
+                            player.worldController.EndlBreakBlock();
+                        }
+                        break;
+                }
+            }
+            return;
+        }
 
         switch (playerDigging.status)
         {

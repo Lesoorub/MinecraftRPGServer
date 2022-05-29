@@ -12,7 +12,7 @@ public class Chunk
 {
     public NBTTag Heightmaps = new NBTTag();
     public v2i cPos;
-    public ChunkSection[] sections;
+    public SortedDictionary<int, ChunkSection> sections = new SortedDictionary<int, ChunkSection>();
     public BlockEntity[] BlockEntities = new BlockEntity[0];
     public byte[] Data;
 
@@ -35,11 +35,10 @@ public class Chunk
         var nbt = new NBTTag(raw);
         Heightmaps = nbt["Heightmaps"];
         cPos = new v2i(nbt["xPos"] as TAG_Int, nbt["zPos"] as TAG_Int);
-        var block_entities = nbt["block_entities"] as TAG_List;
+        TAG_List block_entities = nbt["block_entities"] as TAG_List;
         
         if (block_entities != null && block_entities.data.Count > 0)
         {
-            byte f(int x) => (byte)(x & 0xF);
             BlockEntities = new BlockEntity[block_entities.data.Count];
 
             int index = 0;
@@ -49,8 +48,8 @@ public class Chunk
                 {
                     BlockEntities[index++] = new BlockEntity()
                     {
-                        blockX = f(ent["x"] as TAG_Int),
-                        blockZ = f(ent["z"] as TAG_Int),
+                        blockX = (byte)(ent["x"] as TAG_Int & 0xF),
+                        blockZ = (byte)(ent["z"] as TAG_Int & 0xF),
                         Y = (short)(ent["y"] as TAG_Int),
                         Type = type,
                         Data = (ent as TAG_Compound).RemoveTags(new string[] { "x", "y", "z", "id" })
@@ -61,12 +60,10 @@ public class Chunk
 
         var Sections = (nbt["sections"] as TAG_List).data;
 
-        sbyte miny = Sections.Min(x => (x["Y"] as TAG_Byte).data);
-        sections = new ChunkSection[Sections.Count];
         for (int k = 0; k < Sections.Count; k++)
         {
             var section = new ChunkSection(Sections[k]);
-            sections[section.Y - miny] = section;
+            sections.Add(section.Y, section);
         }
 
         UpdateData();
@@ -90,11 +87,11 @@ public class Chunk
     }
     public void UpdateLight()
     {
-        List<byte[]> skylight = new List<byte[]>(sections.Length);
-        List<byte[]> blocklight = new List<byte[]>(sections.Length);
-        for (int k = 0; k < sections.Length; k++)
+        List<byte[]> skylight = new List<byte[]>(sections.Count);
+        List<byte[]> blocklight = new List<byte[]>(sections.Count);
+        foreach (var sectionPair in sections)
         {
-            var section = sections[k];
+            var section = sectionPair.Value;
 
             if (section == null) continue;
 
@@ -103,7 +100,7 @@ public class Chunk
             if (section.BlockLight != null)
                 blocklight.Add(section.BlockLight);
 
-            int index = k + 1;
+            int index = sectionPair.Key + 1;
 
             SkyMask.Set(index, section.SkyLight != null);
             EmptySkyMask.Set(index, section.SkyLight == null);
@@ -117,7 +114,8 @@ public class Chunk
     {
         var writer = new ArrayWriter();
         foreach (var section in sections)
-            writer.WriteRaw(section.Bytes);
+            if (section.Key >= -4)
+                writer.WriteRaw(section.Value.Bytes);
         Data = writer.ToArray();
     }
 

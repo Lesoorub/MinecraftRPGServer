@@ -11,5 +11,6 @@ public abstract class World
     public virtual BlockState GetBlock(v3i location) => throw new System.NotImplementedException();
     public virtual BlockState GetBlock(Position location) => throw new System.NotImplementedException();
     public virtual BlockState GetBlock(int x, int y, int z) => throw new System.NotImplementedException();
+    public virtual bool SetBlock(Player player, int x, int y, int z, BlockState blockId) => throw new System.NotImplementedException();
     public virtual void Update() { }
 }

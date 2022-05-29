@@ -237,6 +237,23 @@ namespace Packets.Play
             RequestStats
         }
     }
+    [BoundToServerPackage]
+    public class PlayerBlockPlacement : MSerializableToBytes, IPacket
+    {
+        public enum HandType : byte
+        {
+            MainHand, OffHand = 1
+        }
+
+        public override int package_id => 0x2E;
+        public HandType Hand;
+        public Position Location;
+        public Direction Face;
+        public float CursorPositionX;
+        public float CursorPositionY;
+        public float CursorPositionZ;
+        public bool InsideBlock;
+    }
     #endregion
 
     #region Clientbound

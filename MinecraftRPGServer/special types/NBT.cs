@@ -460,23 +460,22 @@ public class TAG_String : TAG
             if (t == 0)//zero is encoded by two bytes
             {
                 offset += 2;
-                continue;
             }
-            if (t <= 0x007F)//single byte
+            else if (t <= 0x007F)//single byte
             {
-                result[offset++] = (byte)(t & 0b0111_1111);
-                continue;
-            }
-            if (t <= 0x07FF)//pair bytes
+                result[offset++] = (byte)(  t        & 0b0111_1111);
+            } 
+            else if (t <= 0x07FF)//pair bytes
             {
-                result[offset++] = (byte)(((t >> 6) & 0b0001_1111) | 0b1100_0000);//Byte 1
-                result[offset++] = (byte)(( t       & 0b0011_1111) | 0b1000_0000);//Byte 2
-                continue;
+                result[offset++] = (byte)(((t >> 6)  & 0b0001_1111) | 0b1100_0000);//Byte 1 //0x1F | 0xC0
+                result[offset++] = (byte)(( t        & 0b0011_1111) | 0b1000_0000);//Byte 2 //0x3F | 0x80
             }
-            //three bytes
-            result[offset++] = (byte)(((t >> 12) & 0b0000_1111) | 0b1110_0000);//Byte 1
-            result[offset++] = (byte)(((t >> 6)  & 0b0011_1111) | 0b1000_0000);//Byte 2
-            result[offset++] = (byte)(( t        & 0b0011_1111) | 0b1000_0000);//Byte 3
+            else//three bytes
+            {
+                result[offset++] = (byte)(((t >> 12) & 0b0000_1111) | 0b1110_0000);//Byte 1 //0x0F | 0xE0
+                result[offset++] = (byte)(((t >> 6)  & 0b0011_1111) | 0b1000_0000);//Byte 2 //0x3F | 0x80
+                result[offset++] = (byte)(( t        & 0b0011_1111) | 0b1000_0000);//Byte 3 //0x3F | 0x80
+            }
         }
         return result.Take(offset);
     }
@@ -561,7 +560,7 @@ public class TAG_List : TAG
             sb.AppendLine(d + " " + x.ToString());
         }
 
-        sb.AppendLine(d + "}");
+        sb.Append(d + "}");
         return sb.ToString();
     }
     public override bool Equals(TAG tag)
@@ -659,7 +658,7 @@ public class TAG_Compound : TAG, IList<TAG>
             sb.AppendLine(d + " " + x.ToString());
         }
 
-        sb.AppendLine(d + "}");
+        sb.Append(d + "}");
         return sb.ToString();
     }
 

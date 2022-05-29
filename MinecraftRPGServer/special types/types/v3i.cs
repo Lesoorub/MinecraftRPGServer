@@ -27,8 +27,11 @@ public class v3i
     public static v3i zero = new v3i(0, 0, 0);
     public static v3i one = new v3i(1, 1, 1);
     public static v3i right = new v3i(1, 0, 0);
+    public static v3i left = new v3i(-1, 0, 0);
     public static v3i up = new v3i(0, 1, 0);
+    public static v3i down = new v3i(0, -1, 0);
     public static v3i forward = new v3i(0, 0, 1);
+    public static v3i back = new v3i(0, 0, -1);
     public static v3i operator -(v3i a) => new v3i(-a.x, -a.y, -a.z);
     public static v3i operator +(v3i a, v3i b) => new v3i(a.x + b.x, a.y + b.y, a.z + b.z);
     public static v3i operator -(v3i a, v3i b) => new v3i(a.x - b.x, a.y - b.y, a.z - b.z);

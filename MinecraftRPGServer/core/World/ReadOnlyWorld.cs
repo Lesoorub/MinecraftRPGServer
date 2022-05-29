@@ -62,6 +62,9 @@ public class ReadOnlyWorld : World
             IsBackground = true
         };
         worldThread.Start();
+
+        //PreLoad chunks
+        LoadChunk(new v2i(0, 0));
     }
 
     public static bool isValid(string path)
@@ -124,15 +127,32 @@ public class ReadOnlyWorld : World
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override BlockState GetBlock(Position location) => 
         GetBlock(location.x, location.y, location.z);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void GetChunkSectionFromCoords(
+        int x, int y, int z, 
+        out int csx, out int csy, out int csz)
+    {
+        csx = x >> 4;
+        csy = y >> 4;
+        csz = z >> 4;
+    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool GetChunkSection(int csx, int csy, int csz, out ChunkSection section)
+    {
+        section = null;
+        var chunk = GetChunk(new v2i(csx, csz));
+        if (chunk == null)
+            return false;
+        section = chunk.sections[csy];
+        if (section == null)
+            return false;
+        return true;
+    }
     public override BlockState GetBlock(int x, int y, int z)
     {
-        var cpos = new v2i(x >> 4, z >> 4);
-        var chunk = GetChunk(cpos);
-        if (chunk == null) return BlockState.air;
-        int index = (y >> 4) + 4;
-        if (index < 0) return BlockState.air;
-        var section = chunk.sections[index];
-        if (section == null) return BlockState.air;
+        GetChunkSectionFromCoords(x, y, z, out int csx, out int csy, out int csz);
+        if (!GetChunkSection(csx, csy, csz, out var section)) 
+            return BlockState.air;
         return section.GetBlock(Chunk.GetRelativeCoord(x), Chunk.GetRelativeCoord(y), Chunk.GetRelativeCoord(z));
     }
     public void SetTime(long newTime)
@@ -143,5 +163,13 @@ public class ReadOnlyWorld : World
     public override void Update()
     {
         SetTime(Time + 1);
+    }
+    public override bool SetBlock(Player player, int x, int y, int z, BlockState blockId)
+    {
+        GetChunkSectionFromCoords(x, y, z, out int csx, out int csy, out int csz);
+        if (!GetChunkSection(csx, csy, csz, out var section))
+            return false;
+        section.SetBlock(Chunk.GetRelativeCoord(x), Chunk.GetRelativeCoord(y), Chunk.GetRelativeCoord(z), (short)blockId.StateID);
+        return true;
     }
 }

@@ -81,7 +81,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     public Weather currentWeather;
     //Modules
     public KeepAliveModule keepAlive = new KeepAliveModule();
-    public WorldLoaderController worldController = new WorldLoaderController();
+    public WorldInteractController worldController = new WorldInteractController();
     public EntitiesController entitiesController = new EntitiesController();
 
     public PlayerSettings settings;
@@ -206,7 +206,6 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         var item = inventoryWindow.GetItem(index);
         DropItem(ref item, count);
         inventoryWindow.SetSlot(index, item);
-        inventoryWindow.OnItemChanged_Invoke(item, index);
     }
     private void Rpgserver_OnLogOut(Player player)
     {

@@ -37,4 +37,8 @@ public struct Position : ISerializable, IDeserializable
         if (z >= 33554432) { z -= 67108864; }
         length = 8;
     }
+    public override bool Equals(object obj)
+    {
+        return obj is Position p && p.x == x && p.y == y && p.z == z;
+    }
 }

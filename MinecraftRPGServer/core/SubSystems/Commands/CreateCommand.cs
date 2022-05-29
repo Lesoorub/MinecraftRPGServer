@@ -132,7 +132,7 @@ public class CreateCommand : IChatCommand
                 nameid = args[0];
                 break;
             case 2:
-                if (int.TryParse(args[1], out int _count) && _count <= 64 && _count > 0)
+                if (int.TryParse(args[1], out int _count) && _count <= Inventory.Item.DefaultMaxCount && _count > 0)
                 {
                     nameid = args[0];
                     count = (byte)_count;

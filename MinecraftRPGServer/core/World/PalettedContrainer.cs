@@ -7,17 +7,17 @@ public enum PaletteType : byte
 {
     Single, Indirect, Direct
 }
-public class PalettedContrainer<T>
+public class PalettedContrainer
 {
     public byte BitsPerEntry;
-    public Palette<T> Palette;
+    public Palette<short> Palette;
     public short[] data;
     private int size;
     private byte threshold;
 
     public PaletteType type;
 
-    public PalettedContrainer(List<T> palette, long[] data, int size, byte threshold, byte globalMaxBitsPerEntry)
+    public PalettedContrainer(List<short> palette, long[] data, int size, byte threshold, byte globalMaxBitsPerEntry)
     {
         this.size = size;
         this.threshold = threshold;
@@ -43,10 +43,10 @@ public class PalettedContrainer<T>
         switch (type)
         {
             case PaletteType.Single:
-                Palette = new Palette<T>(palette);
+                Palette = new Palette<short>(palette);
                 break;
             case PaletteType.Indirect:
-                Palette = new Palette<T>(palette);
+                Palette = new Palette<short>(palette);
                 this.data = UnpackData(data);
                 break;
             case PaletteType.Direct:
@@ -54,7 +54,7 @@ public class PalettedContrainer<T>
                 break;
         }
     }
-    public static PaletteType GetType(List<T> palette, long[] data)
+    public static PaletteType GetType(List<short> palette, long[] data)
     {
         if (palette == null) return PaletteType.Direct;
         if (data == null) return PaletteType.Single;
@@ -63,6 +63,28 @@ public class PalettedContrainer<T>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public int GetData(int rx, int ry, int rz) => data[ry * size * size + rz * size + rx];
 
+    public void Add(int rx, int ry, int rz, short item)
+    {
+        if (Palette == null)
+            Palette = new Palette<short>(new List<short>());
+        short index = (short)Palette.data.IndexOf(item);
+        if (index == -1)
+        {
+            Palette.data.Add(item);
+            if (Palette.data.Count >= threshold)
+            {
+                int fullsize = size * size * size;
+                for (int k = 0; k < fullsize; k++)
+                {
+                    data[k] = Palette.data[data[k]];
+                }
+                data[ry * size * size + rz * size + rx] = item;
+                return;
+            }
+            index = (short)(Palette.data.Count - 1);
+        }
+        data[ry * size * size + rz * size + rx] = index;
+    }
     public short[] UnpackData(long[] longs)
     {
         short[] blocks = new short[size * size * size];
@@ -102,7 +124,7 @@ public class PalettedContrainer<T>
 
         return longs;
     }
-    public byte[] ToByteArray(Func<T, VarInt> convertPaletteTagToID)
+    public byte[] ToByteArray(Func<short, VarInt> convertPaletteTagToID)
     {
         var writer = new ArrayWriter(true);
         writer.Write(BitsPerEntry);

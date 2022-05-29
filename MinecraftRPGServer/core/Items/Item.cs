@@ -22,8 +22,12 @@ namespace Inventory
         public byte ItemCount
         {
             get => itemCount;
-            set => itemCount = Math.Min(Math.Max(value, (byte)0), (byte)64);
+            set => itemCount = Math.Min(Math.Max(value, (byte)0), DefaultMaxCount);
         }
+        [JsonIgnore]
+        public const byte DefaultMaxCount = 64;
+        [JsonIgnore]
+        public virtual byte MaxCount { get; } = DefaultMaxCount;
         [JsonIgnore]
         public virtual bool sendNBT { get; } = false;
         [JsonIgnore]
@@ -58,6 +62,9 @@ namespace Inventory
 
                 if (display.Count > 0)
                     nbt["display"] = new TAG_Compound(display, "display");
+
+                if (MaxCount == 1)
+                    nbt["AntiStackNumber"] = new TAG_Long(RandomPlus.GetLong(), "AntiStackNumber");
 
                 return nbt;
             }
@@ -123,18 +130,18 @@ namespace Inventory
         }
         public static Item Create(ItemID itemID, byte count = 1)
         {
-            if (count < 0 || count > 64) return null;
+            if (count < 0) return null;
             if (itemTypes.TryGetValue(itemID, out var item_type))
             {
                 var item = Activator.CreateInstance(item_type) as Item;
                 item.ItemID = itemID;
-                item.ItemCount = count;
+                item.ItemCount = Math.Min(count, item.MaxCount);
                 return item;
             }
             return new Item()
             {
                 ItemID = itemID,
-                ItemCount = count
+                ItemCount = Math.Min(count, DefaultMaxCount)
             };
         }
 
@@ -161,10 +168,10 @@ namespace Inventory
             target_count += count;
             from_count -= count;
 
-            if (target_count > 64)
+            if (target_count > target.MaxCount)
             {
-                from_count += target_count - 64;
-                target_count = 64;
+                from_count += target_count - target.MaxCount;
+                target_count = target.MaxCount;
             }
 
             target.ItemCount = (byte)target_count;
@@ -183,6 +190,8 @@ namespace Inventory
         {
             if (item == null) return false;
             var item_oreDict = item.GetOreDict();
+            if (to.blacklistItems != null && to.blacklistItems.All(x => item_oreDict.Contains(x)))
+                return false;
             if (to.allowedItems == null || to.allowedItems.Length == 0) 
                 return true;
             if (to.allowedItems.All(x => item_oreDict.Contains(x))) 

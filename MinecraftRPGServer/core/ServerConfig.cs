@@ -24,7 +24,7 @@ public class ServerConfig
     public float MaxDrawEntitiesRange = 32;
     public float MaxDrawEntitiesRangeThreshold = 8;
     //World
-    public bool AllowBreakBlocks = false;
+    public bool AllowBreakBlocks = true;
     public int MaxViewDistance = 8;
     public string WorldPath = @"C:\Users\Lesoorub\Desktop\Bukkit 1.18.2\world";
 

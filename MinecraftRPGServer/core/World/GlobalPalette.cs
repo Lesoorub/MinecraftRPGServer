@@ -9,8 +9,9 @@ public class GlobalPalette
 {
     public static bool Inited = false;
     public static int Length => palette.Count;
-
+    private static readonly List<string> blockIDs = Enum.GetNames(typeof(BlockID)).ToList();
     public static Dictionary<string, BlockMeta> palette = new Dictionary<string, BlockMeta>();
+
     public const string ChahePATH = "GlobalPalette.bin";
     public static void Init(byte[] blocksData)
     {
@@ -35,6 +36,11 @@ public class GlobalPalette
     public static string GetNameID(int stateID) => palette.FirstOrDefault(x => x.Value.states.Any(y => y.id == stateID)).Key;
     public static int[] GetStateIDs(string name) => GetMeta(name).states.Select(x => x.id).ToArray();
     public static int GetStateID(string name) => GetMeta(name).states.First(x => x.@default.HasValue && x.@default.Value).id;
+    public static BlockID GetBlockID(int stateID)
+    {
+        string nameid = GetNameID(stateID).Replace("minecraft:", "");
+        return (BlockID)blockIDs.FindIndex(x => x.Equals(nameid));
+    }
     public static BlockMeta GetMeta(string name) => palette[name];
     static void InitFromJson(byte[] blocksData)
     {
