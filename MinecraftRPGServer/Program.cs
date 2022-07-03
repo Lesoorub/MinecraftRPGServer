@@ -12,6 +12,10 @@ namespace MinecraftRPGServer
     {
         static void Main(string[] args)
         {
+            //NBT_Tests.Test("nbt tests");
+            //Console.ReadLine();
+            //return;
+
             var server = new RPGServer(25565);
             server.Start();
             while (server.isStarted)

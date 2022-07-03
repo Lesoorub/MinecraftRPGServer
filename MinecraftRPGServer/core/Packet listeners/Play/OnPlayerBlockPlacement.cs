@@ -17,14 +17,14 @@ public class OnPlayerBlockPlacement : PacketListener
             if (placedOn.StateID == 0) 
                 return;
             BlockState state;
-            IBlock item = null;
+            IItemBlock item = null;
             switch (placePacket.Hand)
             {
                 case PlayerBlockPlacement.HandType.MainHand:
-                    item = player.MainHand as IBlock;
+                    item = player.MainHand as IItemBlock;
                     break;
                 case PlayerBlockPlacement.HandType.OffHand:
-                    item = player.OffHand as IBlock;
+                    item = player.OffHand as IItemBlock;
                     break;
             }
             if (item != null)

@@ -176,6 +176,11 @@ public class Hologram
 
         private void Player_OnTick(Player player)
         {
+            if (player == null)
+            {
+                Destroy();
+                return;
+            }
             if (player.rpgserver.currentTick >= DestroyTick)
             {
                 Destroy();

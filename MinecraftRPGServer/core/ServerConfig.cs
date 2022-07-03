@@ -26,7 +26,7 @@ public class ServerConfig
     //World
     public bool AllowBreakBlocks = true;
     public int MaxViewDistance = 8;
-    public string WorldPath = @"C:\Users\Lesoorub\Desktop\Bukkit 1.18.2\world";
+    public string WorldPath = @"World";
 
     public static ServerConfig Load()
     {

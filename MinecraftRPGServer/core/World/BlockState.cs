@@ -1,126 +1,21 @@
-﻿using System.Collections.Generic;
-
-public struct BlockState
+﻿public struct BlockState
 {
     public int StateID;
     public string id { get => default; }
     public bool solid { get => StateID > 0; }
     public bool hasShadow { get => solid; }
-    public bool haveCollision { get => StateID != 0; }
+    public bool haveCollision 
+    { 
+        get => 
+            BlockAttribute.blocks.TryGetValue(blockid, out var iWorldBlock) 
+            ? iWorldBlock.hasCollision :
+            StateID != 0; 
+    }
     public BlockID blockid => GlobalPalette.GetBlockID(StateID);
-    public float hardness => hardnessList.TryGetValue(blockid, out var v) ? v : -1;
+    public float hardness => BlockAttribute.blocks.TryGetValue(blockid, out var v) ? v.hardness : -1;
     public BlockState(int StateID)
     {
         this.StateID = StateID;
     }
-    public readonly static BlockState air = new BlockState(0);
-    public readonly static Dictionary<BlockID, float> hardnessList = new Dictionary<BlockID, float>()
-    {
-        { BlockID.lava, 100 },
-        { BlockID.water, 100 },
-        { BlockID.netherite_block, 50 },
-        { BlockID.crying_obsidian, 50 },
-        { BlockID.obsidian, 50 },
-        { BlockID.respawn_anchor, 50 },
-        { BlockID.ancient_debris, 30 },
-        { BlockID.ender_chest, 22.5f },
-        { BlockID.anvil, 5 },
-        { BlockID.bell, 5 },
-        { BlockID.coal_block, 5 },
-        { BlockID.diamond_block, 5 },
-        { BlockID.emerald_block, 5 },
-        { BlockID.iron_block, 5 },
-        { BlockID.redstone_block, 5 },
-        { BlockID.chain, 5 },
-        { BlockID.enchanting_table, 5 },
-        { BlockID.iron_bars, 5 },
-        { BlockID.iron_door, 5 },
-        { BlockID.iron_trapdoor, 5 },
-        { BlockID.spawner, 5 },
-        { BlockID.deepslate_diamond_ore, 4.5f },
-        { BlockID.deepslate_gold_ore, 4.5f },
-        { BlockID.deepslate_iron_ore, 4.5f },
-        { BlockID.deepslate_lapis_ore, 4.5f },
-        { BlockID.deepslate_redstone_ore, 4.5f },
-        { BlockID.cobweb, 4 },
-        { BlockID.blast_furnace, 3.5f },
-        { BlockID.dispenser, 3.5f },
-        { BlockID.dropper, 3.5f },
-        { BlockID.furnace, 3.5f },
-        { BlockID.lantern, 3.5f },
-        { BlockID.observer, 3.5f },
-        { BlockID.stonecutter, 3.5f },
-        { BlockID.smoker, 3.5f },
-        { BlockID.lodestone, 3.5f },
-        { BlockID.cobbled_deepslate, 3.5f },
-        { BlockID.deepslate_bricks, 3.5f },
-        { BlockID.deepslate_tiles, 3.5f },
-        { BlockID.polished_deepslate, 3.5f },
-        { BlockID.chiseled_deepslate, 3.5f },
-        { BlockID.beacon, 3 },
-        { BlockID.gold_block, 3 },
-        { BlockID.lapis_block, 3 },
-        { BlockID.coal_ore, 3 },
-        { BlockID.copper_block, 3 },
-        { BlockID.raw_copper_block, 3 },
-        { BlockID.waxed_copper_block, 3 },
-        { BlockID.copper_ore, 3 },
-        { BlockID.cut_copper, 3 },
-        { BlockID.exposed_cut_copper, 3 },
-        { BlockID.oxidized_cut_copper, 3 },
-        { BlockID.waxed_cut_copper, 3 },
-        { BlockID.cut_copper_slab, 3 },
-        { BlockID.exposed_cut_copper_slab, 3 },
-        { BlockID.oxidized_cut_copper_slab, 3 },
-        { BlockID.waxed_cut_copper_slab, 3 },
-        { BlockID.cut_copper_stairs, 3 },
-        { BlockID.exposed_cut_copper_stairs, 3 },
-        { BlockID.oxidized_cut_copper_stairs, 3 },
-        { BlockID.waxed_cut_copper_stairs, 3 },
-        { BlockID.dragon_egg, 3 },
-        { BlockID.deepslate, 3 },
-        { BlockID.diamond_ore, 3 },
-        { BlockID.emerald_ore, 3 },
-        { BlockID.end_stone, 3 },
-        { BlockID.gold_ore, 3 },
-        { BlockID.hopper, 3 },
-        { BlockID.iron_ore, 3 },
-        { BlockID.lapis_ore, 3 },
-        { BlockID.lightning_rod, 3 },
-        { BlockID.nether_quartz_ore, 3 },
-        { BlockID.redstone_ore, 3 },
-        { BlockID.acacia_trapdoor, 3 },
-        { BlockID.birch_trapdoor, 3 },
-        { BlockID.crimson_trapdoor, 3 },
-        { BlockID.dark_oak_trapdoor, 3 },
-        { BlockID.jungle_trapdoor, 3 },
-        { BlockID.oak_trapdoor, 3 },
-        { BlockID.spruce_trapdoor, 3 },
-        { BlockID.warped_trapdoor, 3 },
-        { BlockID.acacia_door, 3 },
-        { BlockID.birch_door, 3 },
-        { BlockID.crimson_door, 3 },
-        { BlockID.dark_oak_door, 3 },
-        { BlockID.jungle_door, 3 },
-        { BlockID.oak_door, 3 },
-        { BlockID.spruce_door, 3 },
-        { BlockID.warped_door, 3 },
-        { BlockID.nether_gold_ore, 3 },
-        { BlockID.conduit, 3 },
-        { BlockID.blue_ice, 2.8f },
-        { BlockID.chest, 2.5f },
-        { BlockID.crafting_table, 2.5f },
-        { BlockID.cartography_table, 2.5f },
-        { BlockID.lectern, 2.5f },
-        { BlockID.fletching_table, 2.5f },
-        { BlockID.smithing_table, 2.5f },
-        { BlockID.loom, 2.5f },
-        { BlockID.barrel, 2.5f },
-        { BlockID.trapped_chest, 2.5f },
-        { BlockID.bone_block, 2.5f },
-        { BlockID.brick_stairs, 2.5f },
-
-        { BlockID.stone, 1.5f },
-        { BlockID.grass_block, 0.6f },
-    };
+    public static readonly BlockState air = new BlockState((int)DefaultBlockState.air);
 }

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using MineServer;
 
+//Documentation https://wiki.vg/NBT
 public class NBTTag : ISerializable, IDeserializable
 {
     TAG body = default;
@@ -401,7 +402,7 @@ public class TAG_Byte_Array : TAG
         this.data = data;
         size = data.Length;
     }
-    public override byte[] Bytes => data;
+    public override byte[] Bytes => BitConverter.GetBytes(data.Length).Reverse().Combine(data);
     public static implicit operator TAG_Byte_Array(byte[] t) => new TAG_Byte_Array(t);
     public static implicit operator byte[](TAG_Byte_Array tag) => tag?.data;
     public override string ToString()
@@ -451,8 +452,6 @@ public class TAG_String : TAG
     {
         char[] chars = text.ToCharArray();
         byte[] result = new byte[chars.Length * 3 + 2];
-        result[0] = (byte)((text.Length << 8) & 0xFF);
-        result[1] = (byte)( text.Length       & 0xFF);
         int offset = 2;
         foreach (var c in chars)
         {
@@ -477,6 +476,8 @@ public class TAG_String : TAG
                 result[offset++] = (byte)(( t        & 0b0011_1111) | 0b1000_0000);//Byte 3 //0x3F | 0x80
             }
         }
+        result[0] = (byte)(((offset - 2) >> 8) & 0xFF);
+        result[1] = (byte)( (offset - 2)       & 0xFF);
         return result.Take(offset);
     }
 }
@@ -637,11 +638,12 @@ public class TAG_Compound : TAG, IList<TAG>
     {
         get
         {
-            byte[] buffer = new byte[0];
+            var ab = new ArrayOfBytesBuilder();
             foreach (var d in body)
                 if (d is TAG tag)
-                    buffer = buffer.Combine(tag.NamedBytes);
-            return buffer.Combine(new TAG_END().Bytes);
+                    ab.Append(tag.NamedBytes);
+            ab.Append(new TAG_END().Bytes);
+            return ab.ToArray();
         }
     }
     public static implicit operator List<TAG>(TAG_Compound tag) => tag.body;
@@ -837,5 +839,70 @@ public class TAG_Long_Array : TAG
     public override bool Equals(TAG tag)
     {
         return tag is TAG_Long_Array t && data.SequenceEqual(t.data);
+    }
+}
+
+public static class NBT_Tests
+{
+    public static void Test(string folder)
+    {
+        foreach (var file_path in Directory.GetFiles(folder))
+        {
+            if (TestFile(file_path))
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"file_path={file_path} pass");
+                Console.ResetColor();
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"file_path={file_path} failure");
+                Console.ResetColor();
+            }
+            try
+            {
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"file_path={file_path} failure with exception={ex.Message}");
+                Console.ResetColor();
+            }
+        }
+    }
+    public static bool TestFile(string path)
+    {
+        var bytes = File.ReadAllBytes(path);
+        //Try decompress
+        try
+        {
+            bytes = GZip.Decompress(bytes);
+        }
+        catch
+        {
+
+        }
+        NBTTag nbt = new NBTTag(bytes, false);
+        var nbt_bytes = nbt.Bytes;
+        bool result = nbt_bytes.SequenceEqual(bytes);
+
+        if (!result)
+        {
+            File.WriteAllBytes("nbt_bytes.dat", nbt_bytes);
+            File.WriteAllBytes("bytes.dat", bytes);
+            if (nbt_bytes.Length != bytes.Length)
+                ;//Length of arrays is not equals
+            for (int k = 0; k < nbt_bytes.Length; k++)
+            {
+                if (nbt_bytes[k] != bytes[k])
+                {
+                    ;//Not equal byte
+                }
+            }
+            ;//Some error
+        }
+
+        return result;
     }
 }

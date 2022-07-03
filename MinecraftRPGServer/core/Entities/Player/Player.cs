@@ -10,7 +10,8 @@ public class Player : PlayerProtocol
     public static ConcurrentDictionary<string, Player> players = new ConcurrentDictionary<string, Player>();
     public override int EntityType => 111;
     public override v2f BoxCollider => new v2f(0.6f, 1.8f);
-    public override string ID => "minecraft:player";
+    public const string NameID = "minecraft:player";
+    public override string ID => NameID;
     public override EntityMetadata meta { get; set; } = new PlayerMetadata();
     public PlayerData data;
     public const float baseMaxHealth = 100;

@@ -26,7 +26,7 @@ public static class Physics
             isOverlapping1D(box1.y, cube_pos.y) &&
             isOverlapping1D(box1.z, cube_pos.z);
     }
-    public static bool CheckCollisionEntitiesOverride(World world, IEnumerable<Entity> entities, v3f a_pos, v2f a_size, out Hit hit)
+    public static bool CheckCollisionEntitiesOverride(ICollisionProvider world, IEnumerable<Entity> entities, v3f a_pos, v2f a_size, out Hit hit)
     {
         v3i[] collidedBlocks = new v3i[27];
         if (IntersectionWithBlock(world, a_pos, a_size, ref collidedBlocks, out var len))
@@ -43,7 +43,23 @@ public static class Physics
         hit = default;
         return false;
     }
-    public static bool IntersectionWithBlock(World world, v3f a_pos, v2f a_size, ref v3i[] collidedBlocks, out int len)
+    public static int GetVolumeInBlocks(v3f a_pos, v2f a_size)
+    {
+        int f(float x) => (int)Math.Floor(x);
+        return
+            (f(a_pos.x + a_size.x) - f(a_pos.x - a_size.x)) *
+            (f(a_pos.y + a_size.y) - f(a_pos.y - a_size.y)) *
+            (f(a_pos.z + a_size.x) - f(a_pos.z - a_size.x));
+    }
+    public static int GetMaxVolumeInBlocks(v2f a_size)
+    {
+        int f(float x) => (int)Math.Ceiling(x) + 1;
+        return
+            f(a_size.x) *
+            f(a_size.y) *
+            f(a_size.x);
+    }
+    public static bool IntersectionWithBlock(ICollisionProvider world, v3f a_pos, v2f a_size, ref v3i[] collidedBlocks, out int len)
     {
         v3i t = new v3i((int)Math.Round(a_pos.x), (int)Math.Round(a_pos.y), (int)Math.Round(a_pos.z));
         int f(float x) => (int)Math.Floor(x);
@@ -53,7 +69,7 @@ public static class Physics
         for (int z = f(t.z - a_size.x); z <= f(t.z + a_size.x); z++)
         {
             var loc = new v3i(x, y, z);
-            if (world.GetBlock(loc).haveCollision && IntersectionWithCube(a_pos, a_size, loc))
+            if (world.hasCollision(loc) && IntersectionWithCube(a_pos, a_size, loc))
             {
                 collidedBlocks[len++] = loc;
             }

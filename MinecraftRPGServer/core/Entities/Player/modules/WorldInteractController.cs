@@ -46,7 +46,23 @@ public class WorldInteractController : IModule
                         var chunk = player.world.GetChunk(rpos);
                         if (chunk == null)
                             continue;
-                        player.network.Send(chunk.BacketPacket);
+                        //Нам придется каждый раз либо создавать новый пакет,
+                        //либо использовать кешированный для каждого поддерживаемого протокола
+                        player.network.Send(new ChunkDataAndUpdateLight()
+                        {
+                            ChunkX = chunk.cPos.x,
+                            ChunkZ = chunk.cPos.y,
+                            Heightmaps = chunk.Heightmaps,
+                            Data = chunk.Data,
+                            BlockEntities = chunk.BlockEntities,
+                            TrustEdges = true,
+                            SkyLightMask = chunk.SkyMask,
+                            BlockLightMask = chunk.BlockMask,
+                            EmptySkyLightMask = chunk.EmptySkyMask,
+                            EmptyBlockLightMask = chunk.EmptyBlockMask,
+                            SkyLightArray = chunk.SkyLightArrays,
+                            BlockLightArray = chunk.BlockLightArrays
+                        });
                     }
             //Unload chunks
             foreach (var pos in loadedChunks)

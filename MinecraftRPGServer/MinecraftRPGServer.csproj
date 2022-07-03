@@ -100,7 +100,7 @@
     <Compile Include="core\Items\BaseClasses\IContainer.cs" />
     <Compile Include="core\Items\BaseClasses\Scroll.cs" />
     <Compile Include="core\Items\CustomModelData.cs" />
-    <Compile Include="core\Items\IBlock.cs" />
+    <Compile Include="core\Items\IItemBlock.cs" />
     <Compile Include="core\Items\RPG\Scrolls\ScrollOfAreaDamage.cs" />
     <Compile Include="core\Items\RPG\Scrolls\ScrollOfHealing.cs" />
     <Compile Include="core\Items\Vanilla\Leather.cs" />
@@ -191,7 +191,6 @@
     <Compile Include="core\Items\Quality.cs" />
     <Compile Include="core\Items\Rarity.cs" />
     <Compile Include="core\Items\RPGItemAttribute.cs" />
-    <Compile Include="core\Items\SlotType.cs" />
     <Compile Include="core\Packet listeners\Play\OnAnimation.cs" />
     <Compile Include="core\Packet listeners\Play\OnClientStatus.cs" />
     <Compile Include="core\Packet listeners\Play\OnCloseWindow.cs" />
@@ -209,6 +208,7 @@
     <Compile Include="core\SubSystems\Commands\PrivateMessageCommand.cs" />
     <Compile Include="core\SubSystems\Commands\SavePlayerCommand.cs" />
     <Compile Include="core\SubSystems\Commands\UnloadCommand.cs" />
+    <Compile Include="core\SubSystems\Pathfinding\SimplePathfinging.cs" />
     <Compile Include="core\SubSystems\Physics.cs" />
     <Compile Include="core\SubSystems\PlayerTitle.cs" />
     <Compile Include="core\SubSystems\Random.cs" />
@@ -220,11 +220,26 @@
     <Compile Include="core\Windows\List\PlayerInventoryWindow.cs" />
     <Compile Include="core\Windows\PressedInventory.cs" />
     <Compile Include="core\World\BiomeID.cs" />
+    <Compile Include="core\World\Blocks\DeadBush.cs" />
+    <Compile Include="core\World\Blocks\Flower.cs" />
+    <Compile Include="core\World\Blocks\Grass.cs" />
+    <Compile Include="core\World\Blocks\GrassBlock.cs" />
+    <Compile Include="core\World\Blocks\lib\BlockAttribute.cs" />
     <Compile Include="core\World\BlockID.cs" />
+    <Compile Include="core\World\Blocks\BlockWithHardness_1_5.cs" />
+    <Compile Include="core\World\Blocks\lib\IWorldBlock.cs" />
+    <Compile Include="core\World\Blocks\Mushroom.cs" />
+    <Compile Include="core\World\Blocks\Vine.cs" />
     <Compile Include="core\World\EntityWorld.cs" />
     <Compile Include="Comparers\v2iComparer.cs" />
+    <Compile Include="core\World\Blocks\Stone.cs" />
+    <Compile Include="core\World\McRegion\ChunkParser.cs" />
+    <Compile Include="core\World\McRegion\ChunkSectionParser.cs" />
+    <Compile Include="core\World\McRegion\RegionParser.cs" />
+    <Compile Include="core\World\DefaultBlockState.cs" />
     <Compile Include="core\World\Tags\Tags_1_18_2.cs" />
     <Compile Include="core\World\World.cs" />
+    <Compile Include="libs\ArrayOfBytesBuilder.cs" />
     <Compile Include="special types\BlockEntityID.cs" />
     <Compile Include="special types\Direction.cs" />
     <Compile Include="core\Entities\Metadata\EntityMetadata.cs" />
@@ -357,7 +372,9 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="core\Entities\Ai\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Text.Json.6.0.2\build\System.Text.Json.targets" Condition="Exists('..\packages\System.Text.Json.6.0.2\build\System.Text.Json.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

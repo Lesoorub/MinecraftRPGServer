@@ -24,66 +24,16 @@ public class Chunk
     public byte[][] SkyLightArrays;
     public byte[][] BlockLightArrays;
 
-    public ChunkDataAndUpdateLight BacketPacket;
-
     public Chunk(v2i cpos)
     {
         cPos = cpos;
     }
     public Chunk(byte[] raw)
     {
-        var nbt = new NBTTag(raw);
-        Heightmaps = nbt["Heightmaps"];
-        cPos = new v2i(nbt["xPos"] as TAG_Int, nbt["zPos"] as TAG_Int);
-        TAG_List block_entities = nbt["block_entities"] as TAG_List;
-        
-        if (block_entities != null && block_entities.data.Count > 0)
-        {
-            BlockEntities = new BlockEntity[block_entities.data.Count];
-
-            int index = 0;
-            foreach (var ent in block_entities.data)
-            {
-                if (BlockEntity.GetByNameID(ent["id"] as TAG_String, out var type))
-                {
-                    BlockEntities[index++] = new BlockEntity()
-                    {
-                        blockX = (byte)(ent["x"] as TAG_Int & 0xF),
-                        blockZ = (byte)(ent["z"] as TAG_Int & 0xF),
-                        Y = (short)(ent["y"] as TAG_Int),
-                        Type = type,
-                        Data = (ent as TAG_Compound).RemoveTags(new string[] { "x", "y", "z", "id" })
-                    };
-                }
-            }
-        }
-
-        var Sections = (nbt["sections"] as TAG_List).data;
-
-        for (int k = 0; k < Sections.Count; k++)
-        {
-            var section = new ChunkSection(Sections[k]);
-            sections.Add(section.Y, section);
-        }
+        ChunkParser.Parse(this, new NBTTag(raw));
 
         UpdateData();
         UpdateLight();
-
-        BacketPacket = new ChunkDataAndUpdateLight()
-        {
-            ChunkX = cPos.x,
-            ChunkZ = cPos.y,
-            Heightmaps = Heightmaps,
-            Data = Data,
-            BlockEntities = BlockEntities,
-            TrustEdges = true,
-            SkyLightMask = SkyMask,
-            BlockLightMask = BlockMask,
-            EmptySkyLightMask = EmptySkyMask,
-            EmptyBlockLightMask = EmptyBlockMask,
-            SkyLightArray = SkyLightArrays,
-            BlockLightArray = BlockLightArrays
-        };
     }
     public void UpdateLight()
     {
@@ -100,13 +50,35 @@ public class Chunk
             if (section.BlockLight != null)
                 blocklight.Add(section.BlockLight);
 
-            int index = sectionPair.Key + 1;
+            int index = sectionPair.Key + 5;
 
             SkyMask.Set(index, section.SkyLight != null);
             EmptySkyMask.Set(index, section.SkyLight == null);
             BlockMask.Set(index, section.BlockLight != null);
             EmptyBlockMask.Set(index, section.BlockLight == null);
         }
+
+#if DEBUG
+        bool isNormal(long t) => t < 33554431 && t >= 0;
+
+        if (!isNormal(SkyMask.data[0]))
+        {
+            Console.WriteLine("Anomaly SkyMask data");
+        }
+        if (!isNormal(EmptySkyMask.data[0]))
+        {
+            Console.WriteLine("Anomaly EmptySkyMask data");
+        }
+        if (!isNormal(BlockMask.data[0]))
+        {
+            Console.WriteLine("Anomaly BlockMask data");
+        }
+        if (!isNormal(EmptyBlockMask.data[0]))
+        {
+            Console.WriteLine("Anomaly EmptyBlockMask data");
+        }
+#endif
+
         SkyLightArrays = skylight.ToArray();
         BlockLightArrays = blocklight.ToArray();
     }
@@ -115,7 +87,7 @@ public class Chunk
         var writer = new ArrayWriter();
         foreach (var section in sections)
             if (section.Key >= -4)
-                writer.WriteRaw(section.Value.Bytes);
+                writer.WriteRaw(section.Value.GetBytes());
         Data = writer.ToArray();
     }
 

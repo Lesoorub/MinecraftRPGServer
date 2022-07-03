@@ -71,5 +71,10 @@ public class v3f
         (float)(Math.Sin(rotation.x * Rad2Deg) * Math.Cos(rotation.y * Rad2Deg)),
         (float)-Math.Sin(rotation.y * Rad2Deg),
         (float)(Math.Cos(rotation.x * Rad2Deg) * Math.Cos(rotation.y * Rad2Deg)));
-
+    [JsonIgnore]
+    public v3i FloorToInt => new v3i((int)Math.Floor(x), (int)Math.Floor(y), (int)Math.Floor(z));
+    [JsonIgnore]
+    public v3i CeilingToInt => new v3i((int)Math.Ceiling(x), (int)Math.Ceiling(y), (int)Math.Ceiling(z));
+    [JsonIgnore]
+    public v3i RoundToInt => new v3i((int)Math.Round(x), (int)Math.Round(y), (int)Math.Round(z));
 }

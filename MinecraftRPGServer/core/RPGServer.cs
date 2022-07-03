@@ -138,6 +138,7 @@ public sealed partial class RPGServer : MineServer.MineServer
     public void LoadWorlds()
     {
         GlobalPalette.Init(MinecraftRPGServer.Properties.Resources.blocks);
+        BlockAttribute.Init();
         var timer = new System.Diagnostics.Stopwatch();
         timer.Start();
         worlds.TryAdd(spawnWorldName, new ReadOnlyWorld(config.WorldPath, spawnWorldName));
