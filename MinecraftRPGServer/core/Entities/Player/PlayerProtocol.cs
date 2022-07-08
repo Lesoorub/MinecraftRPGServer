@@ -395,8 +395,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
             PickupItemCount = count
         });
     }
-
-
+    
     protected void PlayerTick()
     {
         entitiesController.Tick();

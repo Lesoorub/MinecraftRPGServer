@@ -40,11 +40,7 @@ public class OnPlayerBlockPlacement : PacketListener
                     placedOn);
                 if (state.StateID != 0)
                 {
-                    if (player.world.SetBlock(player, pos.x, pos.y, pos.z, state))
-                    {
-                        //send all who view this chunk
-                        return;
-                    }
+                    player.world.SetBlock(player, pos.x, pos.y, pos.z, state);
                 }
             }
         }

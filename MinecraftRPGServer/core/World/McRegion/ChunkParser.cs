@@ -35,5 +35,6 @@
             ChunkSectionParser.Parse(section, Sections[k]);
             obj.sections.Add(section.Y, section);
         }
+        obj.isChanged = true;
     }
 }

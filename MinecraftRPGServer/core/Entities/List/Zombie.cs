@@ -30,13 +30,13 @@ namespace Entities
             if ((player.Position.x - Position.x) + 
                 (player.Position.y - Position.y) + 
                 (player.Position.z - Position.z) > maxDistance) return;
-            var pf = new SimplePathfinding(player.world, maxDistance, BoxCollider, false);
+            var pf = new SimplePathfinding(player.world, maxDistance, BoxCollider, false, player);
             if (pf.TryGetPath(Position, player.Position, out var path))
             {
                 int index = 0;
                 foreach (var p in path)
                 {
-                    Hologram.Create(player, (v3f)p + v3f.one / 2, (index++).ToString(), tickmod);
+                    Hologram.Create(player, (v3f)p + v3f.one / 2, $"&4{index++}", tickmod);
                 }
             }
             else

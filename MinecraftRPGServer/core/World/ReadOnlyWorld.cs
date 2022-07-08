@@ -137,10 +137,10 @@ public class ReadOnlyWorld : World
         csz = z >> 4;
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool GetChunkSection(int csx, int csy, int csz, out ChunkSection section)
+    public bool GetChunkSection(int csx, int csy, int csz, out Chunk chunk, out ChunkSection section)
     {
         section = null;
-        var chunk = GetChunk(new v2i(csx, csz));
+        chunk = GetChunk(new v2i(csx, csz));
         if (chunk == null)
             return false;
         section = chunk.sections[csy];
@@ -151,7 +151,7 @@ public class ReadOnlyWorld : World
     public override BlockState GetBlock(int x, int y, int z)
     {
         GetChunkSectionFromCoords(x, y, z, out int csx, out int csy, out int csz);
-        if (!GetChunkSection(csx, csy, csz, out var section)) 
+        if (!GetChunkSection(csx, csy, csz, out Chunk chunk, out ChunkSection section)) 
             return BlockState.air;
         return section.GetBlock(Chunk.GetRelativeCoord(x), Chunk.GetRelativeCoord(y), Chunk.GetRelativeCoord(z));
     }
@@ -166,10 +166,13 @@ public class ReadOnlyWorld : World
     }
     public override bool SetBlock(Player player, int x, int y, int z, BlockState blockId)
     {
-        GetChunkSectionFromCoords(x, y, z, out int csx, out int csy, out int csz);
-        if (!GetChunkSection(csx, csy, csz, out var section))
-            return false;
-        section.SetBlock(Chunk.GetRelativeCoord(x), Chunk.GetRelativeCoord(y), Chunk.GetRelativeCoord(z), (short)blockId.StateID);
-        return true;
+        var cpos = new v2i(x >> 4, z >> 4);
+        var chunk = GetChunk(cpos);
+        if (chunk == null)
+            chunks.Add(cpos, chunk = new Chunk(cpos));
+        var result = chunk.SetBlock((byte)(x % 16), (short)y, (byte)(z % 16), (short)blockId.StateID);
+        foreach (var otherplayer in Player.WhoViewChunk(player.world, cpos))
+            otherplayer.worldController.SendSetBlock(x, y, z, blockId);
+        return result;
     }
 }

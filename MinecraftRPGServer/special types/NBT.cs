@@ -848,7 +848,7 @@ public static class NBT_Tests
     {
         foreach (var file_path in Directory.GetFiles(folder))
         {
-            if (TestFile(file_path))
+            if (TestFile(file_path, out var error))
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine($"file_path={file_path} pass");
@@ -857,21 +857,12 @@ public static class NBT_Tests
             else
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"file_path={file_path} failure");
-                Console.ResetColor();
-            }
-            try
-            {
-            }
-            catch (Exception ex)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"file_path={file_path} failure with exception={ex.Message}");
+                Console.WriteLine($"file_path={file_path} failure with error={error}");
                 Console.ResetColor();
             }
         }
     }
-    public static bool TestFile(string path)
+    public static bool TestFile(string path, out string error)
     {
         var bytes = File.ReadAllBytes(path);
         //Try decompress
@@ -887,22 +878,30 @@ public static class NBT_Tests
         var nbt_bytes = nbt.Bytes;
         bool result = nbt_bytes.SequenceEqual(bytes);
 
-        if (!result)
+        if (!result) //Some error
         {
-            File.WriteAllBytes("nbt_bytes.dat", nbt_bytes);
-            File.WriteAllBytes("bytes.dat", bytes);
+            //File.WriteAllBytes("nbt_bytes.dat", nbt_bytes);
+            //File.WriteAllBytes("bytes.dat", bytes);
             if (nbt_bytes.Length != bytes.Length)
-                ;//Length of arrays is not equals
+            {
+                //Length of arrays is not equals
+                error = $"Length of arrays is not equals. nbt_bytes.Length={nbt_bytes.Length}, bytes.Length={bytes.Length}";
+                return false;
+            }
             for (int k = 0; k < nbt_bytes.Length; k++)
             {
                 if (nbt_bytes[k] != bytes[k])
                 {
-                    ;//Not equal byte
+                    //Not equal byte
+                    error = $"Not equal byte by offset={k}, nbt_bytes[offset]={nbt_bytes[k]}, bytes[offset]={bytes[k]}";
+                    return false;
                 }
             }
-            ;//Some error
+            error = "Unknown error";
+            return false;
         }
 
+        error = null;
         return result;
     }
 }

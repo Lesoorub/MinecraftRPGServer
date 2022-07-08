@@ -14,7 +14,19 @@ public class Chunk
     public v2i cPos;
     public SortedDictionary<int, ChunkSection> sections = new SortedDictionary<int, ChunkSection>();
     public BlockEntity[] BlockEntities = new BlockEntity[0];
-    public byte[] Data;
+    byte[] data;
+    public byte[] Data
+    {
+        get
+        {
+            if (isChanged)
+            {
+                UpdateData();
+                UpdateLight();
+            }
+            return data;
+        }
+    }
 
     public BitSet SkyMask = new BitSet();
     public BitSet BlockMask = new BitSet();
@@ -24,9 +36,13 @@ public class Chunk
     public byte[][] SkyLightArrays;
     public byte[][] BlockLightArrays;
 
+    public bool isChanged = false;
+
     public Chunk(v2i cpos)
     {
         cPos = cpos;
+        UpdateData();
+        UpdateLight();
     }
     public Chunk(byte[] raw)
     {
@@ -87,10 +103,23 @@ public class Chunk
         var writer = new ArrayWriter();
         foreach (var section in sections)
             if (section.Key >= -4)
+            {
                 writer.WriteRaw(section.Value.GetBytes());
-        Data = writer.ToArray();
+            }
+        data = writer.ToArray();
+        isChanged = false;
     }
 
+    public bool SetBlock(byte x, short y, byte z, short blockState)
+    {
+        if (y > 319 || y < -64) return false;
+        var section = sections[y >> 4];
+        if (section == null)
+            sections.Add(y >> 4, section = new ChunkSection());
+        section.SetBlock(x, y % 16, z, blockState);
+        isChanged = true;
+        return true;
+    }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int FromAbsolutePosition(float absT) => (int)absT >> 4;
     public static v2i FromAbsolutePosition(v2f absT) => new v2i(FromAbsolutePosition(absT.x), FromAbsolutePosition(absT.y));

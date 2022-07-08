@@ -237,6 +237,7 @@
     <Compile Include="core\World\McRegion\ChunkSectionParser.cs" />
     <Compile Include="core\World\McRegion\RegionParser.cs" />
     <Compile Include="core\World\DefaultBlockState.cs" />
+    <Compile Include="core\World\PaletteType.cs" />
     <Compile Include="core\World\Tags\Tags_1_18_2.cs" />
     <Compile Include="core\World\World.cs" />
     <Compile Include="libs\ArrayOfBytesBuilder.cs" />

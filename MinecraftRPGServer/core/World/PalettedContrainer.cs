@@ -2,11 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-
-public enum PaletteType : byte
-{
-    Single, Indirect, Direct
-}
 public class PalettedContrainer
 {
     public byte BitsPerEntry;
@@ -16,6 +11,21 @@ public class PalettedContrainer
     private byte threshold;
 
     public PaletteType type;
+
+    public PalettedContrainer(List<short> Palette, short[] data, int size)
+    {
+        this.Palette = new Palette<short>(Palette);
+        this.data = data;
+        this.size = size;
+        BitsPerEntry = (byte)Math.Ceiling(Math.Log(Palette.Count, 2));
+
+        if (Palette == null)
+            type = PaletteType.Direct;
+        else if (data == null)
+            type = PaletteType.Single;
+        else
+            type = PaletteType.Indirect;
+    }
 
     public PalettedContrainer(List<short> palette, long[] data, int size, byte threshold, byte globalMaxBitsPerEntry)
     {
@@ -61,15 +71,17 @@ public class PalettedContrainer
         return PaletteType.Indirect;
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public int GetData(int rx, int ry, int rz) => data[ry * size * size + rz * size + rx];
+    public short GetData(int rx, int ry, int rz) => data[ry * size * size + rz * size + rx];
 
     public void Add(int rx, int ry, int rz, short item)
     {
         if (Palette == null)
             Palette = new Palette<short>(new List<short>());
+        //Поиск индекса значения в палитре
         short index = (short)Palette.data.IndexOf(item);
         if (index == -1)
         {
+            //Добавить индекс значения в палитру
             Palette.data.Add(item);
             if (Palette.data.Count >= threshold)
             {
@@ -82,6 +94,12 @@ public class PalettedContrainer
                 return;
             }
             index = (short)(Palette.data.Count - 1);
+        }
+        //Записать в данные индекс
+        if (data == null)
+        {
+            data = new short[size * size * size];
+            type = PaletteType.Indirect;
         }
         data[ry * size * size + rz * size + rx] = index;
     }

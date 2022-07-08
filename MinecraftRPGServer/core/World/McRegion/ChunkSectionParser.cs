@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using static ChunkSection;
 public static class ChunkSectionParser
 {
     public static readonly List<string> biomeNames = Enum.GetNames(typeof(BiomeID)).ToList();
@@ -21,11 +21,19 @@ public static class ChunkSectionParser
                 (biomes_tag["palette"] as TAG_List)?.data
                 .Select(x => (short)biomeNames.FindIndex(y => y.Equals((x as TAG_String).data.Replace("minecraft:", ""))))
                 .ToList(),
-                (biomes_tag["data"] as TAG_Long_Array)?.data, 4, 4, (byte)Math.Ceiling(Math.Log(biomeNames.Count, 2)));
+                (biomes_tag["data"] as TAG_Long_Array)?.data, 
+                BiomesSizePerSection, 
+                BiomesThreasholdPerSection, 
+                GlobalBiomesMaxBitsPerEntry);
         }
         else
         {
-            obj.biomes = new PalettedContrainer(new List<short>() { 0 }, null, 4, 4, (byte)Math.Ceiling(Math.Log(biomeNames.Count, 2)));
+            obj.biomes = new PalettedContrainer(
+                new List<short>() { (short)BiomeID.the_void },
+                null,
+                BiomesSizePerSection,
+                BiomesThreasholdPerSection,
+                GlobalBiomesMaxBitsPerEntry);
         }
         //Try load blocks
         if (block_states_tag != null)
@@ -37,18 +45,18 @@ public static class ChunkSectionParser
                     (x["Properties"] as TAG_Compound)?.body.ToDictionary(y => y.name, y => (y as TAG_String).data))
                 ).ToList(),
                 data: (block_states_tag["data"] as TAG_Long_Array)?.data,
-                size: 16,
-                threshold: 9,
-                globalMaxBitsPerEntry: (byte)Math.Ceiling(Math.Log(GlobalPalette.Length, 2)));
+                size: BlocksSizePerSection,
+                threshold: BlocksThreasholdPerSection,
+                globalMaxBitsPerEntry: GlobalBlockStatesMaxBitsPerEntry);
         }
         else
         {
             obj.block_states = new PalettedContrainer(
-                palette: new List<short>() { 0 },
+                palette: new List<short>() { (short)DefaultBlockState.air },
                 data: null,
-                size: 16,
-                threshold: 9,
-                globalMaxBitsPerEntry: (byte)Math.Ceiling(Math.Log(GlobalPalette.Length, 2)));
+                size: BlocksSizePerSection,
+                threshold: BlocksThreasholdPerSection,
+                globalMaxBitsPerEntry: GlobalBlockStatesMaxBitsPerEntry);
         }
         obj.BlockCount = obj.GetNumberOfBlocks();
     }
@@ -66,5 +74,39 @@ public static class ChunkSectionParser
                 id = list[0].id;
         }
         return (short)id;
+    }
+
+    static short[,,] Convert(PalettedContrainer palette, int size)
+    {
+        if (palette.type == PaletteType.Single)
+        {
+            short value = palette.Palette.data[0];
+            short[,,] data = new short[size, size, size];
+            for (int y = 0; y < size; y++)
+                for (int z = 0; z < size; z++)
+                    for (int x = 0; x < size; x++)
+                        data[x, y, z] = value;
+            return data;
+        }
+        else if (palette.type == PaletteType.Indirect)
+        {
+            short[,,] data = new short[size, size, size];
+            int index = 0;
+            for (int y = 0; y < size; y++)
+                for (int z = 0; z < size; z++)
+                    for (int x = 0; x < size; x++)
+                        data[x, y, z] = palette.Palette.data[palette.data[index++]];
+            return data;
+        }
+        else
+        {
+            short[,,] data = new short[size, size, size];
+            int index = 0;
+            for (int y = 0; y < size; y++)
+                for (int z = 0; z < size; z++)
+                    for (int x = 0; x < size; x++)
+                        data[x, y, z] = palette.data[index++];
+            return data;
+        }
     }
 }

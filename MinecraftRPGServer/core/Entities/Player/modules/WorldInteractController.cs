@@ -175,4 +175,12 @@ public class WorldInteractController : IModule
         Console.WriteLine($"ticks=" + ticks);
         return ticks / 20f;
     }
+    public void SendSetBlock(int x, int y, int z, BlockState blockState)
+    {
+        player.network.Send(new BlockChange()
+        {
+            BlockID = new MineServer.VarInt(blockState.StateID),
+            Location = new Position(x, y, z)
+        });
+    }
 }

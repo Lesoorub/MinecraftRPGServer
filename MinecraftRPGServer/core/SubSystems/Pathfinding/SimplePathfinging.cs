@@ -40,7 +40,7 @@ public class SimplePathfinding : ModifiedAStarAlgoritm, IGetAllowedSteps
     private readonly bool canFly;
     private readonly ICollisionProvider collisionProvider;
     private v3i[] collidedBlocks;
-    public SimplePathfinding(ICollisionProvider collisionProvider, int maxPathSteps, v2f entitySize, bool canFly) : base(maxPathSteps)
+    public SimplePathfinding(ICollisionProvider collisionProvider, int maxPathSteps, v2f entitySize, bool canFly, Player player) : base(maxPathSteps, player)
     {
         this.entitySize = entitySize;
         this.canFly = canFly;
@@ -97,7 +97,7 @@ public class SimplePathfinding : ModifiedAStarAlgoritm, IGetAllowedSteps
                     if (Math.Abs(x) + Math.Abs(z) != 1) continue;
                     var pos = (v3f)(position + new v3i(x, y, z));
                     if (CanStay(pos))
-                        steps.Add(new AllowedStep(position + new v3i(x, y, z), 1));
+                        steps.Add(new AllowedStep(position + new v3i(x, y, z), 1 + Math.Abs(y)));
                 }
         return steps;
     }
@@ -106,9 +106,11 @@ public class SimplePathfinding : ModifiedAStarAlgoritm, IGetAllowedSteps
 public class ModifiedAStarAlgoritm : IPathfinder
 {
     private readonly int maxPathSteps;
-    public ModifiedAStarAlgoritm(int maxPathSteps)
+    Player player;
+    public ModifiedAStarAlgoritm(int maxPathSteps, Player player)
     {
         this.maxPathSteps = maxPathSteps;
+        this.player = player;
     }
     public bool TryGetPath(v3f from, v3f to, IGetAllowedSteps rules, out v3i[] path)
     {
@@ -153,24 +155,19 @@ public class ModifiedAStarAlgoritm : IPathfinder
 
         v3i Pop()//O(stack.Length)
         {
-            var result = stack.First();
             if (stack.Count == 1)
             {
+                var result = stack.First();
                 stack.Remove(result);
                 return result;
             }
-            var min = (round_to - stack.First()).magnitude;
-            foreach (var x in stack)
+            else
             {
-                var dist = (round_to - x).magnitude;
-                if (dist < min)
-                {
-                    result = x;
-                    min = dist;
-                }
+                var minw = stack.Select(x => map.TryGetValue(x, out var y) ? x : null ).Where(x => x != null).Min(x => map[x].width);
+                GetMin(stack.Where(x => map.TryGetValue(x, out var y) && y.width == minw), x => x, round_to, out var min, out var result);
+                stack.Remove(result);
+                return result;
             }
-            stack.Remove(result);
-            return result;
         }
 
         while (stack.Count > 0)//Пока путь не найден
@@ -210,25 +207,34 @@ public class ModifiedAStarAlgoritm : IPathfinder
 
         Console.WriteLine("iterations=" + iterations);
 
+        foreach (var m in map)
+        {
+            Hologram.Create(player, (v3f)m.Key + v3f.down * 0.25f + v3f.one / 2, $"{m.Value.width}", 10);
+        }
+
         if (!map.ContainsKey(round_to))//Если путь не был наден, нужно найти
                                        //близжайшую к нему взвешенную точку
         {
-            var result = map.First().Key;
-            var min = (round_to - result).magnitude;
-            foreach (var x in map)
-            {
-                var dist = (round_to - x.Key).magnitude;
-                if (dist < min)
-                {
-                    result = x.Key;
-                    min = dist;
-                }
-            }
-            round_to = result;
+            GetMin(map, x => x.Key, round_to, out var min, out var result);
+            round_to = result.Key;
         }
 
         path = CalculatePath(round_to);
         return true;
+    }
+    void GetMin<T>(IEnumerable<T> collection, Func<T, v3i> get, v3i point, out double min, out T element)
+    {
+        element = collection.First();
+        min = (point - get(element)).magnitude;
+        foreach (var x in collection)
+        {
+            var dist = (point - get(x)).magnitude;
+            if (dist < min)
+            {
+                element = x;
+                min = dist;
+            }
+        }
     }
     public class DWSpoint
     {
