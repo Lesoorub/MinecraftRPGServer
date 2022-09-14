@@ -47,7 +47,7 @@ public class Gamemode : IChatCommand
         },
         Execute);
     }
-    private void Execute(Player player, string[] args)
+    private void Execute(RPGServer server, Player player, string[] args)
     {
         if (args.Length == 1)
         {

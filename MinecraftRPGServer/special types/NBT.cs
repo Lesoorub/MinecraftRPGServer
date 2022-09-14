@@ -1,25 +1,25 @@
 ﻿using System;
-using System.Reflection;
-using System.Diagnostics;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using MineServer;
 
 //Documentation https://wiki.vg/NBT
 public class NBTTag : ISerializable, IDeserializable
 {
-    TAG body = default;
+    public TAG root = new TAG_Compound();
 #if DEBUG
     public string _ToString { get => ToString(); }
 #endif
+    public byte[] Bytes { get => root.NamedBytes; set => FromByteArray(value, 0, out _); }
     public TAG this[string name]
     {
-        get => body[name];
-        set => body[name] = value;
+        get => root[name];
+        set => root[name] = value;
     }
     public NBTTag() { }
     public NBTTag(byte[] raw, bool gzipCompressed = false)
@@ -28,20 +28,54 @@ public class NBTTag : ISerializable, IDeserializable
             raw = GZip.Decompress(raw);
         FromByteArray(raw, 0, out var len);
     }
-    public NBTTag(TAG_Compound body)
+    public NBTTag(TAG body)
     {
-        this.body = body;
+        this.root = body;
     }
-    public byte[] Bytes { get => body.NamedBytes; set => FromByteArray(value, 0, out var _); }
+    public NBTTag(object obj)
+    {
+        root = Parse(obj).root;
+    }
+    public bool HasTag(string name) => (root is TAG_Compound c) && c.HasTag(name);
+    /// <summary>
+    /// Путь разделенный символом '/'
+    /// </summary>
+    /// <param name="path"></param>
+    /// <returns></returns>
+    public bool HasPath(string path)
+    {
+        try
+        {
+            return GetTagByPath(path) != null;
+        }
+        catch (TagNotFoundException)
+        {
+            return false;
+        }
+    }
+    public TAG GetTagByPath(string path)
+    {
+        TAG current = root;
+        string[] splittedPath = path.Split('/');
+        int index = 0;
+        while (current is TAG_Compound c)
+        {
+            string t = splittedPath[index++];
+            if (!c.HasTag(t)) throw new TagNotFoundException();
 
+            current = c[t];
+            if (splittedPath.Length - 1 == index) return current;
+        }
+        return current;
+    }
     public override int GetHashCode()
     {
         return ToString().GetHashCode();
     }
     public override string ToString()
     {
-        body.SetDepth(0);
-        return body.ToString();
+        root.SetDepth(0);
+        return root.ToString();
     }
 
     public byte[] ToByteArray()
@@ -52,7 +86,7 @@ public class NBTTag : ISerializable, IDeserializable
     public void FromByteArray(byte[] bytes, int offset, out int length)
     {
         int init_offset = offset;
-        body = TAG.Read(bytes[offset++], bytes, ref offset, true);
+        root = TAG.Read(bytes[offset++], bytes, ref offset, true);
         length = offset - init_offset;
     }
     /// <summary>
@@ -63,14 +97,14 @@ public class NBTTag : ISerializable, IDeserializable
     public override bool Equals(object obj)
     {
         if (!(obj is NBTTag tag)) return false;
-        if (tag.body == null && body == null) return true;
-        if (!(tag.body != null && body != null)) return false;
+        if (tag.root == null && root == null) return true;
+        if (!(tag.root != null && root != null)) return false;
 
-        if (tag.body is TAG_Compound obj_compound && body is TAG_Compound compound)
+        if (tag.root is TAG_Compound obj_compound && root is TAG_Compound compound)
         {
-            if (obj_compound.body.Count != compound.body.Count) return false;
+            if (obj_compound.data.Count != compound.data.Count) return false;
         }
-        return tag.body.Equals(body);
+        return tag.root.Equals(root);
     }
     public static bool Equals(NBTTag a, NBTTag b)
     {
@@ -79,7 +113,125 @@ public class NBTTag : ISerializable, IDeserializable
         return false;
     }
     public static NBTTag emptyCompaund => new NBTTag(new TAG_Compound(new List<TAG>()));
-    public static implicit operator TAG_Compound(NBTTag nbt) => nbt == null ? null : nbt.body as TAG_Compound;
+    public static implicit operator TAG_Compound(NBTTag nbt) => nbt == null ? null : nbt.root as TAG_Compound;
+
+    public static NBTTag Parse(object obj)
+    {
+        var type = obj.GetType();
+        if (type.IsArray)
+            return new NBTTag(ParseValue(obj));
+        return new NBTTag(ParseObject(obj));
+    }
+
+    static TAG_Compound ParseObject(object anon)
+    {
+        var type = anon.GetType();
+        NBTTag tag = new NBTTag();
+        var root = tag.root as TAG_Compound;
+        const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance;
+        foreach (var property in type.GetProperties(bindingFlags))
+        {
+            if (property.GetCustomAttributes(typeof(Newtonsoft.Json.JsonIgnoreAttribute), false).Length == 0)
+                root[property.Name] = ParseValue(property.GetValue(anon));
+        }
+        foreach (var property in type.GetFields(bindingFlags))
+        {
+            if (property.GetCustomAttributes(typeof(Newtonsoft.Json.JsonIgnoreAttribute), false).Length == 0)
+                root[property.Name] = ParseValue(property.GetValue(anon));
+        }
+
+        return tag;
+    }
+    static TAG ParseValue(object value)
+    {
+        if (value == null) return new TAG_Byte(0);
+        Type val_type = value.GetType();
+        var type_pair = TAG.TagTypes.FirstOrDefault(x => x.Value.C.Equals(val_type));
+        Type nbt_type = null;
+        if (type_pair.Value != default)
+        {
+            nbt_type = type_pair.Value.NBT;
+        }
+        else if (val_type.IsArray)
+        {
+            Type genericType = val_type.GetElementType();
+            var list = new List<TAG>();
+            var arr = value as Array;
+            var len = arr.GetLength(0);
+            for (int k = 0; k < len; k++)
+                list.Add(ParseValue(arr.GetValue(k)));
+            return new TAG_List(list, list.First().TypeID);
+        }
+        else if (val_type.IsSubclassOf(typeof(IEnumerable)))
+        {
+            Type genericType = val_type.GetElementType();
+            var enumerable = val_type as IEnumerable;
+            var list = new List<TAG>();
+            var iterator = enumerable.GetEnumerator();
+            while (iterator.MoveNext())
+                list.Add(ParseValue(iterator.Current));
+            if (list.Count == 0) return new TAG_List(list, TAG_Byte._TypeID);
+            return new TAG_List(list, list.First().TypeID);
+        }
+        else if (val_type.IsSubclassOf(typeof(IDictionary)))
+        {
+            return ParseObject(value);
+        }
+        else if (val_type == typeof(bool))
+        {
+            return new TAG_Byte((byte)((bool)value ? 1 : 0));
+        }
+
+
+        if (nbt_type != null)
+        {
+            return (TAG)Activator.CreateInstance(nbt_type, value, "");
+        }
+        else
+        {
+            return ParseObject(value);
+        }
+    }
+
+    public T ToObject<T>() where T : new()
+    {
+        return (T)ToObject(typeof(T));
+    }
+    public object ToObject(Type type)
+    {
+        return ToObject(root, type);
+    }
+    static object ToObject(TAG tag, Type type)
+    {
+        if (tag is TAG_List list)
+        {
+            var arr = new ArrayList(list.Count);
+            for (int k = 0; k < list.Count; k++)
+            {
+                var el = list[k];
+                arr.Add(ToObject(el, el.body.GetType()));
+            }
+            var el_type = TAG.TagTypes[list.elementsType].C;
+            return arr.ToArray().Select(x => Convert.ChangeType(x, el_type)).ToList();
+        }
+        else if (tag is TAG_Compound compound)
+        {
+            //ToObject(new { x = 1, y = 2}, typeof(v2i));
+            var obj = Activator.CreateInstance(type);
+            foreach (var element in compound.data)
+            {
+                var field = type.GetField(element.name);
+                if (field == null) continue;
+                if (element.body == null) continue;
+                field.SetValue(obj, ToObject(element, field.FieldType));
+            }
+            return obj;
+        }
+        else
+        {
+            return tag.body;
+        }
+    }
 }
 public class TAG
 {
@@ -87,10 +239,10 @@ public class TAG
     public string name = "";
     public int depth = 0;
 #if DEBUG
-    public string _ToString { get => ToString(); }
+    public string _ToString { get { SetDepth(0); return ToString(); } }
 #endif
-    public virtual TAG this[int index] { get => throw new Exception("Not supported"); set => throw new Exception("Not supported"); }
-    public virtual TAG this[string name] { get => throw new Exception("Not supported"); set => throw new Exception("Not supported"); }
+    public virtual TAG this[int index] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public virtual TAG this[string name] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
     public virtual void SetDepth(int d) { depth = d; }
     public virtual byte TypeID { get => 0; }
@@ -99,11 +251,13 @@ public class TAG
         .Combine(BitConverter.GetBytes(namelen).Reverse()
         .Combine(Encoding.UTF8.GetBytes(name))
         .Combine(Bytes));
-    public void ReadHeader(byte[] raw, ref int offset)
+    public virtual object body { get => throw new NotImplementedException(); }
+
+    public static void ReadHeader(byte[] raw, ref int offset, out string name, out short namelen)
     {
         namelen = BitConverter.ToInt16(raw.BigEndian(offset, 2), 0);
         offset += 2;
-        if (namelen > 256)
+        if (namelen >= 256)
             throw new Exception("Long string?");
         if (namelen < 0)
             throw new Exception("Negative string len?");
@@ -112,51 +266,52 @@ public class TAG
             name = Encoding.UTF8.GetString(raw, offset, namelen);
             offset += namelen;
         }
+        else
+        {
+            name = "";
+        }
     }
+    public class TagType
+    {
+        public Type C;
+        public Type NBT;
+
+        public TagType(Type c, Type nBT)
+        {
+            C = c;
+            NBT = nBT;
+        }
+    }
+    public static Dictionary<int, TagType> TagTypes = new Dictionary<int, TagType>()
+    {
+        { 0, new TagType(typeof(Nullable), typeof(TAG_END)) },
+        { 1, new TagType(typeof(byte), typeof(TAG_Byte)) },
+        { 2, new TagType(typeof(short), typeof(TAG_Short)) },
+        { 3, new TagType(typeof(int), typeof(TAG_Int)) },
+        { 4, new TagType(typeof(long), typeof(TAG_Long)) },
+        { 5, new TagType(typeof(float), typeof(TAG_Float)) },
+        { 6, new TagType(typeof(double), typeof(TAG_Double)) },
+        { 7, new TagType(typeof(byte[]), typeof(TAG_Byte_Array)) },
+        { 8, new TagType(typeof(string), typeof(TAG_String)) },
+        { 9, new TagType(typeof(Array), typeof(TAG_List)) },
+        { 10, new TagType(typeof(object), typeof(TAG_Compound)) },
+        { 11, new TagType(typeof(int[]), typeof(TAG_Int_Array)) },
+        { 12, new TagType(typeof(long[]), typeof(TAG_Long_Array)) },
+    };
     public static TAG Read(int type, byte[] raw, ref int offset, bool nammed)
     {
         if (type == TAG_END._TypeID)
             return new TAG_END();
-
-        TAG tmp = new TAG();
+        string name = "";
+        short namelen = 0;
         if (nammed)
-            tmp.ReadHeader(raw, ref offset);
+            ReadHeader(raw, ref offset, out name, out namelen);
 
-        TAG Switch(ref int o)
-        {
-            switch (type)
-            {
-                //1
-                case TAG_Byte._TypeID: return new TAG_Byte(raw, ref o);
-                //2
-                case TAG_Short._TypeID: return new TAG_Short(raw, ref o);
-                //3
-                case TAG_Int._TypeID: return new TAG_Int(raw, ref o);
-                //4
-                case TAG_Long._TypeID: return new TAG_Long(raw, ref o);
-                //5
-                case TAG_Float._TypeID: return new TAG_Float(raw, ref o);
-                //6
-                case TAG_Double._TypeID: return new TAG_Double(raw, ref o);
-                //7
-                case TAG_Byte_Array._TypeID: return new TAG_Byte_Array(raw, ref o);
-                //8
-                case TAG_String._TypeID: return new TAG_String(raw, ref o);
-                //9
-                case TAG_List._TypeID: return new TAG_List(raw, ref o);
-                //10
-                case TAG_Compound._TypeID: return new TAG_Compound(raw, ref o);
-                //11
-                case TAG_Int_Array._TypeID: return new TAG_Int_Array(raw, ref o);
-                //12
-                case TAG_Long_Array._TypeID: return new TAG_Long_Array(raw, ref o);
-            }
-            throw new Exception("Unsupported type with id: " + type);
-        }
-
-        TAG parsed = Switch(ref offset);
-        parsed.namelen = tmp.namelen;
-        parsed.name = tmp.name;
+        var args = new object[] { raw, offset };
+        TAG parsed = (TAG)Activator.CreateInstance(TagTypes[type].NBT, args);
+        offset = (int)args[1];
+        parsed.namelen = namelen;
+        parsed.name = name;
         return parsed;
     }
     public static implicit operator NBTTag(TAG tag) => tag is TAG_Compound compound ? new NBTTag(compound) : throw new Exception($"Can't convert {tag.GetType()} to {typeof(NBTTag)}");
@@ -175,6 +330,31 @@ public class TAG
         if (a != null && b != null) return a.Equals(b);
         return false;
     }
+
+    public static implicit operator TAG(bool value) => new TAG_Byte((byte)(value ? 1 : 0));
+    public static implicit operator TAG(byte value) => new TAG_Byte(value);
+    public static implicit operator TAG(int value) => new TAG_Int(value);
+    public static implicit operator TAG(long value) => new TAG_Long(value);
+    public static implicit operator TAG(short value) => new TAG_Short(value);
+    public static implicit operator TAG(float value) => new TAG_Float(value);
+    public static implicit operator TAG(double value) => new TAG_Double(value);
+    public static implicit operator TAG(string value) => value != null ? new TAG_String(value) : null;
+    public static implicit operator TAG(byte[] value) => value != null ? new TAG_Byte_Array(value) : null;
+    public static implicit operator TAG(int[] value) => value != null ? new TAG_Int_Array(value) : null;
+    public static implicit operator TAG(long[] value) => value != null ? new TAG_Long_Array(value) : null;
+
+    public static explicit operator bool(TAG tag) => (tag as TAG_Byte).data != 0;
+    public static explicit operator byte(TAG tag) => (byte)(tag as TAG_Byte).data;
+    public static explicit operator sbyte(TAG tag) => (tag as TAG_Byte).data;
+    public static explicit operator int(TAG tag) => (tag as TAG_Int).data;
+    public static explicit operator long(TAG tag) => (tag as TAG_Long).data;
+    public static explicit operator short(TAG tag) => (tag as TAG_Short).data;
+    public static explicit operator float(TAG tag) => (tag as TAG_Float).data;
+    public static explicit operator double(TAG tag) => (tag as TAG_Double).data;
+    public static explicit operator string(TAG tag) => (tag as TAG_String)?.data;
+    public static explicit operator byte[](TAG tag) => (tag as TAG_Byte_Array)?.data;
+    public static explicit operator int[](TAG tag) => (tag as TAG_Int_Array)?.data;
+    public static explicit operator long[](TAG tag) => (tag as TAG_Long_Array)?.data;
 }
 public class TAG_END : TAG
 {
@@ -194,6 +374,7 @@ public class TAG_Byte : TAG
 {
     public const int _TypeID = 1;
     public override byte TypeID { get => _TypeID; }
+    public override object body => this.data;
     public sbyte data;
     //struct
     //[data:1]
@@ -224,6 +405,7 @@ public class TAG_Short : TAG
 {
     public const int _TypeID = 2;
     public override byte TypeID { get => _TypeID; }
+    public override object body => this.data;
     public short data;
     //big endian
     //struct
@@ -255,6 +437,7 @@ public class TAG_Int : TAG
 {
     public const byte _TypeID = 3;
     public override byte TypeID { get => _TypeID; }
+    public override object body => this.data;
     public int data;
     //big endian
     //struct
@@ -287,6 +470,7 @@ public class TAG_Long : TAG
 {
     public const byte _TypeID = 4;
     public override byte TypeID { get => _TypeID; }
+    public override object body => this.data;
     public long data;
     //big endian
     //struct
@@ -318,6 +502,7 @@ public class TAG_Float : TAG
 {
     public const int _TypeID = 5;
     public override byte TypeID { get => _TypeID; }
+    public override object body => this.data;
     public float data;
     //struct
     //[data:4]
@@ -348,6 +533,7 @@ public class TAG_Double : TAG
 {
     public const int _TypeID = 6;
     public override byte TypeID { get => _TypeID; }
+    public override object body => this.data;
     public double data;
     //struct
     //[data:8]
@@ -379,6 +565,7 @@ public class TAG_Byte_Array : TAG
     public const int _TypeID = 7;
     public override byte TypeID { get => _TypeID; }
     public int size;
+    public override object body => this.data;
     public byte[] data;
     public override TAG this[int index]
     {
@@ -407,7 +594,7 @@ public class TAG_Byte_Array : TAG
     public static implicit operator byte[](TAG_Byte_Array tag) => tag?.data;
     public override string ToString()
     {
-        return $"TAG_Byte_Array({namelen}'{name}'): {data.Length} longs";
+        return $"TAG_Byte_Array({namelen}'{name}'): {data.Length} bytes";
     }
     public override bool Equals(TAG tag)
     {
@@ -419,6 +606,7 @@ public class TAG_String : TAG
     public const int _TypeID = 8;
     public override byte TypeID { get => _TypeID; }
     public ushort datalen;
+    public override object body => this.data;
     public string data;
 
     //struct
@@ -435,7 +623,8 @@ public class TAG_String : TAG
         this.name = name;
         namelen = (short)name.Length;
         this.data = data;
-        this.datalen = (ushort)data.Length;
+        if (data != null)
+            this.datalen = (ushort)data.Length;
     }
     public static implicit operator TAG_String(string t) => new TAG_String(t);
     public static implicit operator string(TAG_String tag) => tag.data;
@@ -481,13 +670,15 @@ public class TAG_String : TAG
         return result.Take(offset);
     }
 }
-public class TAG_List : TAG
+public class TAG_List : TAG, IEnumerable
 {
     public const int _TypeID = 9;
     public override byte TypeID { get => _TypeID; }
     public byte elementsType;
     public int size;
+    public override object body => this.data;
     public List<TAG> data = new List<TAG>(10);
+    public int Count => data.Count;
     //struct
     //[elementsType:1][size:4][data:]
     public override TAG this[int index]
@@ -579,38 +770,49 @@ public class TAG_List : TAG
         }
         return false;
     }
+
+    public TAG[] ToArray() => data.ToArray();
+
+    public IEnumerator GetEnumerator() => data.GetEnumerator();
 }
 public class TAG_Compound : TAG, IList<TAG>
 {
     public const int _TypeID = 10;
     public override byte TypeID { get => _TypeID; }
-    public List<TAG> body = new List<TAG>(10);
+    public override object body => this.data;
+    public List<TAG> data = new List<TAG>(10);
     public override TAG this[int index]
     {
-        get => body[index];
-        set => body[index] = value;
+        get => data[index];
+        set => data[index] = value;
     }
     public override TAG this[string name]
     {
-        get => body.FirstOrDefault(x => x.name == name);
+        get => data.FirstOrDefault(x => x.name.Equals(name));
         set
         {
-            for (int k = 0; k < body.Count; k++)
-                if (body[k].name == name)
-                {
-                    body[k] = value;
-                    return;
-                }
-            if (value == null) return;
+            if (name == null) return;
+            if (value == null)
+            {
+                RemoveTag(name);
+                return;
+            }
             value.name = name;
             value.namelen = (short)name.Length;
-            body.Add(value);
+
+            for (int k = 0; k < data.Count; k++)
+                if (data[k].name.Equals(name))
+                {
+                    data[k] = value;
+                    return;
+                }
+            data.Add(value);
         }
     }
     public TAG_Compound(string name = "")
     {
         this.name = name;
-        body = new List<TAG>();
+        data = new List<TAG>();
     }
     public TAG_Compound(byte[] raw, ref int offset)
     {
@@ -624,12 +826,12 @@ public class TAG_Compound : TAG, IList<TAG>
     {
         this.name = name;
         namelen = (short)name.Length;
-        this.body = body;
+        this.data = body;
     }
     public override void SetDepth(int d)
     {
         base.SetDepth(d);
-        foreach (TAG tag in body)
+        foreach (TAG tag in data)
         {
             tag.SetDepth(d + 1);
         }
@@ -639,14 +841,14 @@ public class TAG_Compound : TAG, IList<TAG>
         get
         {
             var ab = new ArrayOfBytesBuilder();
-            foreach (var d in body)
+            foreach (var d in data)
                 if (d is TAG tag)
                     ab.Append(tag.NamedBytes);
             ab.Append(new TAG_END().Bytes);
             return ab.ToArray();
         }
     }
-    public static implicit operator List<TAG>(TAG_Compound tag) => tag.body;
+    public static implicit operator List<TAG>(TAG_Compound tag) => tag.data;
     public static implicit operator NBTTag(TAG_Compound tag) => new NBTTag(tag);
     public override string ToString()
     {
@@ -655,33 +857,36 @@ public class TAG_Compound : TAG, IList<TAG>
         sb.AppendLine($"TAG_Compound({namelen}'{name}'): ");
         sb.AppendLine(d + "{");
 
-        foreach (var x in body)
+        foreach (var x in data)
         {
             sb.AppendLine(d + " " + x.ToString());
         }
 
         sb.Append(d + "}");
         return sb.ToString();
-    }
 
+    }
+    public bool HasTag(string name) => data.Any(x => x.name.Equals(name));
     public TAG_Compound RemoveTag(string name)
     {
-        body.RemoveAll(x => x.name.Equals(name));
+        int index = data.FindIndex(x => x.name.Equals(name));
+        if (index == -1) return this;
+        data.RemoveAt(index);
         return this;
     }
     public TAG_Compound RemoveTags(string[] names)
     {
-        body.RemoveAll(x => names.Contains(x.name));
+        data.RemoveAll(x => names.Contains(x.name));
         return this;
     }
     public override bool Equals(TAG tag)
     {
         if (tag is TAG_Compound t &&
-            body.Count == t.body.Count)
+            data.Count == t.data.Count)
         {
-            for (int k = 0; k < body.Count; k++)
+            for (int k = 0; k < data.Count; k++)
             {
-                if (!Equals(body[k], t.body[k]))
+                if (!Equals(data[k], t.data[k]))
                     return false;
             }
             return true;
@@ -690,57 +895,57 @@ public class TAG_Compound : TAG, IList<TAG>
     }
 
     #region listinterface
-    public int Count => ((ICollection<TAG>)body).Count;
+    public int Count => ((ICollection<TAG>)data).Count;
 
-    public bool IsReadOnly => ((ICollection<TAG>)body).IsReadOnly;
+    public bool IsReadOnly => ((ICollection<TAG>)data).IsReadOnly;
     public int IndexOf(TAG item)
     {
-        return ((IList<TAG>)body).IndexOf(item);
+        return ((IList<TAG>)data).IndexOf(item);
     }
 
     public void Insert(int index, TAG item)
     {
-        ((IList<TAG>)body).Insert(index, item);
+        ((IList<TAG>)data).Insert(index, item);
     }
 
     public void RemoveAt(int index)
     {
-        ((IList<TAG>)body).RemoveAt(index);
+        ((IList<TAG>)data).RemoveAt(index);
     }
 
     public void Add(TAG item)
     {
-        ((ICollection<TAG>)body).Add(item);
+        ((ICollection<TAG>)data).Add(item);
     }
 
     public void Clear()
     {
-        ((ICollection<TAG>)body).Clear();
+        ((ICollection<TAG>)data).Clear();
     }
 
     public bool Contains(TAG item)
     {
-        return ((ICollection<TAG>)body).Contains(item);
+        return ((ICollection<TAG>)data).Contains(item);
     }
 
     public void CopyTo(TAG[] array, int arrayIndex)
     {
-        ((ICollection<TAG>)body).CopyTo(array, arrayIndex);
+        ((ICollection<TAG>)data).CopyTo(array, arrayIndex);
     }
 
     public bool Remove(TAG item)
     {
-        return ((ICollection<TAG>)body).Remove(item);
+        return ((ICollection<TAG>)data).Remove(item);
     }
 
     public IEnumerator<TAG> GetEnumerator()
     {
-        return ((IEnumerable<TAG>)body).GetEnumerator();
+        return ((IEnumerable<TAG>)data).GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
     {
-        return ((IEnumerable)body).GetEnumerator();
+        return ((IEnumerable)data).GetEnumerator();
     }
 
     #endregion listinterface
@@ -750,6 +955,7 @@ public class TAG_Int_Array : TAG
     public const int _TypeID = 11;
     public override byte TypeID { get => _TypeID; }
     public int size;
+    public override object body => this.data;
     public int[] data;
     public override TAG this[int index] { get => new TAG_Int(data[index]); set => data[index] = (value is TAG_Int tag ? tag.data : default); }
     public TAG_Int_Array(byte[] raw, ref int offset)
@@ -786,7 +992,7 @@ public class TAG_Int_Array : TAG
     public static implicit operator int[](TAG_Int_Array tag) => tag.data;
     public override string ToString()
     {
-        return $"TAG_Int_Array({namelen}'{name}'): {data.Length} longs";
+        return $"TAG_Int_Array({namelen}'{name}'): {data.Length} ints";
     }
     public override bool Equals(TAG tag)
     {
@@ -798,6 +1004,7 @@ public class TAG_Long_Array : TAG
     public const int _TypeID = 12;
     public override byte TypeID { get => _TypeID; }
     public int size;
+    public override object body => this.data;
     public long[] data;
     public override TAG this[int index] { get => new TAG_Long(data[index]); set => data[index] = (value is TAG_Long tag ? tag.data : default); }
     public TAG_Long_Array(byte[] raw, ref int offset)
@@ -842,66 +1049,22 @@ public class TAG_Long_Array : TAG
     }
 }
 
-public static class NBT_Tests
+[Serializable]
+internal class TagNotFoundException : Exception
 {
-    public static void Test(string folder)
+    public TagNotFoundException()
     {
-        foreach (var file_path in Directory.GetFiles(folder))
-        {
-            if (TestFile(file_path, out var error))
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"file_path={file_path} pass");
-                Console.ResetColor();
-            }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"file_path={file_path} failure with error={error}");
-                Console.ResetColor();
-            }
-        }
     }
-    public static bool TestFile(string path, out string error)
+
+    public TagNotFoundException(string message) : base(message)
     {
-        var bytes = File.ReadAllBytes(path);
-        //Try decompress
-        try
-        {
-            bytes = GZip.Decompress(bytes);
-        }
-        catch
-        {
+    }
 
-        }
-        NBTTag nbt = new NBTTag(bytes, false);
-        var nbt_bytes = nbt.Bytes;
-        bool result = nbt_bytes.SequenceEqual(bytes);
+    public TagNotFoundException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
 
-        if (!result) //Some error
-        {
-            //File.WriteAllBytes("nbt_bytes.dat", nbt_bytes);
-            //File.WriteAllBytes("bytes.dat", bytes);
-            if (nbt_bytes.Length != bytes.Length)
-            {
-                //Length of arrays is not equals
-                error = $"Length of arrays is not equals. nbt_bytes.Length={nbt_bytes.Length}, bytes.Length={bytes.Length}";
-                return false;
-            }
-            for (int k = 0; k < nbt_bytes.Length; k++)
-            {
-                if (nbt_bytes[k] != bytes[k])
-                {
-                    //Not equal byte
-                    error = $"Not equal byte by offset={k}, nbt_bytes[offset]={nbt_bytes[k]}, bytes[offset]={bytes[k]}";
-                    return false;
-                }
-            }
-            error = "Unknown error";
-            return false;
-        }
-
-        error = null;
-        return result;
+    protected TagNotFoundException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context)
+    {
     }
 }

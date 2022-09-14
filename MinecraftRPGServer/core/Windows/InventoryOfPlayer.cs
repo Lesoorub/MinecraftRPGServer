@@ -75,7 +75,7 @@ namespace Inventory
             if (!GetItemID(nameid, out var itemid)) return null;
             return FindItem(itemid);
         }
-        public Item FindItem(ItemID itemid)
+        public Item FindItem(ItemNameID itemid)
         {
             int find(IndexedItem[] arr)
             {

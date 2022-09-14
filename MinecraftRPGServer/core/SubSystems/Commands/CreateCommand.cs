@@ -100,7 +100,7 @@ public class CreateCommand : IChatCommand
         },
         Execute);
     }
-    private void Execute(Player player, string[] args)
+    private void Execute(RPGServer server, Player player, string[] args)
     {
         if (args.Length < 2) return;
         if (args[0] == "entity")

@@ -49,7 +49,7 @@ public class PrivateMessageCommand : IChatCommand
             RedirectNode = message
         }, Execute);
     }
-    public void Execute(Player player, string[] args)
+    public void Execute(RPGServer server, Player player, string[] args)
     {
         if (args.Length < 2) return;
         var target = player.rpgserver.FindByUsername(args[0]);

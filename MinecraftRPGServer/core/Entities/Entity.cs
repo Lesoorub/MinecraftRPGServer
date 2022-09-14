@@ -224,7 +224,7 @@ public abstract class Entity
     public static Dictionary<string, Type> EntityList = new Dictionary<string, Type>();
     public static void InitEntities()
     {
-        foreach (var ent_type in RPGServer.GetTypesWithAttribute<EntityAttribute>())
+        foreach (var ent_type in Tools.GetTypesWithAttribute<EntityAttribute>())
             EntityList.Add(ent_type.GetCustomAttribute<EntityAttribute>().nameid, ent_type);
     }
     public static int GetUniqEnityID()

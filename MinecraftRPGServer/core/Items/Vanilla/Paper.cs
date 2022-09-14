@@ -1,9 +1,9 @@
 ﻿namespace Inventory.Items
 {
-    [Item(ItemID.paper)]
+    [Item(ItemNameID.paper)]
     public class Paper : RPGItem
     {
-        public Paper() : base(ItemID.paper)
+        public Paper() : base(ItemNameID.paper)
         {
         }
     }

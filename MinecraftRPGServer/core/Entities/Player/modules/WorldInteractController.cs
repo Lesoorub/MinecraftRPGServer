@@ -43,11 +43,11 @@ public class WorldInteractController : IModule
                         if (loadedChunks.Contains(rpos))
                             continue;
                         loadedChunks.Add(rpos);
-                        var chunk = player.world.GetChunk(rpos);
+                        Chunk chunk = player.world.GetChunk(rpos);
                         if (chunk == null)
                             continue;
                         //Нам придется каждый раз либо создавать новый пакет,
-                        //либо использовать кешированный для каждого поддерживаемого протокола
+                        //либо использовать кешированный
                         player.network.Send(new ChunkDataAndUpdateLight()
                         {
                             ChunkX = chunk.cPos.x,
@@ -121,8 +121,8 @@ public class WorldInteractController : IModule
     {
         //input
         var breakingblockstate = player.world.GetBlock(BlockBreakingPosition);
-        var breakingBlock = breakingblockstate.blockid;
-        ItemID tool = player.MainHand != null ? player.MainHand.ItemID : ItemID.air;
+        var breakingBlock = breakingblockstate.defaultBlockState;
+        ItemNameID tool = player.MainHand != null ? player.MainHand.ItemID : ItemNameID.air;
 
         //tool impact
         float toolMultiplier = ToolMath.getToolSpeed(tool);

@@ -7,7 +7,7 @@ public class UnloadCommand : IChatCommand
     {
         Commands.Register(new Node()
         {
-            Name = "unload",
+            Name = "reload",
             Flags = Node.FlagsEnum.literal,
             Childrens = new System.Collections.Generic.List<Node>()
             {
@@ -15,13 +15,31 @@ public class UnloadCommand : IChatCommand
                 {
                     Name = "entities",
                     Flags = Node.FlagsEnum.literal | Node.FlagsEnum.IsExecutable
-                }
+                },
+                new Node()
+                {
+                    Name = "chunks",
+                    Flags = Node.FlagsEnum.literal | Node.FlagsEnum.IsExecutable
+                },
             }
         }, Execute);
     }
-    void Execute(Player player, string[] args)
+    void Execute(RPGServer server, Player player, string[] args)
     {
-        if (args.Length >= 1 && args[0].Equals("entities"))
-            player.entitiesController.UnloadEntities(player.view.entities.Select(x => x.Key));
+        if (args.Length >= 1)
+        {
+            if (args[0].Equals("entities"))
+            {
+                player.entitiesController.UnloadEntities(player.view.entities.Select(x => x.Key));
+                player.EchoIntoChatFromServer("Entities reloaded");
+            }
+            else if (args[0].Equals("chunks"))
+            {
+                player.worldController.UnloadChunks();
+                player.worldController.SendWorld();
+                player.SendPlayerPositionAndLook();
+                player.EchoIntoChatFromServer("Chunks reloaded");
+            }
+        }
     }
 }

@@ -1,0 +1,9 @@
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftLightEngine\bin\Debug\MinecraftLightEngine.dll
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftLightEngine\bin\Debug\MinecraftLightEngine.pdb
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftLightEngine\bin\Debug\DebugArrayTools.dll
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftLightEngine\bin\Debug\DebugArrayTools.pdb
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftLightEngine\obj\Debug\MinecraftLightEngine.csproj.AssemblyReference.cache
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftLightEngine\obj\Debug\MinecraftLightEngine.csproj.CoreCompileInputs.cache
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftLightEngine\obj\Debug\MinecraftLightEngine.csproj.CopyComplete
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftLightEngine\obj\Debug\MinecraftLightEngine.dll
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftLightEngine\obj\Debug\MinecraftLightEngine.pdb

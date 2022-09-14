@@ -1,9 +1,9 @@
 ﻿namespace Blocks
 {
-    [Block(BlockID.grass)]
-    [Block(BlockID.fern)]
-    [Block(BlockID.tall_grass)]
-    [Block(BlockID.large_fern)]
+    [Block(DefaultBlockState.grass)]
+    [Block(DefaultBlockState.fern)]
+    [Block(DefaultBlockState.tall_grass)]
+    [Block(DefaultBlockState.large_fern)]
     public class Grass : IWorldBlock
     {
         public float hardness => 0;

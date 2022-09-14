@@ -37,7 +37,7 @@ namespace Entities
             int coly = (int)position.y;
             for (int y = coly; y >= -64; y--)
             {
-                if (world.GetBlock((int)Math.Floor(position.x), y, (int)Math.Floor(position.z)).haveCollision)
+                if (world.GetBlock((int)Math.Floor(position.x), (short)y, (int)Math.Floor(position.z)).haveCollision)
                 {
                     coly = y;
                     break;

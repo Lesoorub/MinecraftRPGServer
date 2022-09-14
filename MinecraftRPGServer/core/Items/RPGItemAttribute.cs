@@ -3,7 +3,7 @@
 namespace Inventory
 {
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-    sealed class RPGItemAttribute : Attribute
+    public sealed class RPGItemAttribute : Attribute
     {
         public string name;
         public RPGItemAttribute(string name)

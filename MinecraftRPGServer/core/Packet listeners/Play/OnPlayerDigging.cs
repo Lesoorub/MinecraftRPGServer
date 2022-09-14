@@ -15,30 +15,47 @@ public class OnPlayerDigging : PacketListener
             playerDigging.status == PlayerDigging.Status.CancelledDigging ||
             playerDigging.status == PlayerDigging.Status.StartedDigging)
         {
-            if (!player.rpgserver.config.AllowBreakBlocks)
+            void SendOldBlock()
+            {
                 player.network.Send(new BlockChange()
                 {
                     BlockID = new VarInt(player.world.GetBlock((v3i)playerDigging.Location).StateID),
                     Location = playerDigging.Location,
                 });
+            }
+            if (!player.rpgserver.config.AllowBreakBlocks)
+                SendOldBlock();
             else
             {
                 switch (playerDigging.status)
                 {
                     case PlayerDigging.Status.StartedDigging:
-                        player.worldController.StartBreakBlock(playerDigging.Location);
+                        if (player.Gamemode == GamemodeType.Creative)
+                        {
+                            if (!player.world.SetBlock(player,
+                                   playerDigging.Location.x,
+                                   (short)playerDigging.Location.y,
+                                   playerDigging.Location.z,
+                                   new BlockState(0)))
+                                SendOldBlock();
+                        }
+                        else if (player.Gamemode == GamemodeType.Survival)
+                            player.worldController.StartBreakBlock(playerDigging.Location);
                         break;
                     case PlayerDigging.Status.CancelledDigging:
-                        player.worldController.EndlBreakBlock();
+                        if (player.Gamemode == GamemodeType.Survival)
+                            player.worldController.EndlBreakBlock();
                         break;
                     case PlayerDigging.Status.FinishedDigging:
-                        if (player.worldController.canBreak(playerDigging.Location))
+                        if (player.Gamemode == GamemodeType.Survival &&
+                            player.worldController.canBreak(playerDigging.Location))
                         {
-                            player.world.SetBlock(player,
+                            if (!player.world.SetBlock(player,
                                 playerDigging.Location.x,
-                                playerDigging.Location.y,
+                                (short)playerDigging.Location.y,
                                 playerDigging.Location.z,
-                                new BlockState(0));
+                                new BlockState(0)))
+                                SendOldBlock();
                             player.worldController.EndlBreakBlock();
                         }
                         break;

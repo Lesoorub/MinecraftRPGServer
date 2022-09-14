@@ -1,6 +1,6 @@
 ﻿namespace Blocks
 {
-    [Block(BlockID.stone)]
+    [Block(DefaultBlockState.stone)]
     public class Stone : IWorldBlock
     {
         public float hardness => 1.5f;

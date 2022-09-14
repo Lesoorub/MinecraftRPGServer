@@ -1,6 +1,7 @@
 ﻿using MineServer;
 using System.Net;
 using System.IO;
+using System.Security.Cryptography;
 
 public class ConnectedClient : IClient
 {
@@ -8,9 +9,11 @@ public class ConnectedClient : IClient
     public NetworkProvider network { get; set; }
     public MineServer.MineServer server { get; set; }
     public int protocolVersion { get; set; }
-    public const bool compression = false;
-    public const bool encryption = false;
 
+    public byte[] VerifyToken { get; set; }
+    public RSA rsa { get; set; }
+    public byte[] SharedSecret { get; set; }
+    public string username { get; set; }
     public ConnectedClient(NetworkProvider network, RPGServer server)
     {
         this.network = network;
@@ -36,7 +39,7 @@ public class ConnectedClient : IClient
         foreach (var mpacket in minecraft_packets)
         {
 
-            if (RPGServer.registered.TryGetValue(current_state, out var dict) &&
+            if (PackageRegistry.registered.TryGetValue(current_state, out var dict) &&
                 dict.TryGetValue(mpacket.packet_id, out var listeners))
             {
                 foreach (var listener in listeners)
@@ -44,7 +47,7 @@ public class ConnectedClient : IClient
                     listener.OnPacketRecieved(this,
                         (IPacket)PacketListener.Parse(
                             mpacket,
-                            RPGServer.BoundToServer[
+                            PackageRegistry.BoundToServer[
                                 RPGServer.IndexFromPacketIdAndState(
                                     mpacket.packet_id,
                                     current_state)]));

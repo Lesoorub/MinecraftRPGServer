@@ -36,15 +36,26 @@ public class BlockEntity : ISerializable, IDeserializable
     }
 
     public static string[] BlockEntityNames = Enum.GetNames(typeof(BlockEntityID));
-    public static bool GetByNameID(string nameid, out VarInt BlockEntity)
+    public static bool GetByNameID(string nameid, out BlockEntityID BlockEntity)
     {
         int index = Array.IndexOf(BlockEntityNames, nameid.Replace("minecraft:", ""));
         BlockEntity = default;
         if (index != -1)
         {
-            BlockEntity = new VarInt(index);
+            BlockEntity = (BlockEntityID)index;
             return true;
         }
         return false;
+    }
+    public static bool GetNameIDByType(BlockEntityID type, out string nameId)
+    {
+        byte t = (byte)type;
+        if (t < 0 || t >= BlockEntityNames.Length)
+        {
+            nameId = null;
+            return false;
+        }
+        nameId = BlockEntityNames[t];
+        return true;
     }
 }

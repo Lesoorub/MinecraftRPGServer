@@ -44,7 +44,7 @@ public class TeleportCommand : IChatCommand
             RedirectNode = teleport
         }, Execute);
     }
-    void Execute(Player player, string[] args)
+    void Execute(RPGServer server, Player player, string[] args)
     {
         switch (args.Length)
         {

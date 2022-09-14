@@ -7,19 +7,15 @@ public static class Commands
 {
     public static Command root = new Command(new Node(), null);
     public static byte[] DeclareCommands;
-    public delegate void ExecuteArgs(Player player, string[] args);
+    public delegate void ExecuteArgs(RPGServer server, Player player, string[] args);
     public static void Init()
     {
-        var timer = new System.Diagnostics.Stopwatch();
-        timer.Start();
-        foreach (var cmd_type in RPGServer.GetTypesWithAttribute<ChatCommandAttribute>())
+        foreach (var cmd_type in Tools.GetAllTypesWithAttribute<ChatCommandAttribute>())
         {
             var obj = Activator.CreateInstance(cmd_type) as IChatCommand;
             obj.Register();
         }
         DeclareCommands = GetDecloration();
-        timer.Stop();
-        Console.WriteLine($"Commands loaded for {((double)timer.ElapsedTicks / TimeSpan.TicksPerMillisecond):N3} ms");
     }
     public static Command Register(string cmd, ExecuteArgs action)
     {
@@ -43,7 +39,7 @@ public static class Commands
         parent.node.Childrens.Add(node);
         return cmd;
     }
-    public static bool Execute(string cmd, Player player, string[] args)
+    public static bool Execute(string cmd, RPGServer server, Player player, string[] args)
     {
         var spl = cmd.TrimStart('/').Split(' ');
         Command current = root;
@@ -53,7 +49,7 @@ public static class Commands
 
             if (current == null) return false;
         }
-        current.Action.Invoke(player, args);
+        current.Action.Invoke(server, player, args);
         return true;
     }
     public static byte[] GetDecloration()

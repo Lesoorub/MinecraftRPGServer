@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Inventory.Items
 {
-    [Item(ItemID.bow)]
+    [Item(ItemNameID.bow)]
     public partial class Bow : RPGItem, IUsable, IUsingFinish
     {
         [JsonIgnore]
@@ -23,7 +23,7 @@ namespace Inventory.Items
         public virtual float ArrowDamage { get; set; } = 15;
         public override string Type => "Bow";
 
-        public Bow() : base(ItemID.bow) { }
+        public Bow() : base(ItemNameID.bow) { }
 
         public virtual void Use(Player player)
         {
@@ -41,7 +41,7 @@ namespace Inventory.Items
         }
         protected virtual bool CanShot(Player player)
         {
-            var arrowItem = player.inventory.FindItem(ItemID.arrow);
+            var arrowItem = player.inventory.FindItem(ItemNameID.arrow);
             if (arrowItem == null) return false;
             arrowItem.ItemCount--;
             player.SendInventory();

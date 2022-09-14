@@ -5,6 +5,8 @@ public class ServerConfig
 {
     public const string PATH = "cfg.json";
 
+    public bool OnlineMode = false;
+
     //Status
     public string[] descriptions = new string[]
     {
@@ -27,6 +29,8 @@ public class ServerConfig
     public bool AllowBreakBlocks = true;
     public int MaxViewDistance = 8;
     public string WorldPath = @"World";
+    //Plugins
+    public string PluginsFolder = "plugins";
 
     public static ServerConfig Load()
     {

@@ -5,17 +5,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MineServer;
+using System.Runtime.InteropServices;
 
 namespace MinecraftRPGServer
 {
     internal class Program
     {
+        /// <summary>
+        /// Example to import function from C++
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        //[DllImport(
+        //    @"NBT\x64\Debug\NBT.dll", 
+        //    CallingConvention = CallingConvention.StdCall)]
+        //public static extern int Sum(int a, int b);
         static void Main(string[] args)
         {
-            //NBT_Tests.Test("nbt tests");
-            //Console.ReadLine();
-            //return;
-
             var server = new RPGServer(25565);
             server.Start();
             while (server.isStarted)

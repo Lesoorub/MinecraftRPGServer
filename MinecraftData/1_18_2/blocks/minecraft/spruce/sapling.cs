@@ -1,0 +1,38 @@
+using System.Collections.Generic;
+namespace MinecraftData._1_18_2.blocks.minecraft
+{
+    [Block(BlockNameID.spruce_sapling)]
+    public class spruce_sapling : IBlockData
+    {
+        public short DefaultStateID => 23;
+        public float Hardness => 0f;
+        public float ExplosionResistance => 0f;
+        public bool IsTransparent => true;
+        public byte SoundGroup => 2;
+        public short DroppedItem => 31;
+        public MinecraftMaterial Material => MinecraftMaterial.plant;
+        public Dictionary<string, List<string>> Properties => new Dictionary<string, List<string>>()
+        {
+            { "stage", new List<string>() { "0", "1" } }
+        };
+        public state[] States => new state[]
+        {
+            new state
+            {
+                Id = 23,
+                Properties = new byte[] { 0 },
+                CollisionShape = null,
+                LightCost = 0,
+                HasSideTransparency = false,
+            },
+            new state
+            {
+                Id = 24,
+                Properties = new byte[] { 1 },
+                CollisionShape = null,
+                LightCost = 0,
+                HasSideTransparency = false,
+            }
+        };
+    }
+}

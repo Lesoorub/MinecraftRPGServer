@@ -1,0 +1,4 @@
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(495,5): warning MSB8004: каталог Intermediate заканчивается не косой чертой.  Этот экземпляр сборки добавит косую черту, поскольку она необходима для правильного определения каталога Intermediate.
+  test.cpp
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT\test.cpp(3,8): error C2144: синтаксическая ошибка: перед "int" требуется ";"
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT\test.cpp(3,12): error C4430: отсутствует спецификатор типа - предполагается int. Примечание. C++ не поддерживает int по умолчанию

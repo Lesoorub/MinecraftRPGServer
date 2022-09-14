@@ -190,6 +190,7 @@ public class Hologram
 
         public void Destroy()
         {
+            System.Console.WriteLine(new System.Diagnostics.StackTrace());
             network.Send(new Packets.Play.DestroyEntities()
             {
                 Entities = new MineServer.VarInt[] { new MineServer.VarInt(EntityID) }

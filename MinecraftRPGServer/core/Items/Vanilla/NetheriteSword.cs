@@ -1,8 +1,8 @@
 ﻿namespace Inventory.Items
 {
-    [Item(ItemID.netherite_sword)]
+    [Item(ItemNameID.netherite_sword)]
     public class NetheriteSword : Sword
     {
-        public NetheriteSword() : base(ItemID.netherite_sword) { }
+        public NetheriteSword() : base(ItemNameID.netherite_sword) { }
     }
 }

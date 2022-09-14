@@ -5,16 +5,16 @@ using System.Reflection;
 [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
 public sealed class BlockAttribute : Attribute
 {
-    public BlockID BlockID;
-    public static readonly Dictionary<BlockID, IWorldBlock> blocks = new Dictionary<BlockID, IWorldBlock>();
-    public BlockAttribute(BlockID BlockID)
+    public DefaultBlockState BlockID;
+    public static readonly Dictionary<DefaultBlockState, IWorldBlock> blocks = new Dictionary<DefaultBlockState, IWorldBlock>();
+    public BlockAttribute(DefaultBlockState BlockID)
     {
         this.BlockID = BlockID;
     }
     public static void Init()
     {
         blocks.Clear();
-        foreach(var type in RPGServer.GetTypesWithAttribute<BlockAttribute>())
+        foreach(var type in Tools.GetTypesWithAttribute<BlockAttribute>())
         {
             var attrs = type.GetCustomAttributes<BlockAttribute>();
             var obj = (IWorldBlock)Activator.CreateInstance(type);

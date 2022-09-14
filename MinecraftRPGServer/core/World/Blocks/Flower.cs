@@ -1,18 +1,18 @@
 ﻿namespace Blocks
 {
-    [Block(BlockID.dandelion)]
-    [Block(BlockID.poppy)]
-    [Block(BlockID.blue_orchid)]
-    [Block(BlockID.allium)]
-    [Block(BlockID.azure_bluet)]
-    [Block(BlockID.red_tulip)]
-    [Block(BlockID.orange_tulip)]
-    [Block(BlockID.white_tulip)]
-    [Block(BlockID.pink_tulip)]
-    [Block(BlockID.oxeye_daisy)]
-    [Block(BlockID.cornflower)]
-    [Block(BlockID.lily_of_the_valley)]
-    [Block(BlockID.wither_rose)]
+    [Block(DefaultBlockState.dandelion)]
+    [Block(DefaultBlockState.poppy)]
+    [Block(DefaultBlockState.blue_orchid)]
+    [Block(DefaultBlockState.allium)]
+    [Block(DefaultBlockState.azure_bluet)]
+    [Block(DefaultBlockState.red_tulip)]
+    [Block(DefaultBlockState.orange_tulip)]
+    [Block(DefaultBlockState.white_tulip)]
+    [Block(DefaultBlockState.pink_tulip)]
+    [Block(DefaultBlockState.oxeye_daisy)]
+    [Block(DefaultBlockState.cornflower)]
+    [Block(DefaultBlockState.lily_of_the_valley)]
+    [Block(DefaultBlockState.wither_rose)]
     public class Flower : IWorldBlock
     {
         public float hardness => 0;

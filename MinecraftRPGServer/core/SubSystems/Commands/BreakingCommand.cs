@@ -6,7 +6,7 @@ public class BreakingCommand : IChatCommand
     public void Register()
     {
         Commands.Register("breaking",
-        (player, args) =>
+        (server, player, args) =>
         {
             player.rpgserver.config.AllowBreakBlocks = !player.rpgserver.config.AllowBreakBlocks;
             player.Echo(

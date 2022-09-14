@@ -1,5 +1,8 @@
-﻿using MineServer;
+﻿using System;
+using System.Linq;
+using MineServer;
 using Packets.Play;
+using MinecraftData._1_18_2.items.minecraft;
 
 [PacketListener(0x2E, State.Play)]
 public class OnPlayerBlockPlacement : PacketListener
@@ -10,45 +13,60 @@ public class OnPlayerBlockPlacement : PacketListener
         var player = client as Player;
         if (placePacket == null || player == null) return;
 
-        var pos = placePacket.Location + DirToV3f(placePacket.Face);
-        if (player.rpgserver.config.AllowBreakBlocks)
+        v3i pos = placePacket.Location;
+
+        var placedOn = player.world.GetBlock(placePacket.Location);
+
+        if (!Tags_1_18_2.blocks.replaceable_plants_names.Contains(placedOn.id.ToString()))
         {
-            var placedOn = player.world.GetBlock(placePacket.Location);
-            if (placedOn.StateID == 0) 
-                return;
-            BlockState state;
-            IItemBlock item = null;
-            switch (placePacket.Hand)
-            {
-                case PlayerBlockPlacement.HandType.MainHand:
-                    item = player.MainHand as IItemBlock;
-                    break;
-                case PlayerBlockPlacement.HandType.OffHand:
-                    item = player.OffHand as IItemBlock;
-                    break;
-            }
-            if (item != null)
-            {
-                state = item.PlaceBlock(
-                    player,
-                    pos,
-                    placePacket.Face,
-                    new v3f(
-                        placePacket.CursorPositionX,
-                        placePacket.CursorPositionY,
-                        placePacket.CursorPositionZ),
-                    placedOn);
-                if (state.StateID != 0)
-                {
-                    player.world.SetBlock(player, pos.x, pos.y, pos.z, state);
-                }
-            }
+            pos += DirToV3f(placePacket.Face);
         }
-        player.network.Send(new BlockChange()
+
+        //if (placePacket.CursorPositionX == 1 || placePacket.CursorPositionX == 0 ||
+        //    placePacket.CursorPositionY == 1 || placePacket.CursorPositionY == 0 ||
+        //    placePacket.CursorPositionZ == 1 || placePacket.CursorPositionZ == 0)
+        if (!player.rpgserver.config.AllowBreakBlocks)
         {
-            BlockID = new VarInt(player.world.GetBlock(pos).StateID),
-            Location = new Position(pos),
-        });
+            player.network.Send(new BlockChange()
+            {
+                BlockID = new VarInt(player.world.GetBlock(pos).StateID),
+                Location = new Position(pos),
+            });
+            return;
+        }
+
+
+        if (placedOn.StateID == (short)DefaultBlockState.air)//Запрет ставить блок на воздух
+            return;
+
+        ICanPlaceBlock item = null;
+
+        //Определяем какой предмет в руке
+        switch (placePacket.Hand)
+        {
+            case PlayerBlockPlacement.HandType.MainHand:
+                item = player.MainHand?.itemData as ICanPlaceBlock;
+                break;
+            case PlayerBlockPlacement.HandType.OffHand:
+                item = player.OffHand?.itemData as ICanPlaceBlock;
+                break;
+        }
+
+        if (item == null)//Если предмета в руке нет - игнор
+        {
+            return;
+        }    
+
+        BlockState state = new BlockState(GlobalPalette.GetBlockData(item.block).DefaultStateID);
+        if (state.StateID != 0 && !player.world.SetBlock(player, pos.x, (short)pos.y, pos.z, state))
+        {
+            player.network.Send(new BlockChange()
+            {
+                BlockID = new VarInt(player.world.GetBlock(pos).StateID),
+                Location = new Position(pos),
+            });
+            return;
+        }
     }
     private v3i DirToV3f(Direction face)
     {

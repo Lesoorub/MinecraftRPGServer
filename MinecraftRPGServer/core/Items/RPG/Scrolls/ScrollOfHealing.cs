@@ -20,7 +20,7 @@ namespace Inventory.Items
         {
             player.Health += BaseHeal * Power;
             Particle.Spawn(player.world, Particles.happy_villager, player.Position + v3f.up, v3f.one, 0, 10);
-            player.EchoIntoChatFromServer($"&c+{BaseHeal * Power:N1} ♥");
+            player.EchoIntoChatFromServer("&c+{BaseHeal * Power:N1} ♥");
         }
     }
 }

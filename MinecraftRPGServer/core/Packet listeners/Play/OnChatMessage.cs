@@ -16,7 +16,7 @@ public sealed class OnChatMessage : PacketListener
         if (msg.Message.StartsWith("/"))
         {
             string[] sp = msg.Message.Split(' ');
-            Commands.Execute(sp[0], player, sp.Skip(1));
+            Commands.Execute(sp[0], player.rpgserver, player, sp.Skip(1));
             return;
         }
 

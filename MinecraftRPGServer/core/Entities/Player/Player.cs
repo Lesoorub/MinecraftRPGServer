@@ -5,7 +5,7 @@ using System.Collections.Concurrent;
 using MineServer;
 using Packets.Play;
 
-public class Player : PlayerProtocol
+public class Player : PlayerProtocol, IDisposable
 {
     public static ConcurrentDictionary<string, Player> players = new ConcurrentDictionary<string, Player>();
     public override int EntityType => 111;
@@ -67,4 +67,9 @@ public class Player : PlayerProtocol
         .Where(x => x.Value.world.Equals(world) && 
                     x.Value.worldController.loadedChunks.Any(y => y.x == chunkpos.x && y.y == chunkpos.y))
         .Select(x => x.Value);
+
+    public void Dispose()
+    {
+        (network as IDisposable)?.Dispose();
+    }
 }

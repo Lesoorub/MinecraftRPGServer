@@ -1,6 +1,6 @@
 ﻿namespace Blocks
 {
-    [Block(BlockID.dead_bush)]
+    [Block(DefaultBlockState.dead_bush)]
     public class DeadBush : IWorldBlock
     {
         public float hardness => 0;

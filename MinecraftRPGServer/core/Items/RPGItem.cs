@@ -38,7 +38,7 @@ namespace Inventory.Items
             }
         }
 
-        public RPGItem(ItemID itemID)
+        public RPGItem(ItemNameID itemID)
         {
             ItemID = itemID;
         }
@@ -89,7 +89,7 @@ namespace Inventory.Items
         public static Dictionary<string, Type> rpgItems = new Dictionary<string, Type>();
         public static void Init()
         {
-            foreach (var item_type in RPGServer.GetTypesWithAttribute<RPGItemAttribute>())
+            foreach (var item_type in Tools.GetAllTypesWithAttribute<RPGItemAttribute>())
             {
                 var attr = item_type.GetCustomAttribute<RPGItemAttribute>();
                 rpgItems.Add(attr.name, item_type);

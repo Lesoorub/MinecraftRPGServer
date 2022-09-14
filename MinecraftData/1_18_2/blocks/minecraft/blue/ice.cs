@@ -1,0 +1,30 @@
+using System.Collections.Generic;
+namespace MinecraftData._1_18_2.blocks.minecraft
+{
+    [Block(BlockNameID.blue_ice)]
+    public class blue_ice : IBlockData
+    {
+        public short DefaultStateID => 9898;
+        public float Hardness => 2.8f;
+        public float ExplosionResistance => 2.8f;
+        public bool IsTransparent => false;
+        public byte SoundGroup => 6;
+        public short DroppedItem => 547;
+        public MinecraftMaterial Material => MinecraftMaterial.dense_ice;
+        public Dictionary<string, List<string>> Properties => new Dictionary<string, List<string>>()
+        {
+            
+        };
+        public state[] States => new state[]
+        {
+            new state
+            {
+                Id = 9898,
+                Properties = new byte[] {  },
+                CollisionShape = 0,
+                LightCost = 15,
+                HasSideTransparency = false,
+            }
+        };
+    }
+}

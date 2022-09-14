@@ -12,12 +12,12 @@ public static class ToolMath
     {
         none, wood, stone, iron, diamond, netherite, gold
     }
-    public static bool isSpecificTool(ToolType tool, BlockID block)
+    public static bool isSpecificTool(ToolType tool, DefaultBlockState block)
     {
         if (tool == ToolType.none) return false;
         return hasIn(Tags_1_18_2.TagType.blocks, "mineable/" + tool.ToString(), block.ToString());
     }
-    public static bool canHarvest(ItemID itemid, BlockID block)
+    public static bool canHarvest(ItemNameID itemid, DefaultBlockState block)
     {
         switch (GetMaterial(itemid))
         {
@@ -38,7 +38,7 @@ public static class ToolMath
         }
         return false;
     }
-    public static float getToolSpeed(ItemID itemid)
+    public static float getToolSpeed(ItemNameID itemid)
     {
         ToolMaterial mat = GetMaterial(itemid);
         switch (mat)
@@ -60,83 +60,83 @@ public static class ToolMath
         if (type == ToolType.sword || type == ToolType.shears) return 1.5f;
         return 1;
     }
-    public static ToolType GetToolType(ItemID itemId)
+    public static ToolType GetToolType(ItemNameID itemId)
     {
         switch (itemId)
         {
-            case ItemID.wooden_axe:
-            case ItemID.stone_axe:
-            case ItemID.iron_axe:
-            case ItemID.diamond_axe:
-            case ItemID.netherite_axe:
-            case ItemID.golden_axe:
+            case ItemNameID.wooden_axe:
+            case ItemNameID.stone_axe:
+            case ItemNameID.iron_axe:
+            case ItemNameID.diamond_axe:
+            case ItemNameID.netherite_axe:
+            case ItemNameID.golden_axe:
                 return ToolType.axe;
-            case ItemID.wooden_hoe:
-            case ItemID.stone_hoe:
-            case ItemID.iron_hoe:
-            case ItemID.diamond_hoe:
-            case ItemID.netherite_hoe:
-            case ItemID.golden_hoe:
+            case ItemNameID.wooden_hoe:
+            case ItemNameID.stone_hoe:
+            case ItemNameID.iron_hoe:
+            case ItemNameID.diamond_hoe:
+            case ItemNameID.netherite_hoe:
+            case ItemNameID.golden_hoe:
                 return ToolType.hoe;
-            case ItemID.wooden_pickaxe:
-            case ItemID.stone_pickaxe:
-            case ItemID.iron_pickaxe:
-            case ItemID.diamond_pickaxe:
-            case ItemID.netherite_pickaxe:
-            case ItemID.golden_pickaxe:
+            case ItemNameID.wooden_pickaxe:
+            case ItemNameID.stone_pickaxe:
+            case ItemNameID.iron_pickaxe:
+            case ItemNameID.diamond_pickaxe:
+            case ItemNameID.netherite_pickaxe:
+            case ItemNameID.golden_pickaxe:
                 return ToolType.pickaxe;
-            case ItemID.wooden_shovel:
-            case ItemID.stone_shovel:
-            case ItemID.iron_shovel:
-            case ItemID.diamond_shovel:
-            case ItemID.netherite_shovel:
-            case ItemID.golden_shovel:
+            case ItemNameID.wooden_shovel:
+            case ItemNameID.stone_shovel:
+            case ItemNameID.iron_shovel:
+            case ItemNameID.diamond_shovel:
+            case ItemNameID.netherite_shovel:
+            case ItemNameID.golden_shovel:
                 return ToolType.shovel;
-            case ItemID.shears:
+            case ItemNameID.shears:
                 return ToolType.shears;
-            case ItemID.wooden_sword:
-            case ItemID.stone_sword:
-            case ItemID.iron_sword:
-            case ItemID.diamond_sword:
-            case ItemID.netherite_sword:
-            case ItemID.golden_sword:
+            case ItemNameID.wooden_sword:
+            case ItemNameID.stone_sword:
+            case ItemNameID.iron_sword:
+            case ItemNameID.diamond_sword:
+            case ItemNameID.netherite_sword:
+            case ItemNameID.golden_sword:
                 return ToolType.sword;
         }
         return ToolType.none;
     }
-    public static ToolMaterial GetMaterial(ItemID itemId)
+    public static ToolMaterial GetMaterial(ItemNameID itemId)
     {
         switch (itemId)
         {
-            case ItemID.wooden_axe:
-            case ItemID.wooden_hoe:
-            case ItemID.wooden_pickaxe:
-            case ItemID.wooden_shovel:
+            case ItemNameID.wooden_axe:
+            case ItemNameID.wooden_hoe:
+            case ItemNameID.wooden_pickaxe:
+            case ItemNameID.wooden_shovel:
                 return ToolMaterial.wood;
-            case ItemID.stone_axe:
-            case ItemID.stone_hoe:
-            case ItemID.stone_pickaxe:
-            case ItemID.stone_shovel:
+            case ItemNameID.stone_axe:
+            case ItemNameID.stone_hoe:
+            case ItemNameID.stone_pickaxe:
+            case ItemNameID.stone_shovel:
                 return ToolMaterial.stone;
-            case ItemID.iron_axe:
-            case ItemID.iron_hoe:
-            case ItemID.iron_pickaxe:
-            case ItemID.iron_shovel:
+            case ItemNameID.iron_axe:
+            case ItemNameID.iron_hoe:
+            case ItemNameID.iron_pickaxe:
+            case ItemNameID.iron_shovel:
                 return ToolMaterial.iron;
-            case ItemID.diamond_axe:
-            case ItemID.diamond_hoe:
-            case ItemID.diamond_pickaxe:
-            case ItemID.diamond_shovel:
+            case ItemNameID.diamond_axe:
+            case ItemNameID.diamond_hoe:
+            case ItemNameID.diamond_pickaxe:
+            case ItemNameID.diamond_shovel:
                 return ToolMaterial.diamond;
-            case ItemID.netherite_axe:
-            case ItemID.netherite_hoe:
-            case ItemID.netherite_pickaxe:
-            case ItemID.netherite_shovel:
+            case ItemNameID.netherite_axe:
+            case ItemNameID.netherite_hoe:
+            case ItemNameID.netherite_pickaxe:
+            case ItemNameID.netherite_shovel:
                 return ToolMaterial.netherite;
-            case ItemID.golden_axe:
-            case ItemID.golden_hoe:
-            case ItemID.golden_pickaxe:
-            case ItemID.golden_shovel:
+            case ItemNameID.golden_axe:
+            case ItemNameID.golden_hoe:
+            case ItemNameID.golden_pickaxe:
+            case ItemNameID.golden_shovel:
                 return ToolMaterial.gold;
         }
         return ToolMaterial.none;

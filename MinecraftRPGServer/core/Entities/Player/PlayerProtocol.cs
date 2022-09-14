@@ -103,7 +103,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     public long PreviousRecievedMetadata = 0;
     public long LastAttackTime = 0;
     public const int AttackDelayTime = 200;
-    public Dictionary<ItemID, long> Cooldowns = new Dictionary<ItemID, long>();
+    public Dictionary<ItemNameID, long> Cooldowns = new Dictionary<ItemNameID, long>();
 
     protected override v3f HoloOffset => new v3f(0, -.2f, 0);
 
@@ -173,15 +173,15 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         {
             data = Commands.DeclareCommands
         });//20
+        //Создать все сущности у игрока
+        entitiesController.UpdateLoadedEntitiesLoad();//34+
+        SendInventory();
+        SendUpdateHealth();
         SendPlayerPositionAndLook();//22
         rpgserver.tab?.SendPlayers(network);
         worldController.SendUpdateViewPosition();//25
         worldController.SendWorld();//26-27
         SendPlayerPositionAndLook();//30
-        //Создать все сущности у игрока
-        entitiesController.UpdateLoadedEntitiesLoad();//34+
-        SendInventory();
-        SendUpdateHealth();
         var player = this as Player;
         Player.players.TryAdd(player.data.username, player);
 
@@ -189,6 +189,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         //SendMetadataUpdate();
 
         inventory.Init(this as Player);
+        MinecraftRPGServer.PluginManager.OnPlayerLoginInCompleted(this as Player);
     }
     public void DropItem(ref Item item, byte count)
     {
@@ -308,7 +309,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         foreach (var mpacket in minecraft_packets)
         {
             //Console.WriteLine($"[in] packet_id=0x{((int)mpacket.packet_id):X}");
-            if (RPGServer.registered.TryGetValue(State.Play, out var dict) &&
+            if (PackageRegistry.registered.TryGetValue(State.Play, out var dict) &&
                 dict.TryGetValue(mpacket.packet_id, out var listeners))
             {
                 foreach (var listener in listeners)
@@ -316,7 +317,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
                     listener.OnPacketRecieved(this,
                         (IPacket)PacketListener.Parse(
                             mpacket,
-                            RPGServer.BoundToServer[
+                            PackageRegistry.BoundToServer[
                                 RPGServer.IndexFromPacketIdAndState(
                                     mpacket.packet_id,
                                     State.Play)]));
@@ -551,7 +552,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
             Pitch = pitch,
         });
     }
-    public void SendCooldown(ItemID ItemID, int ticks)
+    public void SendCooldown(ItemNameID ItemID, int ticks)
     {
         network.Send(new SetCooldown()
         {

@@ -17,13 +17,15 @@ namespace Inventory
     {
         [JsonIgnore]
         public bool Present { get => itemCount != 0; }
-        public virtual ItemID ItemID { get; set; }
+        public virtual ItemNameID ItemID { get; set; }
         private byte itemCount = 0;
         public byte ItemCount
         {
             get => itemCount;
             set => itemCount = Math.Min(Math.Max(value, (byte)0), DefaultMaxCount);
         }
+        [JsonIgnore]
+        public MinecraftData._1_18_2.items.minecraft.IBaseItem itemData => MinecraftData._1_18_2.items.minecraft.ItemAttribute.items[ItemID];
         [JsonIgnore]
         public const byte DefaultMaxCount = 64;
         [JsonIgnore]
@@ -84,37 +86,33 @@ namespace Inventory
         public static implicit operator Slot(Item item) => item != null ? new Slot((int)item.ItemID, item.ItemCount, item.sendNBT ? item.NBT : null) : default(Slot);
 
 
-        public static string[] ItemIDNames = Enum.GetNames(typeof(ItemID));
-        public static string GetNameID(ItemID itemID) => ItemIDNames[(int)itemID];
-        public static bool GetItemID(string nameID, out ItemID ItemID)
+        public static string[] ItemIDNames = Enum.GetNames(typeof(ItemNameID));
+        public static string GetNameID(ItemNameID itemID) => ItemIDNames[(int)itemID];
+        public static bool GetItemID(string nameID, out ItemNameID ItemID)
         {
-            ItemID = ItemID.air;
+            ItemID = ItemNameID.air;
             int id = Array.IndexOf(ItemIDNames, nameID);
             if (id == -1) 
                 return false;
-            ItemID = (ItemID)id;
+            ItemID = (ItemNameID)id;
             return true;
         }
 
 
-        public static Dictionary<ItemID, Type> itemTypes = new Dictionary<ItemID, Type>();
+        public static Dictionary<ItemNameID, Type> itemTypes = new Dictionary<ItemNameID, Type>();
 
         public static void InitItems()
         {
-            var timer = new Stopwatch();
-            timer.Start();
-            foreach (var item_type in RPGServer.GetTypesWithAttribute<ItemAttribute>())
+            foreach (var item_type in Tools.GetAllTypesWithAttribute<ItemAttribute>())
             {
                 var attr = item_type.GetCustomAttribute<ItemAttribute>();
                 itemTypes.Add(attr.itemID, item_type);
             }
             Items.RPGItem.Init();
-            timer.Stop();
-            Console.WriteLine($"{itemTypes.Count} Items loaded for {((double)timer.ElapsedTicks / TimeSpan.TicksPerMillisecond):N3} ms");
         }
         public static Item FromSlot(Slot slot)
         {
-            ItemID itemID = (ItemID)(int)slot.ItemID;
+            ItemNameID itemID = (ItemNameID)(int)slot.ItemID;
             if (slot.Present && itemTypes.TryGetValue(itemID, out var item_type))
             {
                 var item = (Item)Activator.CreateInstance(item_type);
@@ -128,7 +126,7 @@ namespace Inventory
                 ItemCount = slot.ItemCount,
             };
         }
-        public static Item Create(ItemID itemID, byte count = 1)
+        public static Item Create(ItemNameID itemID, byte count = 1)
         {
             if (count < 0) return null;
             if (itemTypes.TryGetValue(itemID, out var item_type))

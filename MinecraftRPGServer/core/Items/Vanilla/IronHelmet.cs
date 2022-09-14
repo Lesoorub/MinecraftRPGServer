@@ -1,8 +1,8 @@
 ﻿namespace Inventory.Items
 {
-    [Item(ItemID.iron_helmet)]
+    [Item(ItemNameID.iron_helmet)]
     public class IronHelmet : Helmet
     {
-        public IronHelmet() : base(ItemID.iron_helmet) { }
+        public IronHelmet() : base(ItemNameID.iron_helmet) { }
     }
 }

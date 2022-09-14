@@ -15,7 +15,7 @@ namespace Inventory.Items
         }
 
         public override string Type => "Sword";
-        public Sword(ItemID itemID) : base(itemID) { }
+        public Sword(ItemNameID itemID) : base(itemID) { }
         protected override void GetTooltip(ref List<Parameter> list)
         {
             base.GetTooltip(ref list);

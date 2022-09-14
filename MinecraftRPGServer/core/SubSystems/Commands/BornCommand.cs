@@ -20,7 +20,7 @@ public class BornCommand : IChatCommand
         },
         Execute);
     }
-    void Execute(Player player, string[] args)
+    void Execute(RPGServer server, Player player, string[] args)
     {
         Player target = player;
         switch (args.Length)

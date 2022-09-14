@@ -46,6 +46,8 @@ public class Chunk
     }
     public Chunk(byte[] raw)
     {
+        if (raw == null)
+            throw new Exception("Невозможно загрузить чанк из массива равного null");
         ChunkParser.Parse(this, new NBTTag(raw));
 
         UpdateData();
@@ -110,13 +112,30 @@ public class Chunk
         isChanged = false;
     }
 
-    public bool SetBlock(byte x, short y, byte z, short blockState)
+    public byte[] GetSkyLightData(int section)
+    {
+        return sections[section].SkyLight;
+    }
+    public byte[] GetBlockLightData(int section)
+    {
+        return sections[section].BlockLight;
+    }
+    public void SetSkyLightData(int section, byte[] data)
+    {
+        sections[section].SkyLight = data;
+    }
+    public void SetBlockLightData(int section, byte[] data)
+    {
+        sections[section].BlockLight = data;
+    }
+
+    public bool SetBlock(byte rx, short y, byte rz, short blockState)
     {
         if (y > 319 || y < -64) return false;
         var section = sections[y >> 4];
         if (section == null)
             sections.Add(y >> 4, section = new ChunkSection());
-        section.SetBlock(x, y % 16, z, blockState);
+        section.SetBlock(rx, y % 16, rz, blockState);
         isChanged = true;
         return true;
     }

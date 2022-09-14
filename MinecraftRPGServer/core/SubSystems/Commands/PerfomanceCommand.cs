@@ -8,7 +8,7 @@ public class PerfomanceCommand : IChatCommand
     {
         Commands.Register("perfomance", Execute);
     }
-    void Execute(Player player, string[] args)
+    void Execute(RPGServer server, Player player, string[] args)
     {
         player.EchoIntoChatFromServer(
             $"&6Memory: See tab");

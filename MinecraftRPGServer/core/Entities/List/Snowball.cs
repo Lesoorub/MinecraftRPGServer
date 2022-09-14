@@ -30,7 +30,7 @@ namespace Entities
 
             private void Execute(Entity entity, string[] args)
             {
-                var itemID = ItemID.snowball;
+                var itemID = ItemNameID.snowball;
                 if (args.Length == 1 && Inventory.Item.GetItemID(args[0], out var id))
                     itemID = id;
                 entity.meta["Item"] = Inventory.Item.Create(itemID, 1);

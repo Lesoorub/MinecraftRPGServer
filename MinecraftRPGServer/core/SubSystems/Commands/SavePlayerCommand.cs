@@ -5,7 +5,7 @@ public class SavePlayerCommand : IChatCommand
     {
         Commands.Register("saveplayer", Execute);
     }
-    void Execute(Player player, string[] args)
+    void Execute(RPGServer server, Player player, string[] args)
     {
         try
         {

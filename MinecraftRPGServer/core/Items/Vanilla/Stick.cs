@@ -1,9 +1,9 @@
 ﻿namespace Inventory.Items
 {
-    [Item(ItemID.stick)]
+    [Item(ItemNameID.stick)]
     public class Stick : RPGItem
     {
-        public Stick() : base(ItemID.stick)
+        public Stick() : base(ItemNameID.stick)
         {
         }
     }
