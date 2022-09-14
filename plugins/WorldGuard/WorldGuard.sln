@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorldGuard", "WorldGuard\WorldGuard.csproj", "{7CC9AB52-0440-4EE8-B749-0BBC4B9F80EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinecraftRPGServer", "..\..\..\..\MinecraftRPGServer.csproj", "{7D271B0C-0B8E-43DE-8E07-227F48378CCE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7CC9AB52-0440-4EE8-B749-0BBC4B9F80EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CC9AB52-0440-4EE8-B749-0BBC4B9F80EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CC9AB52-0440-4EE8-B749-0BBC4B9F80EF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7CC9AB52-0440-4EE8-B749-0BBC4B9F80EF}.Debug|x64.Build.0 = Debug|Any CPU
+		{7CC9AB52-0440-4EE8-B749-0BBC4B9F80EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CC9AB52-0440-4EE8-B749-0BBC4B9F80EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CC9AB52-0440-4EE8-B749-0BBC4B9F80EF}.Release|x64.ActiveCfg = Release|Any CPU
+		{7CC9AB52-0440-4EE8-B749-0BBC4B9F80EF}.Release|x64.Build.0 = Release|Any CPU
+		{7D271B0C-0B8E-43DE-8E07-227F48378CCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D271B0C-0B8E-43DE-8E07-227F48378CCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D271B0C-0B8E-43DE-8E07-227F48378CCE}.Debug|x64.ActiveCfg = Debug|x64
+		{7D271B0C-0B8E-43DE-8E07-227F48378CCE}.Debug|x64.Build.0 = Debug|x64
+		{7D271B0C-0B8E-43DE-8E07-227F48378CCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D271B0C-0B8E-43DE-8E07-227F48378CCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D271B0C-0B8E-43DE-8E07-227F48378CCE}.Release|x64.ActiveCfg = Release|x64
+		{7D271B0C-0B8E-43DE-8E07-227F48378CCE}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EB2EF3A2-5B74-4E72-92D8-4E60FD9D3DBF}
+	EndGlobalSection
+EndGlobal

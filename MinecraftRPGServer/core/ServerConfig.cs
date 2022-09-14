@@ -30,7 +30,7 @@ public class ServerConfig
     public int MaxViewDistance = 8;
     public string WorldPath = @"World";
     //Plugins
-    public string PluginsFolder = "plugins";
+    public string PluginsFolder = "../../../plugins";
 
     public static ServerConfig Load()
     {
