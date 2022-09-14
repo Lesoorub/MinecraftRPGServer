@@ -1,0 +1,87 @@
+{
+  "$type": "PlayerData, MinecraftRPGServer",
+  "username": "Lesoorub",
+  "loginname": "Lesoorub",
+  "WorldName": "overworld",
+  "Gamemode": 1,
+  "SelectedSlot": 1,
+  "position": {
+    "$type": "v3f, MinecraftRPGServer",
+    "x": -46.5571022,
+    "y": 64.0,
+    "z": -0.349185467
+  },
+  "rotation": {
+    "$type": "v2f, MinecraftRPGServer",
+    "x": 291.5639,
+    "y": 5.06630564
+  },
+  "Health": 100.0,
+  "inventory": {
+    "$type": "Inventory.PressedInventory, MinecraftRPGServer",
+    "mainInv": {
+      "$type": "Inventory.Item[], MinecraftRPGServer",
+      "$values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    "hotbar": {
+      "$type": "Inventory.Item[], MinecraftRPGServer",
+      "$values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    "Armor": {
+      "$type": "Inventory.Item[], MinecraftRPGServer",
+      "$values": [
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    "Craft": {
+      "$type": "Inventory.Item[], MinecraftRPGServer",
+      "$values": [
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  }
+}
