@@ -1,4 +1,5 @@
 ﻿using MineServer;
+using NBT;
 
 public class PlayerMetadata : LivingEntityMetadata
 {

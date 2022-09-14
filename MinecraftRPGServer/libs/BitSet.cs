@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using MineServer;
+using NBT;
+
 public class BitSet : ISerializable, IDeserializable
 {
     const int SizeLongInBits = 64;

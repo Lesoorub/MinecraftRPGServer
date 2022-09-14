@@ -1,4 +1,5 @@
 ﻿using MineServer;
+using NBT;
 
 public struct VillagerData : ISerializable, IDeserializable
 {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MineServer;
+using NBT;
 
 namespace Packets.Play
 {

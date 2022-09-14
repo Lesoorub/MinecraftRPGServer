@@ -1,4 +1,5 @@
 ﻿using Inventory;
+using NBT;
 using System.Runtime.CompilerServices;
 
 public class InventoryWindowWatcher : DataWatcher<InventoryWindowWatcher.InventoryArgs>

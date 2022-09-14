@@ -63,39 +63,9 @@ namespace MinecraftRPGServer.Tests.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
-        internal static byte[] ab4c6e09_9dc0_348e_ba88_9f0cef0e8100 {
+        internal static byte[] args {
             get {
-                object obj = ResourceManager.GetObject("ab4c6e09_9dc0_348e_ba88_9f0cef0e8100", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Byte[].
-        /// </summary>
-        internal static byte[] level2 {
-            get {
-                object obj = ResourceManager.GetObject("level2", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Byte[].
-        /// </summary>
-        internal static byte[] map_5 {
-            get {
-                object obj = ResourceManager.GetObject("map_5", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Byte[].
-        /// </summary>
-        internal static byte[] servers {
-            get {
-                object obj = ResourceManager.GetObject("servers", resourceCulture);
+                object obj = ResourceManager.GetObject("args", resourceCulture);
                 return ((byte[])(obj));
             }
         }

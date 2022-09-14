@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using MineServer;
 using System.Globalization;
+using NBT;
 
 public struct Chat : ISerializable, IDeserializable
 {

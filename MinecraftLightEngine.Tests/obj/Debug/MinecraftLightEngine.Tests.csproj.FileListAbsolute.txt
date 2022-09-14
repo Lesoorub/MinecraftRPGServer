@@ -37,3 +37,4 @@ C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftLightEngine.Tests\obj
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftLightEngine.Tests\obj\Debug\MinecraftLightEngine.Tests.csproj.CopyComplete
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftLightEngine.Tests\obj\Debug\MinecraftLightEngine.Tests.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftLightEngine.Tests\obj\Debug\MinecraftLightEngine.Tests.pdb
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftLightEngine.Tests\bin\Debug\NBT.dll

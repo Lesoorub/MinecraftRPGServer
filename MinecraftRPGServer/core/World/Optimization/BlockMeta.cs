@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using MineServer;
 using System;
 using System.Text;
+using NBT;
 
 public struct BlockMeta : ISerializable, IDeserializable
 {

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using MineServer;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using NBT;
 
 namespace Inventory
 {

@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using MineServer;
+using NBT;
 
 public struct RawByteArray : ISerializable, IDeserializable
 {

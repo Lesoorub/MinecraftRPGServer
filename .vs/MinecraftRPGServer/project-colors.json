@@ -65,7 +65,17 @@
       "ProjectGuid": "1af3d6bb-244c-4960-be9e-19f8394a4c7c",
       "DisplayName": "PluginsAPI",
       "ColorIndex": 11
+    },
+    "a4532c66-968e-4b50-b66e-26a21eeb54aa": {
+      "ProjectGuid": "a4532c66-968e-4b50-b66e-26a21eeb54aa",
+      "DisplayName": "NBT",
+      "ColorIndex": 12
+    },
+    "ea03f115-24cf-4518-a264-5b878cecc183": {
+      "ProjectGuid": "ea03f115-24cf-4518-a264-5b878cecc183",
+      "DisplayName": "NBT.Tests",
+      "ColorIndex": 13
     }
   },
-  "NextColorIndex": 12
+  "NextColorIndex": 14
 }

@@ -41,3 +41,9 @@ C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftRPGServer.Tests\obj\D
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftRPGServer.Tests\obj\Debug\MinecraftRPGServer.Tests.csproj.CopyComplete
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftRPGServer.Tests\obj\Debug\MinecraftRPGServer.Tests.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftRPGServer.Tests\obj\Debug\MinecraftRPGServer.Tests.pdb
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftRPGServer.Tests\bin\Debug\NBT.dll
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftRPGServer.Tests\bin\Debug\NBT.pdb
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftRPGServer.Tests\bin\Debug\Utf8Json.dll
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftRPGServer.Tests\bin\Debug\System.Threading.Tasks.Extensions.xml
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftRPGServer.Tests\bin\Debug\System.ValueTuple.xml
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftRPGServer.Tests\bin\Debug\Utf8Json.xml

@@ -45,20 +45,29 @@
     <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\MSTest.TestFramework.2.2.7\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.1.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.4.0\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="Utf8Json, Version=1.3.7.0, Culture=neutral, PublicKeyToken=8a73d3ba7e392e27, processorArchitecture=MSIL">
+      <HintPath>..\packages\Utf8Json.1.3.7\lib\net47\Utf8Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NBT\BaseFunctional.cs" />
-    <Compile Include="NBT\BaseFunctionality.cs" />
-    <Compile Include="NBT\Parse.cs" />
-    <Compile Include="NBT\ReadData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="World\ChunkSectionParser.cs" />
     <Compile Include="World\InDirectPalette.cs" />
     <Compile Include="World\PaletteContainer.cs" />
   </ItemGroup>
@@ -66,6 +75,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Resources\ab4c6e09-9dc0-348e-ba88-9f0cef0e8100.dat" />
+    <None Include="Resources\args.json" />
     <None Include="Resources\level2.dat" />
     <None Include="Resources\map_5.dat" />
     <None Include="Resources\servers.dat" />
@@ -82,6 +92,10 @@
     <ProjectReference Include="..\MinecraftRPGServer\MinecraftRPGServer.csproj">
       <Project>{7d271b0c-0b8e-43de-8e07-227f48378cce}</Project>
       <Name>MinecraftRPGServer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NBT\NBT.csproj">
+      <Project>{A4532C66-968E-4B50-B66E-26A21EEB54AA}</Project>
+      <Name>NBT</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

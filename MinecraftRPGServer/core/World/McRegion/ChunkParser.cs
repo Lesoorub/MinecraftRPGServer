@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NBT;
 
 public static class ChunkParser
 {
@@ -23,7 +24,7 @@ public static class ChunkParser
                     {
                         blockX = (byte)(ent["x"] as TAG_Int & 0xF),
                         blockZ = (byte)(ent["z"] as TAG_Int & 0xF),
-                        Y = (short)ent["y"],
+                        Y = (short)(int)ent["y"],
                         Type = new MineServer.VarInt((int)type),
                         Data = (ent as TAG_Compound).RemoveTags(new string[] { "x", "y", "z", "id" })
                     };

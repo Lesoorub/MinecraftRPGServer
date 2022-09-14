@@ -1,4 +1,6 @@
 ﻿using MineServer;
+using NBT;
+
 public struct Slot : ISerializable, IDeserializable
 {
     public bool Present;

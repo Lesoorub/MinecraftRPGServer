@@ -118,16 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="ab4c6e09_9dc0_348e_ba88_9f0cef0e8100" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ab4c6e09-9dc0-348e-ba88-9f0cef0e8100.dat;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="level2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\level2.dat;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="map_5" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\map_5.dat;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="servers" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\servers.dat;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="args" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\args.json;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

@@ -10,7 +10,7 @@ using MineServer;
 using System.Security.Cryptography;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-
+using NBT;
 public class SimpleWorld : World
 {
     public delegate void TimeChangedArgs(long newTime);

@@ -1,0 +1,16 @@
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT\bin\Debug\NBT.dll
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT\bin\Debug\NBT.pdb
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT\obj\Debug\NBT.csproj.AssemblyReference.cache
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT\obj\Debug\NBT.csproj.CoreCompileInputs.cache
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT\obj\Debug\NBT.csproj.CopyComplete
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT\obj\Debug\NBT.dll
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT\obj\Debug\NBT.pdb
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT\bin\Debug\System.Buffers.dll
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT\bin\Debug\System.Memory.dll
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT\bin\Debug\System.Numerics.Vectors.dll
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT\bin\Debug\System.Buffers.xml
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT\bin\Debug\System.Numerics.Vectors.xml
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml

@@ -1,8 +1,14 @@
 ﻿using System;
+using System.Security.Cryptography;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
+using NBT;
 using static ChunkSection;
+using Newtonsoft.Json.Linq;
+using System.IO;
+using Newtonsoft.Json;
+
 public static class ChunkSectionParser
 {
     public static readonly List<string> biomeNames = Enum.GetNames(typeof(BiomeID)).ToList();
@@ -63,10 +69,11 @@ public static class ChunkSectionParser
         obj.BlockCount = obj.GetNumberOfBlocks();
     }
     static Dictionary<string, Dictionary<int, short>> chache = new Dictionary<string, Dictionary<int, short>>();
-
+    static SHA1Managed sha1 = new SHA1Managed();
     static StringBuilder sb = new StringBuilder();
-    static short StateIDFromTAG(string name, Dictionary<string, string> propsDict)
+    public static short StateIDFromTAG(string name, Dictionary<string, string> propsDict)
     {
+        if (name.Length == 13 && name.Equals("minecraft:air")) return 0;
         int PropsHash(Dictionary<string, string> p)
         {
             lock (sb)
@@ -78,8 +85,7 @@ public static class ChunkSectionParser
                     sb.Append(pair.Key);
                     sb.Append(pair.Value);
                 }
-                using (var sha1 = new System.Security.Cryptography.SHA1Managed())
-                    return BitConverter.ToInt32(sha1.ComputeHash(Encoding.UTF8.GetBytes(sb.ToString())), 0);
+                return BitConverter.ToInt32(sha1.ComputeHash(Encoding.UTF8.GetBytes(sb.ToString())), 0);
             }
         }
 
@@ -95,22 +101,17 @@ public static class ChunkSectionParser
             if (propsDict == null)
                 return data.DefaultStateID;
 
-            byte[] Convert(Dictionary<string, List<string>> pallete, Dictionary<string, string> dict)
+            IEnumerable<byte> Convert(Dictionary<string, List<string>> pallete, Dictionary<string, string> dict)
             {
                 return new SortedDictionary<string, string>(dict)
-                    .Select(x =>
-                        (byte)pallete[x.Key]
-                        .FindIndex(y =>
-                            y.ToLower()
-                            .Equals(x.Value)
-                            )
-                        )
-                    .ToArray();
+                    .Select(x => (byte)pallete[x.Key]
+                        .FindIndex(y => y.ToLower().Equals(x.Value))
+                    );
             }
 
             var d = Convert(data.Properties, propsDict);
 
-            var r = data.States.First(x => d.SequenceEqual(x.Properties)).Id;
+            short r = data.States.First(x => x.Properties.Length == propsDict.Count && x.Properties.SequenceEqual(d)).Id;
 
             if (!chache.TryGetValue(name, out var list))
                 chache.Add(name, list = new Dictionary<int, short>());

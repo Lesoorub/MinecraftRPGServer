@@ -1,4 +1,5 @@
 ﻿using MineServer;
+using NBT;
 using System;
 using System.Linq;
 public struct Position : ISerializable, IDeserializable
