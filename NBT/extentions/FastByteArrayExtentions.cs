@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 //Documentation https://wiki.vg/NBT
 namespace NBT
@@ -29,6 +30,13 @@ namespace NBT
             Buffer.BlockCopy(raw, offset, buffer, 0, len);
             Array.Reverse(buffer);
             return buffer;
+        }
+        public static string GetHexString(this byte[] ba)
+        {
+            StringBuilder hex = new StringBuilder(ba.Length * 2);
+            foreach (byte b in ba)
+                hex.AppendFormat("{0:x2} ", b);
+            return hex.ToString().TrimEnd();
         }
     }
 }

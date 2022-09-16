@@ -1,0 +1,8 @@
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftData\bin\Release\MinecraftData.dll
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftData\bin\Release\MinecraftData.pdb
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftData\bin\Release\Newtonsoft.Json.dll
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftData\bin\Release\Newtonsoft.Json.xml
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftData\obj\Release\MinecraftData.csproj.CoreCompileInputs.cache
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftData\obj\Release\MinecraftData.csproj.CopyComplete
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftData\obj\Release\MinecraftData.dll
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftData\obj\Release\MinecraftData.pdb

@@ -86,7 +86,9 @@ namespace NBT
         public void FromByteArray(byte[] bytes, int offset, out int length)
         {
             int init_offset = offset;
-            root = TAG.Read(bytes[offset++], bytes, ref offset, true);
+            //root = ParseRecursive(bytes, ref offset).root;
+            root = ParseNotRecursive(bytes, ref offset).root;
+            //root = TAG.Read(bytes[offset++], bytes, ref offset, true);
             length = offset - init_offset;
         }
         /// <summary>
@@ -233,13 +235,15 @@ namespace NBT
             }
         }
 
-        public static NBTTag Parse(byte[] bytes, ref int offset)
+        public static NBTTag ParseRecursive(byte[] bytes, ref int offset)
         {
-            throw new NotImplementedException();
+            return new NBTTag(ReadNamed(bytes, ref offset));
         }
-        static TAG Get(byte[] bytes, ref int offset)
+        static TAG ReadNamed(byte[] bytes, ref int offset)
         {
             byte type = bytes[offset++];
+            if (type == TAG_END._TypeID)
+                return new TAG_END();
             TAG.ReadHeader(bytes, ref offset, out var name, out var namelen);
             TAG t = ReadUnNammed(bytes, ref offset, type);
             if (t == null)
@@ -248,27 +252,32 @@ namespace NBT
             t.namelen = namelen;
             return t;
         }
-
         static TAG ReadUnNammed(byte[] bytes, ref int offset, int type)
         {
             TAG t = null;
             switch (type)
             {
                 case TAG_Byte._TypeID: t = new TAG_Byte(bytes[offset++]); break;
-                case TAG_Short._TypeID: 
+                case TAG_Short._TypeID:
                     t = new TAG_Short(BinaryPrimitives.ReadInt16BigEndian(new Span<byte>(bytes, offset, 2))); offset += 2; break;
-                case TAG_Int._TypeID: 
+                case TAG_Int._TypeID:
                     t = new TAG_Int(BinaryPrimitives.ReadInt32BigEndian(new Span<byte>(bytes, offset, 4))); offset += 4; break;
-                case TAG_Long._TypeID: 
+                case TAG_Long._TypeID:
                     t = new TAG_Long(BinaryPrimitives.ReadInt64BigEndian(new Span<byte>(bytes, offset, 8))); offset += 8; break;
                 case TAG_Float._TypeID: t = new TAG_Float(bytes, ref offset); break;
                 case TAG_Double._TypeID: t = new TAG_Double(bytes, ref offset); break;
                 case TAG_Byte_Array._TypeID: t = new TAG_Byte_Array(bytes, ref offset); break;
                 case TAG_Int_Array._TypeID: t = new TAG_Int_Array(bytes, ref offset); break;
                 case TAG_Long_Array._TypeID: t = new TAG_Long_Array(bytes, ref offset); break;
+                case TAG_String._TypeID: t = new TAG_String(bytes, ref offset); break;
                 case TAG_Compound._TypeID:
-
-                    break;
+                    {
+                        var list = new List<TAG>(10);
+                        TAG temp;
+                        while ((temp = ReadNamed(bytes, ref offset)).TypeID != TAG_END._TypeID)
+                            list.Add(temp);
+                        return new TAG_Compound(list);
+                    }
                 case TAG_List._TypeID:
                     {
                         byte eltype = bytes[offset++];
@@ -277,11 +286,126 @@ namespace NBT
                         List<TAG> list = new List<TAG>(size);
                         for (int k = 0; k < size; k++)
                             list.Add(ReadUnNammed(bytes, ref offset, eltype));
-                        t = new TAG_List(list, eltype);
+                        return new TAG_List(list, eltype);
                     }
-                    break;
             }
             return t;
+        }
+        public static NBTTag ParseNotRecursive(byte[] bytes, ref int offset)
+        {
+            var tagstack = new Stack<TAG>();
+            var namingstack = new Stack<bool>();
+            var listSizeStack = new Stack<(int counter, TAG_List list)>();
+
+            namingstack.Push(true);
+
+            while (offset < bytes.Length)
+            {
+                int type;
+                if (listSizeStack.Count > 0 && listSizeStack.Peek().counter > 0)
+                    type = listSizeStack.Peek().list.elementsType;
+                else
+                    type = bytes[offset++];
+
+                string name = "";
+                short namelen = 0;
+                if (type != 0 && namingstack.Peek())
+                    TAG.ReadHeader(bytes, ref offset, out name, out namelen);
+                TAG t = null;
+                switch (type)
+                {
+                    case TAG_Byte._TypeID: t = new TAG_Byte(bytes[offset++]); break;
+                    case TAG_Short._TypeID:
+                        t = new TAG_Short(BinaryPrimitives.ReadInt16BigEndian(new Span<byte>(bytes, offset, 2))); offset += 2; break;
+                    case TAG_Int._TypeID:
+                        t = new TAG_Int(BinaryPrimitives.ReadInt32BigEndian(new Span<byte>(bytes, offset, 4))); offset += 4; break;
+                    case TAG_Long._TypeID:
+                        t = new TAG_Long(BinaryPrimitives.ReadInt64BigEndian(new Span<byte>(bytes, offset, 8))); offset += 8; break;
+                    case TAG_Float._TypeID: t = new TAG_Float(bytes, ref offset); break;
+                    case TAG_Double._TypeID: t = new TAG_Double(bytes, ref offset); break;
+                    case TAG_Byte_Array._TypeID: t = new TAG_Byte_Array(bytes, ref offset); break;
+                    case TAG_Int_Array._TypeID: t = new TAG_Int_Array(bytes, ref offset); break;
+                    case TAG_Long_Array._TypeID: t = new TAG_Long_Array(bytes, ref offset); break;
+                    case TAG_String._TypeID: t = new TAG_String(bytes, ref offset); break;
+                    case TAG_Compound._TypeID:
+                        t = new TAG_Compound(null);
+                        namingstack.Push(true);
+                        listSizeStack.Push((-1, null));
+                        break;
+                    case TAG_END._TypeID:
+                        {
+                            namingstack.Pop();
+                            listSizeStack.Pop();
+                            var l = new List<TAG>();
+                            while (tagstack.Peek().TypeID != TAG_Compound._TypeID)
+                            {
+                                if (tagstack.Peek().TypeID == TAG_END._TypeID)
+                                    tagstack.Pop();
+                                l.Add(tagstack.Pop());
+                            }
+                            l.Reverse();
+                            (tagstack.Peek() as TAG_Compound).data = l;
+                            tagstack.Push(new TAG_END());
+                        }
+                        break;
+                    case TAG_List._TypeID:
+                        {
+                            byte eltype = bytes[offset++];
+                            int size = BinaryPrimitives.ReadInt32BigEndian(new Span<byte>(bytes, offset, 4));
+                            offset += 4;
+                            t = new TAG_List(new List<TAG>(size), eltype);
+                            if (size > 0)
+                            {
+                                namingstack.Push(false);
+                                listSizeStack.Push((size + 1, t as TAG_List));
+                            }
+                        }
+                        break;
+                }
+                if (t != null)
+                {
+                    t.name = name;
+                    t.namelen = namelen;
+
+                    tagstack.Push(t);
+                }
+
+                while (listSizeStack.Count > 0)
+                {
+                    var pair = listSizeStack.Pop();
+                    pair.counter--;
+                    if (pair.counter == 0)
+                    {
+                        namingstack.Pop();
+                        while (pair.list.data.Count < pair.list.data.Capacity)
+                        {
+                            if (tagstack.Peek().TypeID == TAG_END._TypeID)
+                            {
+                                tagstack.Pop();
+                                continue;
+                            }
+                            pair.list.data.Add(tagstack.Pop());
+                        }
+                        pair.list.data.Reverse();
+                        pair.list.size = pair.list.data.Count;
+                    }
+                    else
+                    {
+                        listSizeStack.Push(pair);
+                        break;
+                    }
+                }
+
+                if (tagstack.Count == 2 &&
+                    tagstack.First().TypeID == TAG_END._TypeID &&
+                    tagstack.Last().TypeID == TAG_Compound._TypeID)
+                {
+                    break;
+                }
+            }
+            if (tagstack.Peek().TypeID == TAG_END._TypeID)
+                tagstack.Pop();
+            return tagstack.Pop();
         }
     }
 }

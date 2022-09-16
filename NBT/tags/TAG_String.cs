@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers.Binary;
 using System.Text;
 
 //Documentation https://wiki.vg/NBT
@@ -16,7 +17,7 @@ namespace NBT
         //[datalen:2][data:datalen]
         public TAG_String(byte[] raw, ref int offset)
         {
-            datalen = BitConverter.ToUInt16(raw.BigEndian(offset, 2), 0);
+            datalen = BinaryPrimitives.ReadUInt16BigEndian(new Span<byte>(raw, offset, 2));
             offset += 2;
             data = Encoding.UTF8.GetString(raw, offset, datalen);
             offset += datalen;

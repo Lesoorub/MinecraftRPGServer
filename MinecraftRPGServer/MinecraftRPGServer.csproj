@@ -272,6 +272,7 @@
     <Compile Include="core\World\Tags\Tags_1_18_2.cs" />
     <Compile Include="core\World\World.cs" />
     <Compile Include="libs\ArrayOfBytesBuilder.cs" />
+    <Compile Include="libs\LFUCache.cs" />
     <Compile Include="special types\BlockEntityID.cs" />
     <Compile Include="special types\Direction.cs" />
     <Compile Include="core\Entities\Metadata\EntityMetadata.cs" />

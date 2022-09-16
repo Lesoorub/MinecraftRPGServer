@@ -25,3 +25,6 @@ C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MineSocket.NET.Tests\obj\Debug
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MineSocket.NET.Tests\obj\Debug\MineSocket.NET.Tests.pdb
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MineSocket.NET.Tests\bin\Debug\NBT.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MineSocket.NET.Tests\bin\Debug\NBT.pdb
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MineSocket.NET.Tests\bin\Debug\System.Memory.dll
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MineSocket.NET.Tests\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MineSocket.NET.Tests\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml

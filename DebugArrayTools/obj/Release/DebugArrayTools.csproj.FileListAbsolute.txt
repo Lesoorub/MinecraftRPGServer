@@ -1,0 +1,6 @@
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\DebugArrayTools\bin\Release\DebugArrayTools.dll
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\DebugArrayTools\bin\Release\DebugArrayTools.pdb
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\DebugArrayTools\obj\Release\DebugArrayTools.csproj.AssemblyReference.cache
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\DebugArrayTools\obj\Release\DebugArrayTools.csproj.CoreCompileInputs.cache
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\DebugArrayTools\obj\Release\DebugArrayTools.dll
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\DebugArrayTools\obj\Release\DebugArrayTools.pdb

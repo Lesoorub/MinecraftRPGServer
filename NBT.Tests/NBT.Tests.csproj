@@ -57,7 +57,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="ReadData.cs" />
+    <Compile Include="RealData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -66,6 +66,7 @@
     <None Include="Resources\ab4c6e09-9dc0-348e-ba88-9f0cef0e8100.dat" />
     <None Include="Resources\level2.dat" />
     <None Include="Resources\map_5.dat" />
+    <None Include="Resources\r.-1.-1.mca" />
     <None Include="Resources\servers.dat" />
   </ItemGroup>
   <ItemGroup>

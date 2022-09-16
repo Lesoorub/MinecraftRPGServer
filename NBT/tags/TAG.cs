@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Linq;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Text;
+using System.Runtime.CompilerServices;
 
 //Documentation https://wiki.vg/NBT
 namespace NBT
@@ -24,10 +27,10 @@ namespace NBT
             .Combine(Encoding.UTF8.GetBytes(name))
             .Combine(Bytes));
         public virtual object body { get => throw new NotImplementedException(); }
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ReadHeader(byte[] raw, ref int offset, out string name, out short namelen)
         {
-            namelen = BitConverter.ToInt16(raw.BigEndian(offset, 2), 0);
+            namelen = BinaryPrimitives.ReadInt16BigEndian(raw.AsSpan(offset));
             offset += 2;
             if (namelen >= 256)
                 throw new Exception("Long string?");

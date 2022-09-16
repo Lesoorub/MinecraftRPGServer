@@ -8,6 +8,7 @@ using static ChunkSection;
 using Newtonsoft.Json.Linq;
 using System.IO;
 using Newtonsoft.Json;
+using System.Runtime.CompilerServices;
 
 public static class ChunkSectionParser
 {
@@ -26,7 +27,7 @@ public static class ChunkSectionParser
         {
             obj.biomes = new PalettedContainer(
                 (biomes_tag["palette"] as TAG_List)?.data
-                .Select(x => (short)biomeNames.FindIndex(y => y.Equals((x as TAG_String).data.Replace("minecraft:", ""))))
+                .Select(x => (short)biomeNames.FindIndex(y => y.Equals(((string)x).Replace("minecraft:", ""))))
                 .ToList(),
                 (biomes_tag["data"] as TAG_Long_Array)?.data, 
                 BiomesSizePerSection, 
@@ -47,10 +48,12 @@ public static class ChunkSectionParser
         if (block_states_tag != null)
         {
             obj.block_states = new PalettedContainer(
-                palette: (block_states_tag["palette"] as TAG_List)?.data.Select(x =>
-                StateIDFromTAG(
-                    x["Name"] as TAG_String,
-                    (x["Properties"] as TAG_Compound)?.data.ToDictionary(y => y.name, y => (y as TAG_String).data))
+                palette: (block_states_tag["palette"] as TAG_List)?.data
+                .Select(x =>
+                    StateIDFromTAG(
+                        x["Name"] as TAG_String,
+                        x["Properties"] as TAG_Compound
+                    )
                 ).ToList(),
                 data: (block_states_tag["data"] as TAG_Long_Array)?.data,
                 size: BlocksSizePerSection,
@@ -68,28 +71,23 @@ public static class ChunkSectionParser
         }
         obj.BlockCount = obj.GetNumberOfBlocks();
     }
-    static Dictionary<string, Dictionary<int, short>> chache = new Dictionary<string, Dictionary<int, short>>();
+    static Dictionary<string, Dictionary<int, short>> chache = new Dictionary<string, Dictionary<int, short>>(50);
     static SHA1Managed sha1 = new SHA1Managed();
     static StringBuilder sb = new StringBuilder();
-    public static short StateIDFromTAG(string name, Dictionary<string, string> propsDict)
+    static IComparer<TAG> comparer = new TAG_Comparer();
+    class TAG_Comparer : IComparer<TAG>
+    {
+        public int Compare(TAG x, TAG y)
+        {
+            return string.Compare(x.name, y.name);
+        }
+    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static short StateIDFromTAG(string name, TAG_Compound propsTAG)
     {
         if (name.Length == 13 && name.Equals("minecraft:air")) return 0;
-        int PropsHash(Dictionary<string, string> p)
-        {
-            lock (sb)
-            {
-                sb.Clear();
-                if (p == null) return 0;
-                foreach (var pair in p)
-                {
-                    sb.Append(pair.Key);
-                    sb.Append(pair.Value);
-                }
-                return BitConverter.ToInt32(sha1.ComputeHash(Encoding.UTF8.GetBytes(sb.ToString())), 0);
-            }
-        }
 
-        var propsHash = PropsHash(propsDict);
+        var propsHash = PropsHash(propsTAG);
         lock (chache)
         {
             if (chache.TryGetValue(name, out var props) && props.TryGetValue(propsHash, out var result))
@@ -98,25 +96,40 @@ public static class ChunkSectionParser
             if (!Enum.TryParse<BlockNameID>(name.Replace("minecraft:", ""), out var nameid)) return 0;
 
             var data = GlobalPalette.GetBlockData(nameid);
-            if (propsDict == null)
+            if (propsTAG == null)
                 return data.DefaultStateID;
 
-            IEnumerable<byte> Convert(Dictionary<string, List<string>> pallete, Dictionary<string, string> dict)
+            IEnumerable<byte> Convert(Dictionary<string, List<string>> pallete, TAG_Compound dict)
             {
-                return new SortedDictionary<string, string>(dict)
-                    .Select(x => (byte)pallete[x.Key]
-                        .FindIndex(y => y.ToLower().Equals(x.Value))
+                dict.data.Sort(comparer);
+                return dict.data.Select(x => (byte)pallete[x.name]
+                        .FindIndex(y => y.ToLower().Equals(x.body))
                     );
             }
 
-            var d = Convert(data.Properties, propsDict);
+            var d = Convert(data.Properties, propsTAG);
 
-            short r = data.States.First(x => x.Properties.Length == propsDict.Count && x.Properties.SequenceEqual(d)).Id;
+            short r = data.States.First(x => x.Properties.Length == propsTAG.Count && x.Properties.SequenceEqual(d)).Id;
 
             if (!chache.TryGetValue(name, out var list))
-                chache.Add(name, list = new Dictionary<int, short>());
+                chache.Add(name, list = new Dictionary<int, short>(50));
             list.Add(propsHash, r);
             return r;
+        }
+    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    static int PropsHash(TAG_Compound p)
+    {
+        lock (sb)
+        {
+            sb.Clear();
+            if (p == null) return 0;
+            foreach (var pair in p)
+            {
+                sb.Append(pair.name);
+                sb.Append(pair.body);
+            }
+            return BitConverter.ToInt32(sha1.ComputeHash(Encoding.UTF8.GetBytes(sb.ToString())), 0);
         }
     }
     public static NBTTag Serialize(ChunkSection obj)
@@ -186,4 +199,5 @@ public static class ChunkSectionParser
             return tags;
         }
     }
+
 }

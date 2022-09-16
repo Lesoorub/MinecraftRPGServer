@@ -127,6 +127,9 @@
   <data name="map_5" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\map_5.dat;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="r__1__1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\r.-1.-1.mca;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="servers" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\servers.dat;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>

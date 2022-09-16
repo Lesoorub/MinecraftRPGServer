@@ -93,6 +93,16 @@ namespace NBT.Tests.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
+        internal static byte[] r__1__1 {
+            get {
+                object obj = ResourceManager.GetObject("r__1__1", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
         internal static byte[] servers {
             get {
                 object obj = ResourceManager.GetObject("servers", resourceCulture);

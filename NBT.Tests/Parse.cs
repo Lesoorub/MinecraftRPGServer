@@ -2,6 +2,7 @@
 using NBT;
 using System.Collections.Generic;
 using System.Linq;
+using static NBT.Tests.Properties.Resources;
 
 namespace MinecraftRPGServer.Tests.NBT
 {
@@ -230,6 +231,16 @@ namespace MinecraftRPGServer.Tests.NBT
             var nbt = NBTTag.Parse(new { string_array = new string[] { "a", "b", "c" } });
             var obj = nbt["string_array"].ToObject<List<string>>();
             Assert.IsTrue(obj[0] == "a" && obj[1] == "b" && obj[2] == "c");
+        }
+        [TestMethod]
+        public void NotRecursiveParse()
+        {
+            var nbt = new NBTTag(level2, true);
+
+            int offset = 0;
+            var parsed = NBTTag.ParseNotRecursive(nbt.Bytes, ref offset);
+
+            Assert.IsTrue(parsed.Bytes.SequenceEqual(nbt.Bytes));
         }
     }
 }

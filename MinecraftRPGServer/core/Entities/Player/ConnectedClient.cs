@@ -2,6 +2,7 @@
 using System.Net;
 using System.IO;
 using System.Security.Cryptography;
+using System;
 
 public class ConnectedClient : IClient
 {
