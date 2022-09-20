@@ -36,6 +36,6 @@ public class SaveAllCommand : IChatCommand
         var mca = pair.Value;
         mca.SaveChunks();
         File.WriteAllBytes($"r.{key.x}.{key.y}.mca", mca.ToByteArray());
-        server.logger.WriteLine("Save completed!");
+        server.logger.Write("Save completed!");
     }
 }

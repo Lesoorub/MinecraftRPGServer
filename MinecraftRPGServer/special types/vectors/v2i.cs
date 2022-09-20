@@ -63,6 +63,17 @@ public class v2i
                 list.Add(new v2i(x, y));
         return list;
     }
+    public static void ForEach(v2i max, Action<ForEachHandler, v2i> onEach)
+    {
+        var handler = new ForEachHandler();
+        var list = Range(max);
+        foreach (var el in list)
+        {
+            onEach(handler, el);
+            if (handler.isBreak)
+                break;
+        }
+    }
     public static void ForEach(v2i max, Action<v2i> onEach)
     {
         var list = Range(max);
@@ -75,13 +86,43 @@ public class v2i
         foreach (var el in list)
             onEach(el);
     }
+    public static void ForEach(v2i min, v2i max, Action<ForEachHandler, v2i> onEach)
+    {
+        var handler = new ForEachHandler();
+        var list = Range(min, max);
+        foreach (var el in list)
+        {
+            onEach(handler, el);
+            if (handler.isBreak)
+                break;
+        }
+    }
     public static void ForEach(List<v2i> list, Action<v2i> onEach)
     {
         foreach (var el in list)
             onEach(el);
     }
+    public static void ForEach(List<v2i> list, Action<ForEachHandler, v2i> onEach)
+    {
+        var handler = new ForEachHandler();
+        foreach (var el in list)
+        {
+            onEach(handler, el);
+            if (handler.isBreak)
+                break;
+        }
+    }
 }
 public static class v2iExtentions
 {
     public static void ForEach(this List<v2i> list, Action<v2i> onEach) => v2i.ForEach(list, onEach);
+}
+
+public class ForEachHandler
+{
+    public bool isBreak = false;
+    public void Break()
+    {
+        isBreak = true;
+    }
 }

@@ -19,8 +19,8 @@ public class ChunkSection
     public short BlockCount;
     public byte BitsPerBlock;
 
-    public static byte GlobalBiomesMaxBitsPerEntry => (byte)Math.Ceiling(Math.Log(ChunkSectionParser.biomeNames.Count, 2));
-    public static byte GlobalBlockStatesMaxBitsPerEntry => (byte)Math.Ceiling(Math.Log(GlobalPalette.Length, 2));
+    public static readonly byte GlobalBiomesMaxBitsPerEntry = (byte)Math.Ceiling(Math.Log(ChunkSectionParser.biomeNames.Count, 2));
+    public static readonly byte GlobalBlockStatesMaxBitsPerEntry = (byte)Math.Ceiling(Math.Log(GlobalPalette.Length, 2));
     public const byte BiomesThreasholdPerSection = 4;
     public const byte BlocksThreasholdPerSection = 9;
 

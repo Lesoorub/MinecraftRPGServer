@@ -115,6 +115,10 @@ public class PalettedContainer
         container.Write(builder);
         return builder.ToArray();
     }
+    public long[] GetData()
+    {
+        return container.GetData();
+    }
     public static short[] UnpackData(int size, byte BitsPerEntry, long[] longs)
     {
         short[] blocks = new short[size * size * size];
@@ -179,6 +183,7 @@ public class PalettedContainer
         short Get(int rx, int ry, int rz);
         List<PaletteElement> GetPalette();
         void Write(ArrayWriter writer);
+        long[] GetData();
     }
 
     public class SinglePalette : IContainer
@@ -214,6 +219,7 @@ public class PalettedContainer
             writer.Write(new VarInt(element));
             writer.Write<byte>(0);
         }
+        public long[] GetData() => null;
 
         public List<PaletteElement> GetPalette()
         {
@@ -360,16 +366,18 @@ public class PalettedContainer
         public void Write(ArrayWriter writer)
         {
             writer.Write(Palette.Select(x => new VarInt(x.value)).ToArray());
-
+            writer.Write(GetData());
+        }
+        public long[] GetData()
+        {
             //Мне лень делать полностью
             byte min = 0;
             if (size == 16)
                 min = 4;
             if (size == 4)
-                min = 3;
+                min = 4;
             //
-
-            writer.Write(PackData(size, Math.Max(min, BitsPerEntry), data));
+            return PackData(size, Math.Max(min, BitsPerEntry), data);
         }
 
         public List<PaletteElement> GetPalette()
@@ -438,7 +446,8 @@ public class PalettedContainer
 
         public void Write(ArrayWriter writer)
         {
-            writer.Write(PackData(size, BitsPerEntry, data));
+            writer.Write(GetData());
         }
+        public long[] GetData() => PackData(size, BitsPerEntry, data);
     }
 }

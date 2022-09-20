@@ -11,15 +11,13 @@ namespace NBT
         public double data;
         //struct
         //[data:8]
-        public TAG_Double(byte[] raw, ref int offset)
+        public TAG_Double(byte[] raw, ref int offset) : base("")
         {
             data = BitConverter.ToDouble(raw.BigEndian(offset, 8), 0);
             offset += 8;
         }
-        public TAG_Double(double data, string name = "")
+        public TAG_Double(double data, string name = "") : base(name)
         {
-            this.name = name;
-            namelen = (short)name.Length;
             this.data = data;
         }
         public override byte[] Bytes => BitConverter.GetBytes(data).Reverse();

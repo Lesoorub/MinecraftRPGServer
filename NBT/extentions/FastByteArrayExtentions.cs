@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 
 //Documentation https://wiki.vg/NBT
@@ -11,6 +12,23 @@ namespace NBT
             byte[] n = new byte[a.Length + b.Length];
             Buffer.BlockCopy(a, 0, n, 0, a.Length);
             Buffer.BlockCopy(b, 0, n, a.Length, b.Length);
+            return n;
+        }
+        public static byte[] Combine(this byte[] a, params byte[][] objs)
+        {
+            byte[][] t = new byte[objs.Length][];
+            int index = 0;
+            foreach (var b in objs)
+                t[index++] = b;
+            index = a.Length;
+            byte[] n = new byte[t.Sum(x => x.Length) + index];
+            Buffer.BlockCopy(a, 0, n, 0, index);
+            foreach (var arr in t)
+            {
+                var l = arr.Length;
+                Buffer.BlockCopy(arr, 0, n, index, l);
+                index += l;
+            }
             return n;
         }
         public static byte[] Take(this byte[] from, int count)

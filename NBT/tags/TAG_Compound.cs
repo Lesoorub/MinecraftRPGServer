@@ -29,7 +29,6 @@ namespace NBT
                     return;
                 }
                 value.name = name;
-                value.namelen = (short)name.Length;
 
                 for (int k = 0; k < data.Count; k++)
                     if (data[k].name.Equals(name))
@@ -40,12 +39,11 @@ namespace NBT
                 data.Add(value);
             }
         }
-        public TAG_Compound(string name = "")
+        public TAG_Compound(string name = "") : base(name)
         {
-            this.name = name;
             data = new List<TAG>();
         }
-        public TAG_Compound(byte[] raw, ref int offset)
+        public TAG_Compound(byte[] raw, ref int offset) : base("")
         {
             TAG t;
             while ((t = Read(raw[offset++], raw, ref offset, true)).TypeID != TAG_END._TypeID)
@@ -53,10 +51,8 @@ namespace NBT
                 Add(t);
             }
         }
-        public TAG_Compound(List<TAG> body, string name = "")
+        public TAG_Compound(List<TAG> body, string name = "") : base(name)
         {
-            this.name = name;
-            namelen = (short)name.Length;
             this.data = body;
         }
         public override void SetDepth(int d)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using NBT;
+using Newtonsoft.Json;
 
 public static class ChunkParser
 {
@@ -39,10 +40,19 @@ public static class ChunkParser
             var section = new ChunkSection();
             section.X = obj.cPos.x;
             section.Z = obj.cPos.y;
-            ChunkSectionParser.Parse(section, Sections[k]);
-            obj.sections.Add(section.Y, section);
+            try
+            {
+                ChunkSectionParser.Parse(section, Sections[k]);
+                obj.sections.Add(section.Y, section);
+            }
+            catch (Exception ex)
+            {
+#if DEBUG
+                throw ex;
+#endif
+            }
         }
-        obj.isChanged = true;
+        obj.IsChanged();
     }
     public static NBTTag Serialize(Chunk obj)
     {

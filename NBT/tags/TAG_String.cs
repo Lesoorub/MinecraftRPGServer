@@ -15,17 +15,15 @@ namespace NBT
 
         //struct
         //[datalen:2][data:datalen]
-        public TAG_String(byte[] raw, ref int offset)
+        public TAG_String(byte[] raw, ref int offset) : base("")
         {
             datalen = BinaryPrimitives.ReadUInt16BigEndian(new Span<byte>(raw, offset, 2));
             offset += 2;
             data = Encoding.UTF8.GetString(raw, offset, datalen);
             offset += datalen;
         }
-        public TAG_String(string data, string name = "")
+        public TAG_String(string data, string name = "") : base(name)
         {
-            this.name = name;
-            namelen = (short)name.Length;
             this.data = data;
             if (data != null)
                 this.datalen = (ushort)data.Length;

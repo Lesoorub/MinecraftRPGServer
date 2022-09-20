@@ -22,10 +22,19 @@ namespace NBT
             set => root[name] = value;
         }
         public NBTTag() { }
-        public NBTTag(byte[] raw, bool gzipCompressed = false)
+        public NBTTag(byte[] raw)
         {
-            if (gzipCompressed)
-                raw = GZip.Decompress(raw);
+            byte first_byte = raw[0];
+            switch (first_byte)
+            {
+                case TAG_Compound._TypeID:
+                    break;
+                case 0x1F:
+                    raw = GZip.Decompress(raw);
+                    break;
+                case 0x78:
+                    throw new Exception("zlib is not supported");
+            }
             FromByteArray(raw, 0, out var len);
         }
         public NBTTag(TAG body)
@@ -225,7 +234,10 @@ namespace NBT
                     var field = type.GetField(element.name);
                     if (field == null) continue;
                     if (element.body == null) continue;
-                    field.SetValue(obj, ToObject(element, field.FieldType));
+                    var d = ToObject(element, field.FieldType);
+                    if (field.FieldType != d.GetType())
+                        d = Convert.ChangeType(d, field.FieldType);
+                    field.SetValue(obj, d);
                 }
                 return obj;
             }
@@ -244,12 +256,11 @@ namespace NBT
             byte type = bytes[offset++];
             if (type == TAG_END._TypeID)
                 return new TAG_END();
-            TAG.ReadHeader(bytes, ref offset, out var name, out var namelen);
+            TAG.ReadHeader(bytes, ref offset, out var name);
             TAG t = ReadUnNammed(bytes, ref offset, type);
             if (t == null)
                 return new TAG_END();
             t.name = name;
-            t.namelen = namelen;
             return t;
         }
         static TAG ReadUnNammed(byte[] bytes, ref int offset, int type)
@@ -308,9 +319,8 @@ namespace NBT
                     type = bytes[offset++];
 
                 string name = "";
-                short namelen = 0;
                 if (type != 0 && namingstack.Peek())
-                    TAG.ReadHeader(bytes, ref offset, out name, out namelen);
+                    TAG.ReadHeader(bytes, ref offset, out name);
                 TAG t = null;
                 switch (type)
                 {
@@ -365,7 +375,6 @@ namespace NBT
                 if (t != null)
                 {
                     t.name = name;
-                    t.namelen = namelen;
 
                     tagstack.Push(t);
                 }

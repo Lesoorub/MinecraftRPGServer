@@ -9,14 +9,12 @@ namespace NBT
         public sbyte data;
         //struct
         //[data:1]
-        public TAG_Byte(byte[] raw, ref int offset)
+        public TAG_Byte(byte[] raw, ref int offset) : base("")
         {
             data = (sbyte)raw[offset++];
         }
-        public TAG_Byte(byte data, string name = "")
+        public TAG_Byte(byte data, string name = "") : base(name)
         {
-            this.name = name;
-            namelen = (short)name.Length;
             this.data = (sbyte)data;
         }
         public override byte[] Bytes => new byte[] { (byte)data };

@@ -5,8 +5,6 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorldGuard", "WorldGuard\WorldGuard.csproj", "{7CC9AB52-0440-4EE8-B749-0BBC4B9F80EF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinecraftRPGServer", "..\..\MinecraftRPGServer\MinecraftRPGServer.csproj", "{7D271B0C-0B8E-43DE-8E07-227F48378CCE}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,14 +21,6 @@ Global
 		{7CC9AB52-0440-4EE8-B749-0BBC4B9F80EF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7CC9AB52-0440-4EE8-B749-0BBC4B9F80EF}.Release|x64.ActiveCfg = Release|Any CPU
 		{7CC9AB52-0440-4EE8-B749-0BBC4B9F80EF}.Release|x64.Build.0 = Release|Any CPU
-		{7D271B0C-0B8E-43DE-8E07-227F48378CCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7D271B0C-0B8E-43DE-8E07-227F48378CCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7D271B0C-0B8E-43DE-8E07-227F48378CCE}.Debug|x64.ActiveCfg = Debug|x64
-		{7D271B0C-0B8E-43DE-8E07-227F48378CCE}.Debug|x64.Build.0 = Debug|x64
-		{7D271B0C-0B8E-43DE-8E07-227F48378CCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7D271B0C-0B8E-43DE-8E07-227F48378CCE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7D271B0C-0B8E-43DE-8E07-227F48378CCE}.Release|x64.ActiveCfg = Release|x64
-		{7D271B0C-0B8E-43DE-8E07-227F48378CCE}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

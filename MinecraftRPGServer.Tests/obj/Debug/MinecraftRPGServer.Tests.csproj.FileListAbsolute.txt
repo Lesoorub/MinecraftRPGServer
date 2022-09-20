@@ -18,7 +18,6 @@ C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftRPGServer.Tests\bin\D
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftRPGServer.Tests\bin\Debug\MineSocket.NET.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftRPGServer.Tests\bin\Debug\Newtonsoft.Json.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftRPGServer.Tests\bin\Debug\MinecraftLightEngine.dll
-C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftRPGServer.Tests\bin\Debug\Ionic.Zlib.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftRPGServer.Tests\bin\Debug\BouncyCastle.Crypto.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftRPGServer.Tests\bin\Debug\System.Text.Json.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftRPGServer.Tests\bin\Debug\System.Memory.dll
@@ -47,3 +46,4 @@ C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftRPGServer.Tests\bin\D
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftRPGServer.Tests\bin\Debug\System.Threading.Tasks.Extensions.xml
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftRPGServer.Tests\bin\Debug\System.ValueTuple.xml
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftRPGServer.Tests\bin\Debug\Utf8Json.xml
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftRPGServer.Tests\bin\Debug\DotNetZip.dll

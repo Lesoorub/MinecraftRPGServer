@@ -63,6 +63,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Resources\%2822, 22%29 raw.nbt" />
     <None Include="Resources\ab4c6e09-9dc0-348e-ba88-9f0cef0e8100.dat" />
     <None Include="Resources\level2.dat" />
     <None Include="Resources\map_5.dat" />

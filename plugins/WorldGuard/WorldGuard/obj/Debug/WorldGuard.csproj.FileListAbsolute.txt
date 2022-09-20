@@ -55,7 +55,6 @@ C:\Users\Lesoorub\source\repos\MinecraftRPGServer\plugins\WorldGuard\WorldGuard\
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\plugins\WorldGuard\WorldGuard\bin\Debug\Microsoft.Bcl.AsyncInterfaces.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\plugins\WorldGuard\WorldGuard\bin\Debug\System.Buffers.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\plugins\WorldGuard\WorldGuard\bin\Debug\Newtonsoft.Json.xml
-C:\Users\Lesoorub\source\repos\MinecraftRPGServer\plugins\WorldGuard\WorldGuard\obj\Debug\WorldGuard.csproj.AssemblyReference.cache
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\plugins\WorldGuard\WorldGuard\obj\Debug\WorldGuard.csproj.CoreCompileInputs.cache
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\plugins\WorldGuard\WorldGuard\obj\Debug\WorldGuard.csproj.CopyComplete
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\plugins\WorldGuard\WorldGuard\obj\Debug\WorldGuard.dll

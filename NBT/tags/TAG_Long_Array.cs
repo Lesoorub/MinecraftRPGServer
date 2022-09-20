@@ -13,7 +13,7 @@ namespace NBT
         public override object body => this.data;
         public long[] data;
         public override TAG this[int index] { get => new TAG_Long(data[index]); set => data[index] = (value is TAG_Long tag ? tag.data : default); }
-        public TAG_Long_Array(byte[] raw, ref int offset)
+        public TAG_Long_Array(byte[] raw, ref int offset) : base("")
         {
             size = BinaryPrimitives.ReadInt32BigEndian(raw.AsSpan(offset));
             offset += 4;
@@ -26,10 +26,8 @@ namespace NBT
                 offset += 8;
             }
         }
-        public TAG_Long_Array(long[] data, string name = "")
+        public TAG_Long_Array(long[] data, string name = "") : base(name)
         {
-            this.name = name;
-            namelen = (short)name.Length;
             this.data = data;
             size = data.Length;
         }

@@ -13,15 +13,13 @@ namespace NBT
         //big endian
         //struct
         //[data:2]
-        public TAG_Short(byte[] raw, ref int offset)
+        public TAG_Short(byte[] raw, ref int offset) : base("")
         {
             data = BinaryPrimitives.ReadInt16BigEndian(new Span<byte>(raw, offset, 2));
             offset += 2;
         }
-        public TAG_Short(short data, string name = "")
+        public TAG_Short(short data, string name = "") : base(name)
         {
-            this.name = name;
-            namelen = (short)name.Length;
             this.data = data;
         }
         public override byte[] Bytes => BitConverter.GetBytes(data).Reverse();

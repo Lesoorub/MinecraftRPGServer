@@ -7,14 +7,14 @@
   "SelectedSlot": 1,
   "position": {
     "$type": "v3f, MinecraftRPGServer",
-    "x": -61.7513351,
-    "y": 78.0,
-    "z": -11.0302572
+    "x": -43.49094,
+    "y": 64.0,
+    "z": 1.03475058
   },
   "rotation": {
     "$type": "v2f, MinecraftRPGServer",
-    "x": 1400.97766,
-    "y": 53.2747078
+    "x": -97.60309,
+    "y": 13.194
   },
   "Health": 100.0,
   "inventory": {

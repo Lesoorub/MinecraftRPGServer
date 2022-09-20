@@ -35,6 +35,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\MinecraftData\bin\Debug\MinecraftData.dll</HintPath>
     </Reference>
+    <Reference Include="MinecraftRPGServer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\MinecraftRPGServer\bin\Debug\MinecraftRPGServer.exe</HintPath>
+    </Reference>
     <Reference Include="MineSocket.NET, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\MineSocket.NET\MineSocket.NET\bin\Release\MineSocket.NET.dll</HintPath>
@@ -52,18 +56,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\WorldGuard.cs" />
+    <Compile Include="WorldGuard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\MinecraftRPGServer\MinecraftRPGServer.csproj">
-      <Project>{7d271b0c-0b8e-43de-8e07-227f48378cce}</Project>
-      <Name>MinecraftRPGServer</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy /B "WorldGuard.dll" "../../../../WorldGuard.dll"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

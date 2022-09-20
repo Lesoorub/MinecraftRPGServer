@@ -18,11 +18,11 @@ namespace MinecraftRPGServer
         public string name;
         public string path;
 
-        public PluginInstance(string name, string path, CompilerResults cr)
+        public PluginInstance(string name, string path, Assembly assembly)
         {
             this.name = name;
             this.path = path;
-            assembly = cr.CompiledAssembly;
+            this.assembly = assembly;
             instance = assembly.CreateInstance(name);
             type = instance.GetType();
             plugin = (Plugin)instance;
@@ -32,10 +32,9 @@ namespace MinecraftRPGServer
                 LoadConfig(type.GetCustomAttribute<PluginConfigAttribute>().configType);
             }
         }
-
         void LoadConfig(Type confType)
         {
-            var confFile = new FileInfo(Path.Combine(path.Replace(name + ".cs", ""), name + ".conf"));
+            var confFile = new FileInfo(Path.Combine(path.Replace(name + ".dll", ""), name + ".conf"));
             if (!confFile.Exists)
             {
                 plugin.config = (PluginConfig)Activator.CreateInstance(confType);

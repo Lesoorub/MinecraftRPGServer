@@ -25,7 +25,7 @@ public sealed partial class RPGServer : MineServer.MineServer
             { "Load configs by", () => config = ServerConfig.Load() },
             { "Load plugins by", () => 
             { 
-                PluginManager.LoadPlugins(config.PluginsFolder);
+                PluginManager.LoadPlugins(this, config.PluginsFolder);
                 if (PluginManager.plugins.Count > 0)
                     PluginManager.OnPreInit(this);
             } },
@@ -42,7 +42,7 @@ public sealed partial class RPGServer : MineServer.MineServer
         {
             partTimer.Restart();
             i.Value();
-            logger.WriteLine($"{i.Key} {((double)partTimer.ElapsedTicks / TimeSpan.TicksPerMillisecond):N3} ms");
+            logger.Write($"{i.Key} {((double)partTimer.ElapsedTicks / TimeSpan.TicksPerMillisecond):N3} ms");
         }
         OnStart += RPGServer_OnStart;
         OnStop += RPGServer_OnStop;
@@ -50,10 +50,10 @@ public sealed partial class RPGServer : MineServer.MineServer
         partTimer.Restart();
         if (PluginManager.plugins.Count > 0)
             PluginManager.OnPostInit(this);
-        logger.WriteLine($"Plugins post init {((double)partTimer.ElapsedTicks / TimeSpan.TicksPerMillisecond):N3} ms");
+        logger.Write($"Plugins post init {((double)partTimer.ElapsedTicks / TimeSpan.TicksPerMillisecond):N3} ms");
 
         timer.Stop();
-        logger.WriteLine($"Server loaded for {((double)timer.ElapsedTicks / TimeSpan.TicksPerMillisecond):N3} ms");
+        logger.Write($"Server loaded for {((double)timer.ElapsedTicks / TimeSpan.TicksPerMillisecond):N3} ms");
     }
 
     private void RPGServer_OnStart()
@@ -238,13 +238,13 @@ public sealed partial class RPGServer : MineServer.MineServer
         var world = new SimpleWorld(config.WorldPath, spawnWorldName);
         world.LoadMCAFromPath(config.WorldPath);
         worlds.TryAdd(spawnWorldName, world);
-        logger.WriteLine("Load area around spawn");
+        logger.Write("Load area around spawn");
 
         var timer = new System.Diagnostics.Stopwatch();
         timer.Start();
         world.PrepairingToSpawnWorld(config.MaxViewDistance);
         timer.Stop();
-        logger.WriteLine($"Complete for {((double)timer.ElapsedTicks / TimeSpan.TicksPerMillisecond):N3} ms");
+        logger.Write($"Complete for {((double)timer.ElapsedTicks / TimeSpan.TicksPerMillisecond):N3} ms");
     }
 }
 //Packets

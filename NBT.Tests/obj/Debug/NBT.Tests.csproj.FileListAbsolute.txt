@@ -22,7 +22,6 @@ C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\NBT.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\Newtonsoft.Json.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\MinecraftData.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\MinecraftLightEngine.dll
-C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\Ionic.Zlib.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\BouncyCastle.Crypto.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\System.Text.Json.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\System.Memory.dll
@@ -43,3 +42,4 @@ C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\obj\Debug\NBT.Tests.
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\obj\Debug\NBT.Tests.pdb
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\NBT.Tests.dll.config
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\System.Memory.xml
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\DotNetZip.dll

@@ -18,7 +18,6 @@ C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftLightEngine.Tests\bin
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftLightEngine.Tests\bin\Debug\MinecraftData.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftLightEngine.Tests\bin\Debug\MineSocket.NET.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftLightEngine.Tests\bin\Debug\Newtonsoft.Json.dll
-C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftLightEngine.Tests\bin\Debug\Ionic.Zlib.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftLightEngine.Tests\bin\Debug\BouncyCastle.Crypto.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftLightEngine.Tests\bin\Debug\System.Text.Json.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftLightEngine.Tests\bin\Debug\System.Memory.dll
@@ -38,3 +37,4 @@ C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftLightEngine.Tests\obj
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftLightEngine.Tests\obj\Debug\MinecraftLightEngine.Tests.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftLightEngine.Tests\obj\Debug\MinecraftLightEngine.Tests.pdb
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftLightEngine.Tests\bin\Debug\NBT.dll
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftLightEngine.Tests\bin\Debug\DotNetZip.dll

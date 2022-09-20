@@ -31,12 +31,17 @@ namespace MinecraftRPGServer.Tests.NBT
         {
             TestNBT(ab4c6e09_9dc0_348e_ba88_9f0cef0e8100);
         }
+        [TestMethod]
+        public void NBTTag_22_22_raw()
+        {
+            TestNBT(_22__22__raw);
+        }
 
         [TestMethod]
         public void NBTTag_streamreading()
         {
-            var firstNBT = GZip.Decompress(ab4c6e09_9dc0_348e_ba88_9f0cef0e8100);
-            var secondNBT = GZip.Decompress(map_5);
+            var firstNBT = Compressions.GZip.Decompress(ab4c6e09_9dc0_348e_ba88_9f0cef0e8100);
+            var secondNBT = Compressions.GZip.Decompress(map_5);
             var data = firstNBT.Combine(secondNBT);
 
             NBTTag nbt = new NBTTag();
@@ -46,13 +51,9 @@ namespace MinecraftRPGServer.Tests.NBT
 
         private void TestNBT(byte[] bytes)
         {
-            //Try decompress
-            try
-            {
-                bytes = GZip.Decompress(bytes);
-            }
-            catch { }
-            NBTTag nbt = new NBTTag(bytes, false);
+            if (bytes[0] == 0x1f)
+                bytes = Compressions.GZip.Decompress(bytes);
+            NBTTag nbt = new NBTTag(bytes);
             Assert.IsTrue(bytes.SequenceEqual(nbt.Bytes));
         }
         [TestMethod]

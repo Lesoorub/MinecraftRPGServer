@@ -19,13 +19,7 @@ public class SimpleWorld : World
     public readonly string entitiesPATH = "entities";
     public string path;
     public ConcurrentDictionary<v2i, MCA> regions = new ConcurrentDictionary<v2i, MCA>();
-    public long Seed;
-    public long HashedSeed;
-    public long Time { get; private set; } = 0;
-    public long CycleTime = 24000;
-    
-
-    Dictionary<v2i, Chunk> chunks = new Dictionary<v2i, Chunk>();
+    public WorldInfo info;
     Thread worldThread;
     public SimpleWorld(string path, string publicName)
     {
@@ -60,43 +54,15 @@ public class SimpleWorld : World
         {
             string levelPath = Path.Combine(path, "level.dat");
             if (!File.Exists(levelPath)) return false;
-            var level = new NBTTag(File.ReadAllBytes(levelPath), true);
+            var level = new NBTTag(File.ReadAllBytes(levelPath));
             if (!level.HasPath("Data")) return false;
-            var data = level["Data"];
-            if (level.HasPath("Data/WorldGenSettings/seed"))
-                SetSeed((long)data["WorldGenSettings"]["seed"]);
-            if (level.HasPath("Data/SpawnX") &&
-                level.HasPath("Data/SpawnY") &&
-                level.HasPath("Data/SpawnZ"))
-                SpawnPoint = new v3f(
-                    (int)data["SpawnX"],
-                    (int)data["SpawnY"],
-                    (int)data["SpawnZ"]);
-            if (level.HasPath("Data/SpawnAngle"))
-                SpawnRotation = (float)data["SpawnAngle"];
+            info = new WorldInfo(level);
         }
         catch
         {
             return false;
         }
         return true;
-    }
-    public void SetSeed(long newseed)
-    {
-        using (SHA1Managed sha1 = new SHA1Managed())
-        {
-            Seed = newseed;
-            HashedSeed = BitConverter.ToInt64(sha1.ComputeHash(BitConverter.GetBytes(newseed).Take(8)), 0);
-        }
-    }
-    public void SetSeed(string newseed)
-    {
-        using (SHA1Managed sha1 = new SHA1Managed())
-        {
-            var seed_bytes = sha1.ComputeHash(Encoding.UTF8.GetBytes(newseed));
-            Seed = BitConverter.ToInt64(seed_bytes, 0);
-            HashedSeed = BitConverter.ToInt64(sha1.ComputeHash(seed_bytes.Take(8)), 0);
-        }
     }
     public static bool isValid(string path)
     {
@@ -108,43 +74,56 @@ public class SimpleWorld : World
     }
     public override Chunk GetChunk(v2i cpos)
     {
-        Chunk c;
-        lock (chunks)
-        {
-            if (!chunks.ContainsKey(cpos))
-            {
-                c = LoadChunk(cpos);
-                if (c == null) return null;
-                chunks[cpos] = c;
-            }
-            else c = chunks[cpos];
-        }
-        return c;
-    }
-    public void PrepairingToSpawnWorld(int radius)
-    {
-        int r = radius + 2;
-        //Parallel.For(-r, r, (x) =>
-        for (int x = -r; x < r; x++)
-        {
-            var cpos = new v2i(0, 0);
-            for (int z = -r; z < r; z++)
-            {
-                GetChunk(new v2i(x + cpos.x, z + cpos.y));
-            }
-        };
-    }
-    /// <summary>
-    /// Load chunk in memory
-    /// </summary>
-    /// <param name="cpos">Absolute chunk position</param>
-    /// <returns>Loaded chunk</returns>
-    public Chunk LoadChunk(v2i cpos)
-    {
         int regx = cpos.x >> 5;
         int regz = cpos.y >> 5;
         var mca = GetRegion(regx, regz);
         return mca.GetChunk(cpos.x - regx * 32, cpos.y - regz * 32);
+    }
+    public void PrepairingToSpawnWorld(int radius)
+    {
+        int r = radius + 2;
+        int index = 0;
+        List<v2i> cposArray = v2i.Range(new v2i(-r, -r), new v2i(r, r));
+        Thread[] pool = new Thread[1];
+        EventWaitHandle StartWaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
+        EventWaitHandle EndWaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
+        for (int k = 0; k < pool.Length; k++)
+        {
+            pool[k] = new Thread(() =>
+            {
+                StartWaitHandle.WaitOne();
+                while (true)
+                {
+                    v2i cpos;
+                    lock (cposArray)
+                    {
+                        cpos = cposArray[index];
+                        Interlocked.Increment(ref index);
+                    }
+                    GetChunk(cpos);
+                    //int regx = cpos.x >> 5;
+                    //int regz = cpos.y >> 5;
+                    //var mca = GetRegion(regx, regz);
+                    //chunks.Add(cpos, mca.LoadChunk(cpos.x - regx * 32, cpos.y - regz * 32));
+
+                    if (index >= cposArray.Count)
+                        break;
+                }
+                EndWaitHandle.Set();
+            });
+            pool[k].Start();
+        }
+        StartWaitHandle.Set();
+        EndWaitHandle.WaitOne();
+        //Parallel.For(-r, r, (x) =>
+        //for (int x = -r; x < r; x++)
+        //{
+        //    var cpos = new v2i(0, 0);
+        //    for (int z = -r; z < r; z++)
+        //    {
+        //        GetChunk(new v2i(x + cpos.x, z + cpos.y));
+        //    }
+        //};
     }
     public MCA GetRegion(int regx, int regz)
     {
@@ -208,11 +187,11 @@ public class SimpleWorld : World
     public void SetTime(long newTime)
     {
         OnTimeChanged?.Invoke(newTime);
-        Time = newTime;
+        info.Time = newTime;
     }
     public override void Update()
     {
-        SetTime(Time + 1);
+        SetTime(info.Time + 1);
     }
     public override bool SetBlock(Player player, int x, short y, int z, BlockState blockId)
     {
@@ -221,7 +200,7 @@ public class SimpleWorld : World
         var cpos = new v2i(x >> 4, z >> 4);
         var chunk = GetChunk(cpos);
         if (chunk == null)
-            chunks.Add(cpos, chunk = new Chunk(cpos));
+            return false;
         var result = chunk.SetBlock((byte)((x - cpos.x * 16) % 16), (short)y, (byte)((z - cpos.y * 16) % 16), (short)blockId.StateID);
         foreach (var otherplayer in Player.WhoViewChunk(player.world, cpos))
             otherplayer.worldController.SendSetBlock(x, y, z, blockId);

@@ -235,7 +235,7 @@ namespace MinecraftRPGServer.Tests.NBT
         [TestMethod]
         public void NotRecursiveParse()
         {
-            var nbt = new NBTTag(level2, true);
+            var nbt = new NBTTag(level2);
 
             int offset = 0;
             var parsed = NBTTag.ParseNotRecursive(nbt.Bytes, ref offset);

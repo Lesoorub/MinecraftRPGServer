@@ -10,8 +10,8 @@ namespace NBT
 {
     public class TAG
     {
-        public short namelen;
-        public string name = "";
+        public short namelen => (short)name.Length;
+        public string name;
         public int depth = 0;
 #if DEBUG
         public string _ToString { get { SetDepth(0); return ToString(); } }
@@ -22,15 +22,16 @@ namespace NBT
         public virtual void SetDepth(int d) { depth = d; }
         public virtual byte TypeID { get => 0; }
         public virtual byte[] Bytes { get => new byte[0]; }
-        public virtual byte[] NamedBytes => new byte[] { TypeID }
-            .Combine(BitConverter.GetBytes(namelen).Reverse()
-            .Combine(Encoding.UTF8.GetBytes(name))
-            .Combine(Bytes));
+        public virtual byte[] NamedBytes => FastByteArrayExtentions.Combine(
+            new byte[] { TypeID }, 
+            BitConverter.GetBytes(namelen).Reverse(), 
+            Encoding.UTF8.GetBytes(name), 
+            Bytes);
         public virtual object body { get => throw new NotImplementedException(); }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ReadHeader(byte[] raw, ref int offset, out string name, out short namelen)
+        public static void ReadHeader(byte[] raw, ref int offset, out string name)
         {
-            namelen = BinaryPrimitives.ReadInt16BigEndian(raw.AsSpan(offset));
+            var namelen = BinaryPrimitives.ReadInt16BigEndian(raw.AsSpan(offset));
             offset += 2;
             if (namelen >= 256)
                 throw new Exception("Long string?");
@@ -60,7 +61,7 @@ namespace NBT
         public static Dictionary<int, TagType> TagTypes = new Dictionary<int, TagType>()
         {
             {  0, new TagType(typeof(Nullable), typeof(TAG_END)) },
-            {  1, new TagType(typeof(byte),     typeof(TAG_Byte)) },
+            {  1, new TagType(typeof(sbyte),     typeof(TAG_Byte)) },
             {  2, new TagType(typeof(short),    typeof(TAG_Short)) },
             {  3, new TagType(typeof(int),      typeof(TAG_Int)) },
             {  4, new TagType(typeof(long),     typeof(TAG_Long)) },
@@ -78,9 +79,8 @@ namespace NBT
             if (type == TAG_END._TypeID)
                 return new TAG_END();
             string name = "";
-            short namelen = 0;
             if (nammed)
-                ReadHeader(raw, ref offset, out name, out namelen);
+                ReadHeader(raw, ref offset, out name);
 
             TAG parsed = null;
             switch (type)
@@ -98,10 +98,17 @@ namespace NBT
                 case TAG_Int_Array._TypeID:  parsed = new TAG_Int_Array(raw, ref offset);  break;
                 case TAG_Long_Array._TypeID:  parsed = new TAG_Long_Array(raw, ref offset);  break;
             }
-            parsed.namelen = namelen;
             parsed.name = name;
             return parsed;
         }
+
+        protected TAG() { }
+
+        protected TAG(string name)
+        {
+            this.name = name;
+        }
+
         public static implicit operator NBTTag(TAG tag) => tag is TAG_Compound compound ? new NBTTag(compound) : throw new Exception($"Can't convert {tag.GetType()} to {typeof(NBTTag)}");
 
         public T ToObject<T>() where T : new()

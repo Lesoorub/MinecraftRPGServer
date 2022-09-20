@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using MineServer;
 public class MCA
 {
-    Dictionary<v2i, Chunk> chunks = new Dictionary<v2i, Chunk>(v2iComparer.Instance);
+    ConcurrentDictionary<v2i, Chunk> chunks = new ConcurrentDictionary<v2i, Chunk>(v2iComparer.Instance);
     public byte[] location_table_raw;
     public byte[] timestamp_table_raw;
     public byte[] chunks_raw;
+    readonly CompressionScheme GlobalCompressionScheme = CompressionScheme.zlib;
     public MCA()
     {
         location_table_raw = new byte[4096];
@@ -22,99 +24,42 @@ public class MCA
     public Chunk GetChunk(int rx, int rz)
     {
         var t = new v2i(rx, rz);
-        lock (chunks)
+        if (!chunks.ContainsKey(t))
         {
-            if (!chunks.ContainsKey(t))
-            {
-                var c = LoadChunk(rx, rz);
-                if (c != null)
-                    chunks.Add(t, c);
-                return c;
-            }
-            return chunks[t];
+            var c = LoadChunk(rx, rz);
+            if (c == null)
+                throw new Exception("Can't load chunk");
+            return c;
         }
+        return chunks[t];
     }
     public Chunk LoadChunk(int rx, int rz)
     {
         if (!ChunkSpawned(GetChunkIndex(rx, rz)))
-            return null;
-        return new Chunk(GetChunkData(rx, rz));
-    }
-    public enum CompressionScheme : byte
-    {
-        gzip = 1,
-        zlib = 2,
-        none = 3
-    }
-    public byte[] GetCompressedChunkData(int index, out CompressionScheme compressionScheme)
-    {
-        compressionScheme = 0;
-        int offset = BitConverter.ToInt32(location_table_raw.BigEndian(index, 3).Combine(0), 0);
-        int size = location_table_raw[index + 3];
-        if (offset == 0 && size == 0)
-            return null;
-        var raw = chunks_raw.Take((offset - 2) * 4096, size * 4096);
-        //Raw struture:
-        //length: 4 (bigEndian)
-        //compressionType: 1 (CompressionScheme enum)
-        //compressedChunkData : (length - 1)
-        int Length = BitConverter.ToInt32(raw.BigEndian(0, 4), 0) - 1;
-        compressionScheme = (CompressionScheme)raw[4];
-        return raw.Take(5, Length);
-    }
-    public byte[] GetChunkData(int rx, int rz)
-    {
-        int index = GetChunkIndex(rx, rz);
-        if (index < 0)
-            throw new Exception("Попытка чтений данных вне файла");
-        var compressedData = GetCompressedChunkData(index, out var compressionScheme);
-        switch (compressionScheme)
+            return CreateChunk(rx, rz);
+        if (!TryGetChunkData(rx, rz, out var data)) 
+            return CreateChunk(rx, rz);
+        try
         {
-            case CompressionScheme.gzip:
-                return GZip.Decompress(compressedData);
-            case CompressionScheme.zlib:
-                return zlib.Decompress2(compressedData);
-            case CompressionScheme.none:
-                return compressedData;
-            default:
-                throw new Exception("Not supported compression scheme");
+            var chunk = new Chunk(data);
+            var cpos = new v2i(rx, rz);
+            if (!chunks.TryAdd(cpos, chunk))
+                return chunks[cpos];
+            return chunk;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+            return null;
         }
     }
-
-    readonly CompressionScheme GlobalCompressionScheme = CompressionScheme.zlib;
-    bool ChunkSpawned(int index)
-    {
-        int offset = BitConverter.ToInt32(location_table_raw.BigEndian(index, 3).Combine(0), 0);
-        int size = location_table_raw[index + 3];
-        if (offset == 0 && size == 0)
-            return false;
-        return true;
-    }
-    int GetChunkIndex(int rx, int rz) => ((rx % 32) + (rz % 32) * 32) * 4;
-    int GetChunkPages(int bytes_length) => (int)Math.Ceiling((float)bytes_length / 4096);
-    byte[] CompressLoadedChunk(v2i cpos, out int pages)
-    {
-        byte[] bytes = ChunkParser.Serialize(chunks[cpos]).Bytes;
-        switch (GlobalCompressionScheme)
-        {
-            case CompressionScheme.gzip:
-                bytes = GZip.Compress(bytes);
-                break;
-            case CompressionScheme.zlib:
-                bytes = zlib.Compress(bytes);
-                break;
-        }
-        pages = GetChunkPages(bytes.Length);
-        return bytes;
-    }
-
     public void SaveChunks()
     {
-        byte[] Format(byte[] data)
+        byte[] Format(byte[] data, CompressionScheme compressionScheme)
         {
             return BitConverter.GetBytes(data.Length + 1)
                 .Reverse()
-                .Combine((byte)GlobalCompressionScheme)
+                .Combine((byte)compressionScheme)
                 .Combine(data);
         }
 
@@ -129,12 +74,14 @@ public class MCA
                 byte[] compressed_chunk = null;
                 if (chunks.ContainsKey(cpos))
                 {
-                    compressed_chunk = Format(CompressLoadedChunk(cpos, out _));
+                    var compressed = CompressLoadedChunk(cpos, out _);
+                    if (compressed != null)
+                        compressed_chunk = Format(compressed, GlobalCompressionScheme);
                 }
                 else
                 {
                     if (ChunkSpawned(i))
-                        compressed_chunk = Format(GetCompressedChunkData(i, out _));
+                        compressed_chunk = Format(GetCompressedChunkData(i, out var scheme), scheme);
                 }
                 if (compressed_chunk == null)
                 {
@@ -160,15 +107,97 @@ public class MCA
                 offset += GetChunkPages(r.Length) * 4096;
             }
         }
-        var mca = new MCA(ToByteArray());
-
-        v2i.ForEach(new v2i(32, 32), (cpos) =>
-        {
-            LoadChunk(cpos.x, cpos.y);
-        });
     }
     public byte[] ToByteArray()
     {
         return FastByteArrayExtensions.Combine(location_table_raw, timestamp_table_raw, chunks_raw);
     }
+
+    Chunk CreateChunk(int rx, int rz)
+    {
+        var cpos = new v2i(rx, rz);
+        var chunk = new Chunk(cpos);
+        if (!chunks.TryAdd(cpos, chunk))
+            throw new Exception("Can't add chunk in chunks");
+        return chunk;
+    }
+    enum CompressionScheme : byte
+    {
+        gzip = 1,
+        zlib = 2,
+        none = 3
+    }
+    byte[] GetCompressedChunkData(int index, out CompressionScheme compressionScheme)
+    {
+        compressionScheme = 0;
+        int offset = BitConverter.ToInt32(location_table_raw.BigEndian(index, 3).Combine(0), 0);
+        int size = location_table_raw[index + 3];
+        if (offset == 0 && size == 0)
+            return null;
+        var raw = chunks_raw.Take((offset - 2) * 4096, size * 4096);
+        //Raw struture:
+        //length: 4 (bigEndian)
+        //compressionType: 1 (CompressionScheme enum)
+        //compressedChunkData : (length - 1)
+        int Length = BitConverter.ToInt32(raw.BigEndian(0, 4), 0) - 1;
+        compressionScheme = (CompressionScheme)raw[4];
+        return raw.Take(5, Length);
+    }
+    bool TryGetChunkData(int rx, int rz, out byte[] data)
+    {
+        data = null;
+        int index = GetChunkIndex(rx, rz);
+        if (index < 0)
+            throw new Exception("Попытка чтений данных вне файла");
+        var compressedData = GetCompressedChunkData(index, out var compressionScheme);
+        switch (compressionScheme)
+        {
+            case CompressionScheme.gzip:
+                return Compressions.GZip.TryDecompress(compressedData, out data);
+
+            case CompressionScheme.zlib:
+                return Compressions.zlib.TryDecompress(compressedData, out data);
+
+            case CompressionScheme.none:
+                data = compressedData;
+                return true;
+
+            default:
+                throw new Exception("Not supported compression scheme");
+        }
+    }
+    bool ChunkSpawned(int index)
+    {
+        int offset = BitConverter.ToInt32(location_table_raw.BigEndian(index, 3).Combine(0), 0);
+        int size = location_table_raw[index + 3];
+        if (offset == 0 && size == 0)
+            return false;
+        return true;
+    }
+    int GetChunkIndex(int rx, int rz) => ((rx % 32) + (rz % 32) * 32) * 4;
+    int GetChunkPages(int bytes_length) => (int)Math.Ceiling((float)bytes_length / 4096);
+    byte[] CompressLoadedChunk(v2i cpos, out int pages)
+    {
+        byte[] bytes = ChunkParser.Serialize(chunks[cpos]).Bytes;
+        switch (GlobalCompressionScheme)
+        {
+            case CompressionScheme.gzip:
+                if (!Compressions.GZip.TryCompress(bytes, out bytes))
+                {
+                    pages = 0;
+                    return null;
+                }
+                break;
+            case CompressionScheme.zlib:
+                if (!Compressions.zlib.TryCompress(bytes, out bytes))
+                {
+                    pages = 0;
+                    return null;
+                }
+                break;
+        }
+        pages = GetChunkPages(bytes.Length);
+        return bytes;
+    }
+
 }

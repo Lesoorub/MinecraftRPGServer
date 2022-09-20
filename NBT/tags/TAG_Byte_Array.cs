@@ -17,7 +17,7 @@ namespace NBT
             get => new TAG_Byte(data[index]);
             set => data[index] = (value is TAG_Byte tag ? (byte)tag.data : default);
         }
-        public TAG_Byte_Array(byte[] raw, ref int offset)
+        public TAG_Byte_Array(byte[] raw, ref int offset) : base("")
         {
             size = BinaryPrimitives.ReadInt32BigEndian(raw.AsSpan(offset));
             offset += 4;
@@ -28,10 +28,8 @@ namespace NBT
             Buffer.BlockCopy(raw, offset, data, 0, size);
             offset += size;
         }
-        public TAG_Byte_Array(byte[] data, string name = "")
+        public TAG_Byte_Array(byte[] data, string name = "") : base(name)
         {
-            this.name = name;
-            namelen = (short)name.Length;
             this.data = data;
             size = data.Length;
         }

@@ -16,6 +16,7 @@ public class Chunk
     public SortedDictionary<int, ChunkSection> sections = new SortedDictionary<int, ChunkSection>();
     public BlockEntity[] BlockEntities = new BlockEntity[0];
     byte[] data;
+    public long LastModifyTimeStamp;
     public byte[] Data
     {
         get
@@ -37,7 +38,7 @@ public class Chunk
     public byte[][] SkyLightArrays;
     public byte[][] BlockLightArrays;
 
-    public bool isChanged = false;
+    private bool isChanged = false;
 
     public Chunk(v2i cpos)
     {
@@ -137,8 +138,13 @@ public class Chunk
         if (section == null)
             sections.Add(y >> 4, section = new ChunkSection());
         section.SetBlock(rx, y % 16, rz, blockState);
-        isChanged = true;
+        IsChanged();
         return true;
+    }
+    public void IsChanged()
+    {
+        this.isChanged = true;
+        LastModifyTimeStamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int FromAbsolutePosition(float absT) => (int)absT >> 4;
@@ -146,4 +152,5 @@ public class Chunk
     public static v2i FromAbsolutePosition(v3f absT) => new v2i(FromAbsolutePosition(absT.x), FromAbsolutePosition(absT.z));
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int GetRelativeCoord(int x) => x & 0xF;
+
 }

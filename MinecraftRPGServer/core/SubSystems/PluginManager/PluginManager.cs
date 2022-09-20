@@ -15,42 +15,32 @@ namespace MinecraftRPGServer
     {
         public static Dictionary<string, PluginInstance> plugins = new Dictionary<string, PluginInstance>();
         static CSharpCodeProvider c = new CSharpCodeProvider();
-        public static bool LoadPlugin(string path)
+        public static bool LoadPlugin(RPGServer server, string path)
         {
             var info = new FileInfo(path);
             if (!info.Exists) return false;
 
-
-            CompilerParameters cp = new CompilerParameters()
+            string name = info.Name.Replace(".dll", "");
+            try
             {
-                CompilerOptions = "/t:library",
-                GenerateInMemory = true,
-            };
-
-            var code = File.ReadAllText(path);
-
-            cp.ReferencedAssemblies.AddRange(AppDomain.CurrentDomain
-                            .GetAssemblies()
-                            .Where(a => !a.IsDynamic)
-                            .Select(a => a.Location).ToArray());
-
-            CompilerResults cr = c.CompileAssemblyFromSource(cp, code);
-            if (cr.Errors.Count > 0)
-            {
-                foreach (var err in cr.Errors)
-                    Console.WriteLine(string.Format("[{0}] {1}", info.Name, err));
-                return false;
+                plugins.Add(name, new PluginInstance(name, path, System.Reflection.Assembly.LoadFrom(path)));
             }
-            string name = info.Name.Replace(".cs", "");
-            plugins.Add(name, new PluginInstance(name, path, cr));
+            catch (Exception ex)
+            {
+                server.logger.Error($"{name} is not loaded. Exception={ex}");
+            }
+            finally
+            {
+                server.logger.Write($"{name} is loaded");
+            }
             return true;
         }
-        public static void LoadPlugins(string pluginsPath)
+        public static void LoadPlugins(RPGServer server, string pluginsPath)
         {
             new DirectoryInfo(pluginsPath).Create();
-            foreach (var path in Directory.GetFiles(pluginsPath, "*.cs", SearchOption.TopDirectoryOnly))
+            foreach (var path in Directory.GetFiles(pluginsPath, "*.dll", SearchOption.TopDirectoryOnly))
             {
-                if (!LoadPlugin(path))
+                if (!LoadPlugin(server, path))
                     Console.WriteLine($"[{nameof(PluginManager)}] Error on load plugin with path={path}");
             }
         }

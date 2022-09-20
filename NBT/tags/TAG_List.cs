@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers.Binary;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,10 +37,10 @@ namespace NBT
                         data[k] = value;
             }
         }
-        public TAG_List(byte[] raw, ref int offset)
+        public TAG_List(byte[] raw, ref int offset) : base("")
         {
             elementsType = raw[offset++];
-            size = BitConverter.ToInt32(raw.BigEndian(offset, 4), 0);
+            size = BinaryPrimitives.ReadInt32BigEndian(raw.AsSpan(offset));
             offset += 4;
             if (size < 0)
                 throw new Exception("Size of list < 0, see wiki.vg");
@@ -49,10 +50,8 @@ namespace NBT
                 data.Add(Read(elementsType, raw, ref offset, false));
             }
         }
-        public TAG_List(List<TAG> data, byte elementsType, string name = "")
+        public TAG_List(List<TAG> data, byte elementsType, string name = "") : base(name)
         {
-            this.name = name;
-            namelen = (short)name.Length;
             this.data = data;
             size = data.Count;
             this.elementsType = elementsType;
@@ -69,11 +68,13 @@ namespace NBT
         {
             get
             {
-                byte[] buffer = new byte[] { elementsType }.Combine(BitConverter.GetBytes(data.Count).Reverse());
+                ArrayOfBytesBuilder builder = new ArrayOfBytesBuilder();
+                builder.Append(new byte[] { elementsType });
+                builder.Append(BitConverter.GetBytes(data.Count).Reverse());
                 foreach (var d in data)
                     if (d is TAG tag)
-                        buffer = buffer.Combine(tag.Bytes);
-                return buffer;
+                        builder.Append(tag.Bytes);
+                return builder.ToArray();
             }
         }
         public static implicit operator List<TAG>(TAG_List tag) => tag.data;
