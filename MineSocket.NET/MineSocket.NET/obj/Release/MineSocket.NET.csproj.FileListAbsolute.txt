@@ -1,0 +1,14 @@
+C:\Users\Lesoorub\source\repos\MineSocket.NET\MineSocket.NET\bin\Release\MineSocket.NET.dll
+C:\Users\Lesoorub\source\repos\MineSocket.NET\MineSocket.NET\bin\Release\MineSocket.NET.pdb
+C:\Users\Lesoorub\source\repos\MineSocket.NET\MineSocket.NET\obj\Release\MineSocket.NET.csproj.CoreCompileInputs.cache
+C:\Users\Lesoorub\source\repos\MineSocket.NET\MineSocket.NET\obj\Release\MineSocket.NET.dll
+C:\Users\Lesoorub\source\repos\MineSocket.NET\MineSocket.NET\obj\Release\MineSocket.NET.pdb
+C:\Users\Lesoorub\source\repos\MineSocket.NET\MineSocket.NET\obj\Release\MineSocket.NET.csproj.AssemblyReference.cache
+C:\Users\Lesoorub\source\repos\MineSocket.NET\MineSocket.NET\bin\Release\Newtonsoft.Json.dll
+C:\Users\Lesoorub\source\repos\MineSocket.NET\MineSocket.NET\bin\Release\Newtonsoft.Json.xml
+C:\Users\Lesoorub\source\repos\MineSocket.NET\MineSocket.NET\obj\Release\MineSocket.NET.csproj.CopyComplete
+C:\Users\Lesoorub\source\repos\MineSocket.NET\MineSocket.NET\bin\Release\NBT.dll
+C:\Users\Lesoorub\source\repos\MineSocket.NET\MineSocket.NET\bin\Release\System.Memory.dll
+C:\Users\Lesoorub\source\repos\MineSocket.NET\MineSocket.NET\bin\Release\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\Lesoorub\source\repos\MineSocket.NET\MineSocket.NET\bin\Release\NBT.pdb
+C:\Users\Lesoorub\source\repos\MineSocket.NET\MineSocket.NET\bin\Release\System.Runtime.CompilerServices.Unsafe.xml

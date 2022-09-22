@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinecraftRPGServer", "MinecraftRPGServer\MinecraftRPGServer.csproj", "{7D271B0C-0B8E-43DE-8E07-227F48378CCE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineSocket.NET", "..\MineSocket.NET\MineSocket.NET\MineSocket.NET.csproj", "{7A7B12B6-1122-4238-A5C3-5D4C08D8A2E9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineSocket.NET", "MineSocket.NET\MineSocket.NET\MineSocket.NET.csproj", "{7A7B12B6-1122-4238-A5C3-5D4C08D8A2E9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinecraftRPGServer.Tests", "MinecraftRPGServer.Tests\MinecraftRPGServer.Tests.csproj", "{A5E84907-306B-47D5-99F3-DEA5E78DF688}"
 EndProject
