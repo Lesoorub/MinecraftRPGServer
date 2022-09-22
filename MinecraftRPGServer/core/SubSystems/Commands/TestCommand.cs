@@ -31,7 +31,7 @@ public class SaveAllCommand : IChatCommand
     }
     void Execute(RPGServer server, Player player, string[] args)
     {
-        var pair = (server.spawnWorld as SimpleWorld).regions.First();
+        var pair = (server.spawnWorld as AnvilWorld).regions.First();
         var key = pair.Key;
         var mca = pair.Value;
         mca.SaveChunks();

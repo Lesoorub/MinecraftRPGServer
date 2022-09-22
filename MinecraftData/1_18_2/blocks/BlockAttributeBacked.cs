@@ -5,7 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
 {
 	public partial class BlockAttribute : Attribute
     {
-        public static readonly Dictionary<BlockNameID, IBlockData> blocks = new Dictionary<BlockNameID, IBlockData>()
+        public static readonly SortedDictionary<BlockNameID, IBlockData> blocks = new SortedDictionary<BlockNameID, IBlockData>()
         {
             { BlockNameID.acacia_button, new acacia_button()},
             { BlockNameID.acacia_door, new acacia_door()},
@@ -906,7 +906,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
             { BlockNameID.zombie_head, new zombie_head()},
             { BlockNameID.zombie_wall_head, new zombie_wall_head()}
         };
-        public static Dictionary<short, BlockNameID> names = new Dictionary<short, BlockNameID>()
+        public static SortedDictionary<short, BlockNameID> names = new SortedDictionary<short, BlockNameID>()
         {
             { 6648, BlockNameID.acacia_button },
             { 6649, BlockNameID.acacia_button },

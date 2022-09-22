@@ -98,6 +98,7 @@ public static class ChunkSectionParser
         }
         obj.BlockCount = obj.GetNumberOfBlocks();
     }
+    static Dictionary<int, Dictionary<int, short>> read_only_chache = new Dictionary<int, Dictionary<int, short>>(50);
     static Dictionary<int, Dictionary<int, short>> chache = new Dictionary<int, Dictionary<int, short>>(50);
     static IComparer<TAG> comparer = new TAG_Comparer();
     class TAG_Comparer : IComparer<TAG>
@@ -115,37 +116,47 @@ public static class ChunkSectionParser
         var propsHash = PropsHash(propsTAG);
         var nameHash = StringHash(name);
 
+        if (read_only_chache.TryGetValue(nameHash, out var props) && props.TryGetValue(propsHash, out var result))
+            return result;
+        if (!Enum.TryParse<BlockNameID>(name.Replace("minecraft:", ""), out var nameid)) return 0;
+
+        var data = GlobalPalette.GetBlockData(nameid);
+        if (propsTAG == null)
+            return data.DefaultStateID;
+
+        IEnumerable<byte> Convert(Dictionary<string, List<string>> pallete, TAG_Compound dict)
+        {
+            dict.data.Sort(comparer);
+            return dict.data.Select(x => (byte)pallete[x.name]
+                    .FindIndex(y => y.ToLower().Equals(x.body.ToString().ToLower()))
+                );
+        }
+
+        var d = Convert(data.Properties, propsTAG);
+        if (d.Any(x => x == 255))
+        {
+#if DEBUG
+            throw new Exception($"Can't get stateId from name and properties: " +
+                $"properties={string.Join(" ", d.Select(x => x.ToString("X")))}, " +
+                $"name={name}, " +
+                $"propsTag={propsTAG.ToString()}");
+#endif
+            return 0;
+        }
+        short r = data.States.First(x => x.Properties.Length == propsTAG.Count && x.Properties.SequenceEqual(d)).Id;
+
         lock (chache)
         {
-            if (chache.TryGetValue(nameHash, out var props) && props.TryGetValue(propsHash, out var result))
-                return result;
-            if (!Enum.TryParse<BlockNameID>(name.Replace("minecraft:", ""), out var nameid)) return 0;
-
-            var data = GlobalPalette.GetBlockData(nameid);
-            if (propsTAG == null)
-                return data.DefaultStateID;
-
-            IEnumerable<byte> Convert(Dictionary<string, List<string>> pallete, TAG_Compound dict)
-            {
-                dict.data.Sort(comparer);
-                return dict.data.Select(x => (byte)pallete[x.name]
-                        .FindIndex(y => y.ToLower().Equals(x.body.ToString().ToLower()))
-                    );
-            }
-
-            var d = Convert(data.Properties, propsTAG);
-            if (d.Any(x => x == 255))
-            {
-#if DEBUG
-                throw new Exception($"Can't read properties = {string.Join(" ", d.Select(x => x.ToString("X")))}");
-#endif
-                return 0;
-            }
-            short r = data.States.First(x => x.Properties.Length == propsTAG.Count && x.Properties.SequenceEqual(d)).Id;
-
             if (!chache.TryGetValue(nameHash, out var list))
+            {
                 chache.Add(nameHash, list = new Dictionary<int, short>(50));
-            list.Add(propsHash, r);
+                read_only_chache.Add(nameHash, new Dictionary<int, short>(50));
+            }
+            if (!list.ContainsKey(propsHash))
+            {
+                list.Add(propsHash, r);
+                read_only_chache[nameHash].Add(propsHash, r);
+            }
             return r;
         }
     }

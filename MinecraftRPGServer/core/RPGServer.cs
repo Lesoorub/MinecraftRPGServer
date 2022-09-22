@@ -235,7 +235,7 @@ public sealed partial class RPGServer : MineServer.MineServer
 
     public void LoadWorlds()
     {
-        var world = new SimpleWorld(config.WorldPath, spawnWorldName);
+        var world = new AnvilWorld(config.WorldPath, spawnWorldName);
         world.LoadMCAFromPath(config.WorldPath);
         worlds.TryAdd(spawnWorldName, world);
         logger.Write("Load area around spawn");

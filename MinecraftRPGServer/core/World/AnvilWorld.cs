@@ -11,7 +11,7 @@ using System.Security.Cryptography;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using NBT;
-public class SimpleWorld : World
+public class AnvilWorld : World
 {
     public delegate void TimeChangedArgs(long newTime);
     public event TimeChangedArgs OnTimeChanged;
@@ -21,7 +21,7 @@ public class SimpleWorld : World
     public ConcurrentDictionary<v2i, MCA> regions = new ConcurrentDictionary<v2i, MCA>();
     public WorldInfo info;
     Thread worldThread;
-    public SimpleWorld(string path, string publicName)
+    public AnvilWorld(string path, string publicName)
     {
         this.publicName = publicName;
         this.path = path;
@@ -56,7 +56,7 @@ public class SimpleWorld : World
             if (!File.Exists(levelPath)) return false;
             var level = new NBTTag(File.ReadAllBytes(levelPath));
             if (!level.HasPath("Data")) return false;
-            info = new WorldInfo(level);
+            info = new AnvilWorldInfo(level);
         }
         catch
         {
@@ -191,6 +191,7 @@ public class SimpleWorld : World
     }
     public override void Update()
     {
+        if (info == null) return;
         SetTime(info.Time + 1);
     }
     public override bool SetBlock(Player player, int x, short y, int z, BlockState blockId)

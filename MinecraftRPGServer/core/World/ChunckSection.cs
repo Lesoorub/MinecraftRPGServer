@@ -1,5 +1,6 @@
 ﻿using MineServer;
 using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
 public class ChunkSection
@@ -19,8 +20,10 @@ public class ChunkSection
     public short BlockCount;
     public byte BitsPerBlock;
 
-    public static readonly byte GlobalBiomesMaxBitsPerEntry = (byte)Math.Ceiling(Math.Log(ChunkSectionParser.biomeNames.Count, 2));
-    public static readonly byte GlobalBlockStatesMaxBitsPerEntry = (byte)Math.Ceiling(Math.Log(GlobalPalette.Length, 2));
+    public const byte GlobalBiomesMaxBitsPerEntry = 5;
+    //public static readonly byte GlobalBiomesMaxBitsPerEntry = (byte)Math.Ceiling(Math.Log(ChunkSectionParser.biomeNames.Count, 2));
+    public const byte GlobalBlockStatesMaxBitsPerEntry = 10;
+    //public static readonly byte GlobalBlockStatesMaxBitsPerEntry = (byte)Math.Ceiling(Math.Log(GlobalPalette.Length, 2));
     public const byte BiomesThreasholdPerSection = 4;
     public const byte BlocksThreasholdPerSection = 9;
 
@@ -51,12 +54,21 @@ public class ChunkSection
     }
     public byte[] GetBytes() 
     {
-        var writer = new ArrayWriter();
-        writer.Write(BlockCount);
-        writer.WriteRaw(block_states.ToByteArray());
-        writer.WriteRaw(biomes.ToByteArray());
+        //var writer = new ArrayWriter();
+        //writer.Write(BlockCount);
+        //writer.WriteRaw(block_states.ToByteArray());
+        //writer.WriteRaw(biomes.ToByteArray());
 
-        return writer.ToArray();
+        //return writer.ToArray();
+
+        var block_states_bytes = block_states.ToByteArray();
+        var biomes_bytes = biomes.ToByteArray();
+        var buffer = new byte[block_states_bytes.Length + biomes_bytes.Length + 2];
+        var buffer_span = new Span<byte>(buffer, 0, buffer.Length);
+        BinaryPrimitives.WriteInt16BigEndian(buffer_span, BlockCount);
+        Buffer.BlockCopy(block_states_bytes, 0, buffer, 2, block_states_bytes.Length);
+        Buffer.BlockCopy(biomes_bytes, 0, buffer, 2 + block_states_bytes.Length, biomes_bytes.Length);
+        return buffer;
     }
     public BlockState GetBlock(int rx, int ry, int rz)
     {

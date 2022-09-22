@@ -327,7 +327,7 @@
     <Compile Include="core\World\Optimization\BlockMeta.cs" />
     <Compile Include="core\World\Palette.cs" />
     <Compile Include="core\World\PalettedContainer.cs" />
-    <Compile Include="core\World\SimpleWorld.cs" />
+    <Compile Include="core\World\AnvilWorld.cs" />
     <Compile Include="libs\BitSet.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

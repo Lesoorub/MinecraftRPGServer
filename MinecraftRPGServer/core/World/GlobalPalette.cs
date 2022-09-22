@@ -23,6 +23,5 @@ public class GlobalPalette
         BlocksData.names[StateId];
     public static IBlockData GetBlockData(short StateId) => 
         BlocksData.blocks[BlocksData.names[StateId]];
-    public static IBlockData GetBlockData(BlockNameID nameid) => 
-        BlocksData.blocks[nameid];
+    public static IBlockData GetBlockData(BlockNameID nameid) => BlocksData.blocks[nameid];
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -104,13 +105,15 @@ public class Chunk
     }
     public void UpdateData()
     {
-        var writer = new ArrayWriter();
-        foreach (var section in sections)
-            if (section.Key >= -4)
-            {
-                writer.WriteRaw(section.Value.GetBytes());
-            }
-        data = writer.ToArray();
+        var builder = new ArrayOfBytesBuilder();
+        {
+            foreach (var section in sections)
+                if (section.Key >= -4)
+                {
+                    builder.Append(section.Value.GetBytes());
+                }
+            data = builder.ToArray();
+        }
         isChanged = false;
     }
 
