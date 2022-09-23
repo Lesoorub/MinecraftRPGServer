@@ -384,10 +384,6 @@
     <None Include="Resources\Tags1.18.2.bin" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\MineSocket.NET\MineSocket.NET\MineSocket.NET.csproj">
-      <Project>{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}</Project>
-      <Name>MineSocket.NET</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DebugArrayTools\DebugArrayTools.csproj">
       <Project>{4ef61a5a-3d81-45b0-889d-e815f56d3306}</Project>
       <Name>DebugArrayTools</Name>
@@ -399,6 +395,10 @@
     <ProjectReference Include="..\MinecraftLightEngine\MinecraftLightEngine.csproj">
       <Project>{30b9731c-6feb-43c4-a1a7-0904bdbbd551}</Project>
       <Name>MinecraftLightEngine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MineSocket.NET\MineSocket.NET\MineSocket.NET.csproj">
+      <Project>{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}</Project>
+      <Name>MineSocket.NET</Name>
     </ProjectReference>
     <ProjectReference Include="..\NBT\NBT.csproj">
       <Project>{a4532c66-968e-4b50-b66e-26a21eeb54aa}</Project>
