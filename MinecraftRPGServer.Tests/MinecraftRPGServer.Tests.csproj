@@ -81,7 +81,7 @@
     <None Include="Resources\servers.dat" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\MineSocket.NET\MineSocket.NET\MineSocket.NET.csproj">
+    <ProjectReference Include="..\MineSocket.NET\MineSocket.NET\MineSocket.NET.csproj">
       <Project>{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}</Project>
       <Name>MineSocket.NET</Name>
     </ProjectReference>

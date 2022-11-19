@@ -98,8 +98,9 @@ public static class ChunkSectionParser
         }
         obj.BlockCount = obj.GetNumberOfBlocks();
     }
-    static Dictionary<int, Dictionary<int, short>> read_only_chache = new Dictionary<int, Dictionary<int, short>>(50);
-    static Dictionary<int, Dictionary<int, short>> chache = new Dictionary<int, Dictionary<int, short>>(50);
+
+
+    static StateIDFromTAGChahe chache = new StateIDFromTAGChahe();
     static IComparer<TAG> comparer = new TAG_Comparer();
     class TAG_Comparer : IComparer<TAG>
     {
@@ -113,24 +114,17 @@ public static class ChunkSectionParser
     {
         if (name.Length == 13 && name.Equals("minecraft:air")) return 0;
 
-        var propsHash = PropsHash(propsTAG);
-        var nameHash = StringHash(name);
+        var propsHash = StateIDFromTAGChahe.PropsHash(propsTAG);
+        var nameHash = StateIDFromTAGChahe.StringHash(name);
 
-        if (read_only_chache.TryGetValue(nameHash, out var props) && props.TryGetValue(propsHash, out var result))
-            return result;
         if (!Enum.TryParse<BlockNameID>(name.Replace("minecraft:", ""), out var nameid)) return 0;
+
+        if (chache.Get(nameHash, propsHash, out var result))
+            return result;
 
         var data = GlobalPalette.GetBlockData(nameid);
         if (propsTAG == null)
             return data.DefaultStateID;
-
-        IEnumerable<byte> Convert(Dictionary<string, List<string>> pallete, TAG_Compound dict)
-        {
-            dict.data.Sort(comparer);
-            return dict.data.Select(x => (byte)pallete[x.name]
-                    .FindIndex(y => y.ToLower().Equals(x.body.ToString().ToLower()))
-                );
-        }
 
         var d = Convert(data.Properties, propsTAG);
         if (d.Any(x => x == 255))
@@ -147,41 +141,16 @@ public static class ChunkSectionParser
 
         lock (chache)
         {
-            if (!chache.TryGetValue(nameHash, out var list))
-            {
-                chache.Add(nameHash, list = new Dictionary<int, short>(50));
-                read_only_chache.Add(nameHash, new Dictionary<int, short>(50));
-            }
-            if (!list.ContainsKey(propsHash))
-            {
-                list.Add(propsHash, r);
-                read_only_chache[nameHash].Add(propsHash, r);
-            }
+            chache.Add(nameHash, propsHash, r);
             return r;
         }
-    }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    static int PropsHash(TAG_Compound p)
-    {
-        if (p == null) return 0;
-        int hash = 1;
-        foreach (var pair in p)
+        IEnumerable<byte> Convert(Dictionary<string, List<string>> pallete, TAG_Compound dict)
         {
-            hash *= StringHash(pair.name);
-            hash *= StringHash(pair.body as string);
+            dict.data.Sort(comparer);
+            return dict.data.Select(x => (byte)pallete[x.name]
+                    .FindIndex(y => y.ToLower().Equals(x.body.ToString().ToLower()))
+                );
         }
-        return hash;
-    }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    static int StringHash(string read)
-    {
-        int hashedValue = 307445734;
-        for (int i = 0; i < read.Length; i++)
-        {
-            hashedValue += read[i];
-            hashedValue *= 307445734;
-        }
-        return hashedValue;
     }
     public static NBTTag Serialize(ChunkSection obj)
     {
@@ -264,4 +233,76 @@ public static class ChunkSectionParser
         }
     }
 
+
+    public class StateIDFromTAGChahe
+    {
+        Dictionary<int, Dictionary<int, short>> data = new Dictionary<int, Dictionary<int, short>>(50);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Get(int nameHash, int propsHash, out short value)
+        {
+            Dictionary<int, short> dict;
+            lock (data)
+            {
+                if (!data.TryGetValue(nameHash, out dict))
+                {
+                    value = 0;
+                    return false;
+                }
+            }
+            lock (dict)
+            {
+                if (!dict.TryGetValue(propsHash, out value))
+                {
+                    value = 0;
+                    return false;
+                }
+                else
+                    return true;
+            }
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Add(int nameHash, int propsHash, short value)
+        {
+            Dictionary<int, short> list;
+            lock (data)
+            {
+                if (!data.TryGetValue(nameHash, out list))
+                {
+                    data.Add(nameHash, list = new Dictionary<int, short>(50));
+                }
+            }
+            lock (list)
+            {
+                if (!list.ContainsKey(propsHash))
+                {
+                    list.Add(propsHash, value);
+                }
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int StringHash(string read)
+        {
+            int hashedValue = 307445734;
+            for (int i = 0; i < read.Length; i++)
+            {
+                hashedValue += read[i];
+                hashedValue *= 307445734;
+            }
+            return hashedValue;
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int PropsHash(TAG_Compound p)
+        {
+            if (p == null) return 0;
+            int hash = 1;
+            foreach (var pair in p)
+            {
+                hash *= StringHash(pair.name);
+                hash *= StringHash(pair.body as string);
+            }
+            return hash;
+        }
+    }
 }

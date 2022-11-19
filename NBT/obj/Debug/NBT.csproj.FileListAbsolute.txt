@@ -8,7 +8,6 @@ C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT\obj\Debug\NBT.csproj.CopyC
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT\obj\Debug\NBT.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT\obj\Debug\NBT.pdb
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT\bin\Debug\System.Buffers.dll
-C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT\bin\Debug\System.Memory.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT\bin\Debug\System.Numerics.Vectors.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT\bin\Debug\System.Buffers.xml

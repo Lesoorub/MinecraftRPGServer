@@ -7,6 +7,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using MinecraftData._1_18_2.blocks.minecraft;
 using BlocksData = MinecraftData._1_18_2.blocks.minecraft.BlockAttribute;
+using System.Runtime.CompilerServices;
+using System.Collections.Concurrent;
 
 public class GlobalPalette
 {
@@ -23,5 +25,16 @@ public class GlobalPalette
         BlocksData.names[StateId];
     public static IBlockData GetBlockData(short StateId) => 
         BlocksData.blocks[BlocksData.names[StateId]];
-    public static IBlockData GetBlockData(BlockNameID nameid) => BlocksData.blocks[nameid];
+
+    static ConcurrentDictionary<BlockNameID, IBlockData> blocksChache = new ConcurrentDictionary<BlockNameID, IBlockData>();
+    public static IBlockData GetBlockData(BlockNameID nameid)
+    {
+        IBlockData result;
+        if (blocksChache.TryGetValue(nameid, out result))
+            return result;
+
+        result = BlocksData.blocks[nameid];
+        blocksChache.TryAdd(nameid, result);
+        return result;
+    }
 }

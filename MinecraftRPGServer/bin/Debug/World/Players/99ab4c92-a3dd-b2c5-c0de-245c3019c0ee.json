@@ -4,17 +4,17 @@
   "loginname": "Lesoorub",
   "WorldName": "overworld",
   "Gamemode": 1,
-  "SelectedSlot": 1,
+  "SelectedSlot": 3,
   "position": {
     "$type": "v3f, MinecraftRPGServer",
-    "x": -43.49094,
-    "y": 64.0,
-    "z": 1.03475058
+    "x": -45.8676338,
+    "y": 66.53293,
+    "z": 9.433006
   },
   "rotation": {
     "$type": "v2f, MinecraftRPGServer",
-    "x": -97.60309,
-    "y": 13.194
+    "x": 229.073486,
+    "y": 42.72218
   },
   "Health": 100.0,
   "inventory": {
@@ -35,7 +35,15 @@
         null,
         null,
         null,
-        null,
+        {
+          "$type": "Inventory.Items.ScrollOfAreaDamage, MinecraftRPGServer",
+          "Radius": 3.0,
+          "BaseDamage": 1.0,
+          "quality": 1,
+          "Description": "Deal 1 damage within radius of 3 blocks.",
+          "ItemID": 791,
+          "ItemCount": 1
+        },
         null,
         null,
         null,
@@ -54,10 +62,552 @@
     "hotbar": {
       "$type": "Inventory.Item[], MinecraftRPGServer",
       "$values": [
-        null,
-        null,
-        null,
-        null,
+        {
+          "$type": "Inventory.Items.Backpack, MinecraftRPGServer",
+          "quality": 1,
+          "slots": {
+            "$type": "Inventory.IndexedItem[], MinecraftRPGServer",
+            "$values": [
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "item": {
+                  "$type": "Inventory.Item, MinecraftRPGServer",
+                  "ItemID": 607,
+                  "ItemCount": 1
+                },
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "item": {
+                  "$type": "Inventory.Item, MinecraftRPGServer",
+                  "ItemID": 587,
+                  "ItemCount": 1
+                },
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              }
+            ]
+          },
+          "ItemID": 781,
+          "ItemCount": 1
+        },
+        {
+          "$type": "Inventory.Items.Backpack, MinecraftRPGServer",
+          "quality": 1,
+          "slots": {
+            "$type": "Inventory.IndexedItem[], MinecraftRPGServer",
+            "$values": [
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              },
+              {
+                "$type": "Inventory.IndexedItem, MinecraftRPGServer",
+                "blacklistItems": {
+                  "$type": "System.String[], mscorlib",
+                  "$values": [
+                    "minecraft:backpack"
+                  ]
+                }
+              }
+            ]
+          },
+          "ItemID": 781,
+          "ItemCount": 1
+        },
+        {
+          "$type": "Inventory.Items.UniversalAmulet, MinecraftRPGServer",
+          "quality": 1,
+          "Scroll": {
+            "$type": "Inventory.Items.ScrollOfHealing, MinecraftRPGServer",
+            "Radius": 3.0,
+            "quality": 1,
+            "Description": "Heal 12 HP of the caster.",
+            "ItemID": 791,
+            "ItemCount": 1
+          },
+          "ItemID": 872,
+          "ItemCount": 1
+        },
+        {
+          "$type": "Inventory.Items.RPGNetheriteSword, MinecraftRPGServer",
+          "MinDamage": 15.0,
+          "MaxDamage": 25.0,
+          "rarity": 5,
+          "quality": 4,
+          "AttackSound": {
+            "$type": "Sound, MinecraftRPGServer",
+            "ID": 806,
+            "category": 7
+          },
+          "ItemID": 724,
+          "ItemCount": 1
+        },
         null,
         null,
         null,

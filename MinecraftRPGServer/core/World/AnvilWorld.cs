@@ -84,7 +84,7 @@ public class AnvilWorld : World
         int r = radius + 2;
         int index = 0;
         List<v2i> cposArray = v2i.Range(new v2i(-r, -r), new v2i(r, r));
-        Thread[] pool = new Thread[1];
+        Thread[] pool = new Thread[12];
         EventWaitHandle StartWaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
         EventWaitHandle EndWaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
         for (int k = 0; k < pool.Length; k++)

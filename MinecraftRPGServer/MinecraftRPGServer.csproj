@@ -229,6 +229,7 @@
     <Compile Include="core\SubSystems\Commands\CreateCommand.cs" />
     <Compile Include="core\SubSystems\Commands\HealCommand.cs" />
     <Compile Include="core\SubSystems\Commands\ParticleCommand.cs" />
+    <Compile Include="core\SubSystems\Commands\SaveAllCommand.cs" />
     <Compile Include="core\SubSystems\Hologram.cs" />
     <Compile Include="core\SubSystems\Commands\InfoCommand.cs" />
     <Compile Include="core\SubSystems\Commands\PerfomanceCommand.cs" />

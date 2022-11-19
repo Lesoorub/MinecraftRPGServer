@@ -45,4 +45,14 @@ namespace Entities
             }
         }
     }
+    [Entity("bael")]
+    public class Bael : ArmorStand
+    {
+        ArmorStand head;
+        public Bael(World world) : base(world)
+        {
+            head = new ArmorStand(world);
+            head.Position = position + v3f.up;
+        }
+    }
 }

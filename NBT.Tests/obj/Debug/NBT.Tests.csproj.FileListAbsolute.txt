@@ -41,5 +41,4 @@ C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\obj\Debug\NBT.Tests.
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\obj\Debug\NBT.Tests.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\obj\Debug\NBT.Tests.pdb
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\NBT.Tests.dll.config
-C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\System.Memory.xml
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\DotNetZip.dll

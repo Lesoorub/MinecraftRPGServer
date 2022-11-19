@@ -14,7 +14,7 @@ namespace MinecraftRPGServer
     public static class PluginManager
     {
         public static Dictionary<string, PluginInstance> plugins = new Dictionary<string, PluginInstance>();
-        static CSharpCodeProvider c = new CSharpCodeProvider();
+
         public static bool LoadPlugin(RPGServer server, string path)
         {
             var info = new FileInfo(path);
