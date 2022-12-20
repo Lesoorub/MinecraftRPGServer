@@ -82,48 +82,14 @@ public class AnvilWorld : World
     public void PrepairingToSpawnWorld(int radius)
     {
         int r = radius + 2;
-        int index = 0;
-        List<v2i> cposArray = v2i.Range(new v2i(-r, -r), new v2i(r, r));
-        Thread[] pool = new Thread[12];
-        EventWaitHandle StartWaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
-        EventWaitHandle EndWaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
-        for (int k = 0; k < pool.Length; k++)
+        for (int x = -r; x < r; x++)
         {
-            pool[k] = new Thread(() =>
+            var cpos = new v2i(0, 0);
+            for (int z = -r; z < r; z++)
             {
-                StartWaitHandle.WaitOne();
-                while (true)
-                {
-                    v2i cpos;
-                    lock (cposArray)
-                    {
-                        cpos = cposArray[index];
-                        Interlocked.Increment(ref index);
-                    }
-                    GetChunk(cpos);
-                    //int regx = cpos.x >> 5;
-                    //int regz = cpos.y >> 5;
-                    //var mca = GetRegion(regx, regz);
-                    //chunks.Add(cpos, mca.LoadChunk(cpos.x - regx * 32, cpos.y - regz * 32));
-
-                    if (index >= cposArray.Count)
-                        break;
-                }
-                EndWaitHandle.Set();
-            });
-            pool[k].Start();
-        }
-        StartWaitHandle.Set();
-        EndWaitHandle.WaitOne();
-        //Parallel.For(-r, r, (x) =>
-        //for (int x = -r; x < r; x++)
-        //{
-        //    var cpos = new v2i(0, 0);
-        //    for (int z = -r; z < r; z++)
-        //    {
-        //        GetChunk(new v2i(x + cpos.x, z + cpos.y));
-        //    }
-        //};
+                GetChunk(new v2i(x + cpos.x, z + cpos.y));
+            }
+        };
     }
     public MCA GetRegion(int regx, int regz)
     {

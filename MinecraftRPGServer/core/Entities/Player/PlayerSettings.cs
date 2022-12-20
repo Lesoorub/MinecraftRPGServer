@@ -9,6 +9,6 @@ public struct PlayerSettings
 
     public void UpdateBy(RPGServer rpgserver, Packets.Play.ClientSettings settings)
     {
-        ViewDistance = (byte)Math.Min(settings.ViewDistance, rpgserver.config.MaxViewDistance);
+        ViewDistance = (byte)Math.Min(settings.ViewDistance, rpgserver.config.world.MaxViewDistance);
     }
 }

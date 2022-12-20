@@ -84,7 +84,7 @@ namespace Authentication
                     DimensionName = player.world.publicName,
                     HashedSeed = 0,
                     MaxPlayers = server.maxPlayers,
-                    ViewDistance = server.config.MaxViewDistance,
+                    ViewDistance = server.config.world.MaxViewDistance,
                     ReducedDebugInfo = false,
                     EnableRespawnScreen = false,
                     IsDebug = false,

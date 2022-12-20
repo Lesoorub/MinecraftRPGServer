@@ -12,37 +12,37 @@ public class Gamemode : IChatCommand
             Name = "gamemode",
             Childrens = new List<Node>()
             {
-                    new Node()
+                new Node()
+                {
+                    Flags = Node.FlagsEnum.IsExecutable | Node.FlagsEnum.argument,
+                    Name = "mode",
+                    Parser = Node.Parsers.integer,
+                    Properties = new Node.Parsers.IntegerParser(Node.Parsers.IntegerParser.FlagsEnum.Min | Node.Parsers.IntegerParser.FlagsEnum.Max)
                     {
-                        Flags = Node.FlagsEnum.IsExecutable | Node.FlagsEnum.argument,
-                        Name = "mode",
-                        Parser = Node.Parsers.integer,
-                        Properties = new Node.Parsers.IntegerParser(Node.Parsers.IntegerParser.FlagsEnum.Min | Node.Parsers.IntegerParser.FlagsEnum.Max)
-                        {
-                            Min = 0,
-                            Max = 3
-                        }
-                    },
-                    new Node()
-                    {
-                        Flags = Node.FlagsEnum.IsExecutable | Node.FlagsEnum.literal,
-                        Name = "survival",
-                    },
-                    new Node()
-                    {
-                        Flags = Node.FlagsEnum.IsExecutable | Node.FlagsEnum.literal,
-                        Name = "creative",
-                    },
-                    new Node()
-                    {
-                        Flags = Node.FlagsEnum.IsExecutable | Node.FlagsEnum.literal,
-                        Name = "adventure",
-                    },
-                    new Node()
-                    {
-                        Flags = Node.FlagsEnum.IsExecutable | Node.FlagsEnum.literal,
-                        Name = "spectator",
+                        Min = 0,
+                        Max = 3
                     }
+                },
+                new Node()
+                {
+                    Flags = Node.FlagsEnum.IsExecutable | Node.FlagsEnum.literal,
+                    Name = "survival",
+                },
+                new Node()
+                {
+                    Flags = Node.FlagsEnum.IsExecutable | Node.FlagsEnum.literal,
+                    Name = "creative",
+                },
+                new Node()
+                {
+                    Flags = Node.FlagsEnum.IsExecutable | Node.FlagsEnum.literal,
+                    Name = "adventure",
+                },
+                new Node()
+                {
+                    Flags = Node.FlagsEnum.IsExecutable | Node.FlagsEnum.literal,
+                    Name = "spectator",
+                }
             }
         },
         Execute);

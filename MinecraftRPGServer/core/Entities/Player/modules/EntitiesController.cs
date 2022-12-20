@@ -150,7 +150,7 @@ public class EntitiesController : IModule
         //Выгрузить всех энтити вне зоны видимости
         if (view.entities.Count > 0)
         {
-            var unloadSqrDistance = Math.Pow(cfg.MaxDrawEntitiesRange + cfg.MaxDrawEntitiesRangeThreshold, 2);
+            var unloadSqrDistance = Math.Pow(cfg.entities.MaxDrawEntitiesRange + cfg.entities.MaxDrawEntitiesRangeThreshold, 2);
             bool f(KeyValuePair<int, LoadedEntity<Entity>> x) => 
                 x.Value.entity.isDestroyed || //Ентити уничтожено
                 v3f.SqrDistance(x.Value.entity.Position, player.Position) >= unloadSqrDistance; //Ентити дальше радиуса выгрузки
@@ -161,7 +161,7 @@ public class EntitiesController : IModule
         }
 
         //Добавить все энтити находящиеся в зоне видимости
-        foreach (var entity in player.GetEntityInRadius(player.Position, cfg.MaxDrawEntitiesRange))
+        foreach (var entity in player.GetEntityInRadius(player.Position, cfg.entities.MaxDrawEntitiesRange))
         {
             if (LoadEntity(entity))
             {

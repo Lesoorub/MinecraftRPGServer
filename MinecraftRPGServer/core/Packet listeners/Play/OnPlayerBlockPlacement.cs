@@ -25,7 +25,7 @@ public class OnPlayerBlockPlacement : PacketListener
         //if (placePacket.CursorPositionX == 1 || placePacket.CursorPositionX == 0 ||
         //    placePacket.CursorPositionY == 1 || placePacket.CursorPositionY == 0 ||
         //    placePacket.CursorPositionZ == 1 || placePacket.CursorPositionZ == 0)
-        if (!player.rpgserver.config.AllowBreakBlocks)
+        if (!player.rpgserver.config.world.AllowBreakBlocks)
         {
             player.network.Send(new BlockChange()
             {

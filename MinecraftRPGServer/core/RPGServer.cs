@@ -7,6 +7,7 @@ using MineServer;
 using System.Threading.Tasks;
 using MinecraftRPGServer;
 using System.Collections.Generic;
+using MinecraftRPGServer.core.Configs;
 
 public sealed partial class RPGServer : MineServer.MineServer
 {
@@ -14,7 +15,7 @@ public sealed partial class RPGServer : MineServer.MineServer
 
     public TabPlayerInfo tab;
     public Logger logger = new Logger();
-    public RPGServer(ushort port) : base(port)
+    public RPGServer(StartUpSettings settings) : base(settings.port)
     {
         var partTimer = new System.Diagnostics.Stopwatch();
         var timer = new System.Diagnostics.Stopwatch();
@@ -22,7 +23,12 @@ public sealed partial class RPGServer : MineServer.MineServer
 
         Dictionary<string, Action> init = new Dictionary<string, Action>()
         {
-            { "Load configs by", () => config = ServerConfig.Load() },
+            { "Load configs by", () => {
+                if (!settings.NoReadConfigs)
+                    config = ServerConfig.Load();
+                else
+                    config = new ServerConfig();
+            } },
             { "Load plugins by", () => 
             { 
                 PluginManager.LoadPlugins(this, config.PluginsFolder);
@@ -235,14 +241,14 @@ public sealed partial class RPGServer : MineServer.MineServer
 
     public void LoadWorlds()
     {
-        var world = new AnvilWorld(config.WorldPath, spawnWorldName);
-        world.LoadMCAFromPath(config.WorldPath);
+        var world = new AnvilWorld(config.world.WorldPath, spawnWorldName);
+        world.LoadMCAFromPath(config.world.WorldPath);
         worlds.TryAdd(spawnWorldName, world);
         logger.Write("Load area around spawn");
 
         var timer = new System.Diagnostics.Stopwatch();
         timer.Start();
-        world.PrepairingToSpawnWorld(config.MaxViewDistance);
+        world.PrepairingToSpawnWorld(config.world.MaxViewDistance);
         timer.Stop();
         logger.Write($"Complete for {((double)timer.ElapsedTicks / TimeSpan.TicksPerMillisecond):N3} ms");
     }
@@ -279,4 +285,8 @@ public sealed partial class RPGServer : MineServer.MineServer
         obj.server = this;
         PackageRegistry.Register(packetid, state, obj);
     }
+}
+
+namespace MinecraftRPGServer
+{
 }

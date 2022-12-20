@@ -22,14 +22,16 @@ public sealed class OnChatMessage : PacketListener
 
         var server = client.server as RPGServer;
 
-        string message = server.config.ChatFormat
+        var cfg = server.config.chat;
+
+        string message = cfg.ChatFormat
             .Replace("{playername}", player.data.username);
         if (msg.Message.StartsWith("!"))//Global message
         {
             message = message
-                .Replace("{channel}", server.config.GlobalChannelName)
+                .Replace("{channel}", cfg.GlobalChannelName)
                 .Replace("{message}", msg.Message.Substring(1).Trim());
-            if (message.Length > server.config.maxMessageSize)
+            if (message.Length > cfg.maxMessageSize)
                 return;
             foreach (var pl in server.loginnedPlayers)
                 pl.Value.Echo(player.PlayerUUID, Packets.Play.ChatMessage_clientbound.PositionType.chat, 
@@ -38,11 +40,11 @@ public sealed class OnChatMessage : PacketListener
         else//Local message
         {
             message = message
-                .Replace("{channel}", server.config.LocalChannelName)
+                .Replace("{channel}", cfg.LocalChannelName)
                 .Replace("{message}", msg.Message.Trim());
-            if (message.Length > server.config.maxMessageSize)
+            if (message.Length > cfg.maxMessageSize)
                 return;
-            double sqrDistance = server.config.LocalRange * server.config.LocalRange;
+            double sqrDistance = cfg.LocalRange * cfg.LocalRange;
 
             foreach (var pl in server.loginnedPlayers)
                 if (v3f.SqrDistance(pl.Value.Position, player.Position) < sqrDistance)

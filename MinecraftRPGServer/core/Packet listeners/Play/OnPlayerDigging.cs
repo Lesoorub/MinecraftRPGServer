@@ -23,7 +23,7 @@ public class OnPlayerDigging : PacketListener
                     Location = playerDigging.Location,
                 });
             }
-            if (!player.rpgserver.config.AllowBreakBlocks)
+            if (!player.rpgserver.config.world.AllowBreakBlocks)
                 SendOldBlock();
             else
             {

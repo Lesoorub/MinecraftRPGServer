@@ -8,11 +8,12 @@ public class BreakingCommand : IChatCommand
         Commands.Register("breaking",
         (server, player, args) =>
         {
-            player.rpgserver.config.AllowBreakBlocks = !player.rpgserver.config.AllowBreakBlocks;
+            var cfg = player.rpgserver.config.world;
+            cfg.AllowBreakBlocks = !cfg.AllowBreakBlocks;
             player.Echo(
                 System.Guid.Empty, 
                 ChatMessage_clientbound.PositionType.system_message, 
-                Chat.ColoredText($"&6Braking now is {(player.rpgserver.config.AllowBreakBlocks ? "&aenabled" : "&cdisabled")}"));
+                Chat.ColoredText($"&6Braking now is {(cfg.AllowBreakBlocks ? "&aenabled" : "&cdisabled")}"));
         });
     }
 }

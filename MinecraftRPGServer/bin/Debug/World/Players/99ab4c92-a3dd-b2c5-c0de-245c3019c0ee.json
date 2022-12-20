@@ -4,17 +4,17 @@
   "loginname": "Lesoorub",
   "WorldName": "overworld",
   "Gamemode": 1,
-  "SelectedSlot": 3,
+  "SelectedSlot": 5,
   "position": {
     "$type": "v3f, MinecraftRPGServer",
-    "x": -45.8676338,
-    "y": 66.53293,
-    "z": 9.433006
+    "x": -49.201973,
+    "y": 66.0,
+    "z": 9.035962
   },
   "rotation": {
     "$type": "v2f, MinecraftRPGServer",
-    "x": 229.073486,
-    "y": 42.72218
+    "x": 246.261673,
+    "y": 53.1706848
   },
   "Health": 100.0,
   "inventory": {

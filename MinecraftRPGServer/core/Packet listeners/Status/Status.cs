@@ -8,24 +8,31 @@ using MineServer;
 [PacketListener(0x00, State.Status)]
 public sealed class Status : PacketListener
 {
-    string favicon = null;
-    const string favicon_path = "favicon.png";
+    static string favicon = null;
     int last_motd_index = 0;
-    public Status()
-    {
-        if (File.Exists(favicon_path))
-        {
-            favicon = "data:image/png;base64," + 
-                Convert.ToBase64String(
-                    File.ReadAllBytes(favicon_path), 
-                    Base64FormattingOptions.None);
-        }
-    }
+
     public override void OnPacketRecieved(IClient client, IPacket packet)
     {
         var con_client = client as ConnectedClient;
         if (con_client == null) return;
         var server = (con_client.server as RPGServer);
+
+        if (favicon == null)
+        {
+            var favicon_path = server.config.motd.faviconPath;
+            if (File.Exists(favicon_path))
+            {
+                favicon = "data:image/png;base64," +
+                    Convert.ToBase64String(
+                        File.ReadAllBytes(favicon_path),
+                        Base64FormattingOptions.None);
+            }
+            else
+            {
+                favicon = null;
+            }
+        }
+
         var response = new Response()
         {
             response = JsonConvert.SerializeObject(new Motd()
@@ -34,11 +41,11 @@ public sealed class Status : PacketListener
                 version_protocol = SupportedProtocol.allprotocols.ContainsKey(con_client.protocolVersion) ? con_client.protocolVersion : SupportedProtocol.allprotocols.First().Key,
                 players_max = server.maxPlayers,
                 players_online = server.online,
-                description = Chat.ColoredText(server.config.descriptions[last_motd_index++]),
+                description = Chat.ColoredText(server.config.motd.descriptions[last_motd_index++]),
                 favicon = favicon,
             }, Formatting.None, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore })
         };
-        if (last_motd_index >= server.config.descriptions.Length)
+        if (last_motd_index >= server.config.motd.descriptions.Length)
             last_motd_index = 0;
         client.network.Send(response.ToByteArray());
         return;
