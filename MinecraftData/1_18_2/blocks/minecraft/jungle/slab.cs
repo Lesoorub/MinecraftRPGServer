@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class jungle_slab : IBlockData
     {
         public short DefaultStateID => 8571;
+        public state DefaultState => States[3];
         public float Hardness => 2f;
         public float ExplosionResistance => 3f;
         public bool IsTransparent => false;

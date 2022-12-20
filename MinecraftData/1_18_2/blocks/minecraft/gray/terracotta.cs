@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class gray_terracotta : IBlockData
     {
         public short DefaultStateID => 7072;
+        public state DefaultState => States[0];
         public float Hardness => 1.25f;
         public float ExplosionResistance => 4.2f;
         public bool IsTransparent => false;

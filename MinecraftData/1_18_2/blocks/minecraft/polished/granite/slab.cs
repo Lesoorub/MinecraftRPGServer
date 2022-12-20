@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class polished_granite_slab : IBlockData
     {
         public short DefaultStateID => 11042;
+        public state DefaultState => States[3];
         public float Hardness => 1.5f;
         public float ExplosionResistance => 6f;
         public bool IsTransparent => false;

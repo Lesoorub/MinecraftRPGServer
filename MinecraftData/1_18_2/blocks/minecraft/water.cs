@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class water : IBlockData
     {
         public short DefaultStateID => 34;
+        public state DefaultState => States[0];
         public float Hardness => 100f;
         public float ExplosionResistance => 100f;
         public bool IsTransparent => true;

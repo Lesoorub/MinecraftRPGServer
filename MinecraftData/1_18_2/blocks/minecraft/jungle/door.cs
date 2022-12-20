@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class jungle_door : IBlockData
     {
         public short DefaultStateID => 9127;
+        public state DefaultState => States[11];
         public float Hardness => 3f;
         public float ExplosionResistance => 3f;
         public bool IsTransparent => true;

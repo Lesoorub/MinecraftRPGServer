@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class acacia_fence : IBlockData
     {
         public short DefaultStateID => 8955;
+        public state DefaultState => States[31];
         public float Hardness => 2f;
         public float ExplosionResistance => 3f;
         public bool IsTransparent => false;

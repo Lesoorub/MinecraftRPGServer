@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class red_wall_banner : IBlockData
     {
         public short DefaultStateID => 8459;
+        public state DefaultState => States[0];
         public float Hardness => 1f;
         public float ExplosionResistance => 1f;
         public bool IsTransparent => true;

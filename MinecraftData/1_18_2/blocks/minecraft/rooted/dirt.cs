@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class rooted_dirt : IBlockData
     {
         public short DefaultStateID => 18682;
+        public state DefaultState => States[0];
         public float Hardness => 0.5f;
         public float ExplosionResistance => 0.5f;
         public bool IsTransparent => false;

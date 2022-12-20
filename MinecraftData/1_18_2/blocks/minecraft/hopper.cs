@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class hopper : IBlockData
     {
         public short DefaultStateID => 6934;
+        public state DefaultState => States[0];
         public float Hardness => 3f;
         public float ExplosionResistance => 4.8f;
         public bool IsTransparent => true;

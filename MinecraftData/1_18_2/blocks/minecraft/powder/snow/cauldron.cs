@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class powder_snow_cauldron : IBlockData
     {
         public short DefaultStateID => 5347;
+        public state DefaultState => States[0];
         public float Hardness => 2f;
         public float ExplosionResistance => 2f;
         public bool IsTransparent => true;

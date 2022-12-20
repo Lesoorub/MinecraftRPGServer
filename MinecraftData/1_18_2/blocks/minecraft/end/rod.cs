@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class end_rod : IBlockData
     {
         public short DefaultStateID => 9312;
+        public state DefaultState => States[4];
         public float Hardness => 0f;
         public float ExplosionResistance => 0f;
         public bool IsTransparent => true;

@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class light_blue_glazed_terracotta : IBlockData
     {
         public short DefaultStateID => 9636;
+        public state DefaultState => States[0];
         public float Hardness => 1.4f;
         public float ExplosionResistance => 1.4f;
         public bool IsTransparent => false;

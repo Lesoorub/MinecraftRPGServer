@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class shroomlight : IBlockData
     {
         public short DefaultStateID => 15243;
+        public state DefaultState => States[0];
         public float Hardness => 1f;
         public float ExplosionResistance => 1f;
         public bool IsTransparent => false;

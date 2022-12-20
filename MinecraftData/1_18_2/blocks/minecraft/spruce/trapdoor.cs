@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class spruce_trapdoor : IBlockData
     {
         public short DefaultStateID => 4259;
+        public state DefaultState => States[15];
         public float Hardness => 3f;
         public float ExplosionResistance => 3f;
         public bool IsTransparent => true;

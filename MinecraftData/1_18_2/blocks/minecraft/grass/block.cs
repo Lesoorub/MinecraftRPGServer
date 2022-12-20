@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class grass_block : IBlockData
     {
         public short DefaultStateID => 9;
+        public state DefaultState => States[1];
         public float Hardness => 0.6f;
         public float ExplosionResistance => 0.6f;
         public bool IsTransparent => false;

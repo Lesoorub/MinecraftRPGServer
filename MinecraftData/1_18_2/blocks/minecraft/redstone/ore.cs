@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class redstone_ore : IBlockData
     {
         public short DefaultStateID => 3953;
+        public state DefaultState => States[1];
         public float Hardness => 3f;
         public float ExplosionResistance => 3f;
         public bool IsTransparent => false;

@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class medium_amethyst_bud : IBlockData
     {
         public short DefaultStateID => 17699;
+        public state DefaultState => States[9];
         public float Hardness => 1.5f;
         public float ExplosionResistance => 1.5f;
         public bool IsTransparent => true;

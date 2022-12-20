@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class dark_oak_stairs : IBlockData
     {
         public short DefaultStateID => 7684;
+        public state DefaultState => States[11];
         public float Hardness => 2f;
         public float ExplosionResistance => 3f;
         public bool IsTransparent => false;

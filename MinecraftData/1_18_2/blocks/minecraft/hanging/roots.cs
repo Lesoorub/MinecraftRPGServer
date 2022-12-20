@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class hanging_roots : IBlockData
     {
         public short DefaultStateID => 18681;
+        public state DefaultState => States[1];
         public float Hardness => 0f;
         public float ExplosionResistance => 0f;
         public bool IsTransparent => true;

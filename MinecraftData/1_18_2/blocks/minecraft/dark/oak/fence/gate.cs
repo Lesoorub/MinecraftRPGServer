@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class dark_oak_fence_gate : IBlockData
     {
         public short DefaultStateID => 8803;
+        public state DefaultState => States[7];
         public float Hardness => 2f;
         public float ExplosionResistance => 3f;
         public bool IsTransparent => false;

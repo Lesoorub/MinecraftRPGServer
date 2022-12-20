@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class light : IBlockData
     {
         public short DefaultStateID => 7786;
+        public state DefaultState => States[31];
         public float Hardness => -1f;
         public float ExplosionResistance => 3600001f;
         public bool IsTransparent => true;

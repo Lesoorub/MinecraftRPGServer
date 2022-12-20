@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class crimson_sign : IBlockData
     {
         public short DefaultStateID => 15910;
+        public state DefaultState => States[1];
         public float Hardness => 1f;
         public float ExplosionResistance => 1f;
         public bool IsTransparent => true;

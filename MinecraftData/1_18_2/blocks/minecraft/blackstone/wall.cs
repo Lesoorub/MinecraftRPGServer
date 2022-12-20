@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class blackstone_wall : IBlockData
     {
         public short DefaultStateID => 16177;
+        public state DefaultState => States[3];
         public float Hardness => 1.5f;
         public float ExplosionResistance => 6f;
         public bool IsTransparent => false;

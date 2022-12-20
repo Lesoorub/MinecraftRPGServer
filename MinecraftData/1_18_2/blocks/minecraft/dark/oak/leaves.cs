@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class dark_oak_leaves : IBlockData
     {
         public short DefaultStateID => 231;
+        public state DefaultState => States[13];
         public float Hardness => 0.2f;
         public float ExplosionResistance => 0.2f;
         public bool IsTransparent => true;

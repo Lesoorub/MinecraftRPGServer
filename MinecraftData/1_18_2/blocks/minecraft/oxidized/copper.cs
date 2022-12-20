@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class oxidized_copper : IBlockData
     {
         public short DefaultStateID => 17814;
+        public state DefaultState => States[0];
         public float Hardness => 3f;
         public float ExplosionResistance => 6f;
         public bool IsTransparent => false;

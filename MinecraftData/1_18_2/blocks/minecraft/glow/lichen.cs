@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class glow_lichen : IBlockData
     {
         public short DefaultStateID => 5020;
+        public state DefaultState => States[127];
         public float Hardness => 0.2f;
         public float ExplosionResistance => 0.2f;
         public bool IsTransparent => true;

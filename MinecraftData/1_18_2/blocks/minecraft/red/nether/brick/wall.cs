@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class red_nether_brick_wall : IBlockData
     {
         public short DefaultStateID => 13712;
+        public state DefaultState => States[3];
         public float Hardness => 2f;
         public float ExplosionResistance => 6f;
         public bool IsTransparent => false;

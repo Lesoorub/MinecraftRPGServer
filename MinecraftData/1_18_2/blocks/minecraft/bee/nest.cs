@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class bee_nest : IBlockData
     {
         public short DefaultStateID => 16030;
+        public state DefaultState => States[0];
         public float Hardness => 0.3f;
         public float ExplosionResistance => 0.3f;
         public bool IsTransparent => false;

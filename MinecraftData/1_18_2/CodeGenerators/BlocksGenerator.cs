@@ -20,9 +20,9 @@ namespace MinecraftData._1_18_2.CodeGenerators
             };
             File.WriteAllText(path, JsonConvert.SerializeObject(value, settings));
         }
-        public static void ConvertRawDataBlockFormatToBlockFormat(string jsonInPath, string outputCodeDir)
+        public static void ConvertRawDataBlockFormatToBlockFormat(string inJsonPath, string outputJsonPath)
         {
-            var rdbf = Tools.ReadBigJson<RawDataBlockFormat>(jsonInPath);
+            var rdbf = Tools.ReadBigJson<RawDataBlockFormat>(inJsonPath);
 
             var materials = rdbf.Select(x => x.Value.states.First().Value.material).Distinct().ToArray();
 
@@ -64,7 +64,7 @@ namespace MinecraftData._1_18_2.CodeGenerators
 
                 }).ToArray(),
             });
-            WriteJson(outputCodeDir, bf);
+            WriteJson(outputJsonPath, bf);
         }
         public static void GenerateCode(string jsonInPath, string outputCodeDir)
         {
@@ -94,6 +94,7 @@ $@"namespace MinecraftData._1_18_2.blocks.minecraft
     public class {pair.Key.Replace("minecraft:", "")} : IBlockData
     {{
         public short DefaultStateID => {pair.Value.DefaultStateID};
+        public state DefaultState => States[{pair.Value.States.ToList().FindIndex(x => x.Id == pair.Value.DefaultStateID)}];
         public float Hardness => {pair.Value.Hardness.ToString().Replace(",", ".")}f;
         public float ExplosionResistance => {pair.Value.ExplosionResistance.ToString().Replace(",", ".")}f;
         public bool IsTransparent => {pair.Value.IsTransparent.ToString().ToLower()};

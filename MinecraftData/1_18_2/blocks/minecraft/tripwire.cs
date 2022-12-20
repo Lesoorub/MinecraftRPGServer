@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class tripwire : IBlockData
     {
         public short DefaultStateID => 5608;
+        public state DefaultState => States[127];
         public float Hardness => 0f;
         public float ExplosionResistance => 0f;
         public bool IsTransparent => true;

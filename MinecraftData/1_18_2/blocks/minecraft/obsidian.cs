@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class obsidian : IBlockData
     {
         public short DefaultStateID => 1490;
+        public state DefaultState => States[0];
         public float Hardness => 50f;
         public float ExplosionResistance => 1200f;
         public bool IsTransparent => false;

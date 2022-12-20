@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class scaffolding : IBlockData
     {
         public short DefaultStateID => 15036;
+        public state DefaultState => States[31];
         public float Hardness => 0f;
         public float ExplosionResistance => 0f;
         public bool IsTransparent => true;

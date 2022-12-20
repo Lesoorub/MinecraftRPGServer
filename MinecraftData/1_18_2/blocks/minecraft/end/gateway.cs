@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class end_gateway : IBlockData
     {
         public short DefaultStateID => 9474;
+        public state DefaultState => States[0];
         public float Hardness => -1f;
         public float ExplosionResistance => 3600000f;
         public bool IsTransparent => true;

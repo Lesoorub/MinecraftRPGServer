@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class soul_campfire : IBlockData
     {
         public short DefaultStateID => 15179;
+        public state DefaultState => States[3];
         public float Hardness => 2f;
         public float ExplosionResistance => 2f;
         public bool IsTransparent => true;

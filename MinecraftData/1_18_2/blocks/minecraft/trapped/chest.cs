@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class trapped_chest : IBlockData
     {
         public short DefaultStateID => 6829;
+        public state DefaultState => States[1];
         public float Hardness => 2.5f;
         public float ExplosionResistance => 2.5f;
         public bool IsTransparent => false;

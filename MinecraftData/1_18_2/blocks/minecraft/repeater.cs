@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class repeater : IBlockData
     {
         public short DefaultStateID => 4103;
+        public state DefaultState => States[3];
         public float Hardness => 0f;
         public float ExplosionResistance => 0f;
         public bool IsTransparent => false;

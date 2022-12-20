@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class pointed_dripstone : IBlockData
     {
         public short DefaultStateID => 18549;
+        public state DefaultState => States[5];
         public float Hardness => 1.5f;
         public float ExplosionResistance => 3f;
         public bool IsTransparent => true;

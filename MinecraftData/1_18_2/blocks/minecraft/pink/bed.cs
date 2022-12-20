@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class pink_bed : IBlockData
     {
         public short DefaultStateID => 1180;
+        public state DefaultState => States[3];
         public float Hardness => 0.2f;
         public float ExplosionResistance => 0.2f;
         public bool IsTransparent => true;

@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class dead_horn_coral_wall_fan : IBlockData
     {
         public short DefaultStateID => 9842;
+        public state DefaultState => States[0];
         public float Hardness => 0f;
         public float ExplosionResistance => 0f;
         public bool IsTransparent => true;

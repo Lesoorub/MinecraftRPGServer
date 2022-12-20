@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class light_gray_stained_glass : IBlockData
     {
         public short DefaultStateID => 4172;
+        public state DefaultState => States[0];
         public float Hardness => 0.3f;
         public float ExplosionResistance => 0.3f;
         public bool IsTransparent => true;

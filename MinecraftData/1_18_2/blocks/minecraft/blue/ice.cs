@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class blue_ice : IBlockData
     {
         public short DefaultStateID => 9898;
+        public state DefaultState => States[0];
         public float Hardness => 2.8f;
         public float ExplosionResistance => 2.8f;
         public bool IsTransparent => false;

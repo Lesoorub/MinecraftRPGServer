@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class crimson_fence_gate : IBlockData
     {
         public short DefaultStateID => 15516;
+        public state DefaultState => States[7];
         public float Hardness => 2f;
         public float ExplosionResistance => 3f;
         public bool IsTransparent => false;

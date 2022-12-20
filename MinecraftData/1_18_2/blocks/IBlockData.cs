@@ -4,6 +4,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public interface IBlockData
     {
         short DefaultStateID { get; }
+        state DefaultState { get; }
         float Hardness { get; }
         float ExplosionResistance { get; }
         bool IsTransparent { get; }

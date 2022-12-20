@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class damaged_anvil : IBlockData
     {
         public short DefaultStateID => 6824;
+        public state DefaultState => States[0];
         public float Hardness => 5f;
         public float ExplosionResistance => 1200f;
         public bool IsTransparent => false;

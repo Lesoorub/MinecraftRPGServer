@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class note_block : IBlockData
     {
         public short DefaultStateID => 282;
+        public state DefaultState => States[1];
         public float Hardness => 0.8f;
         public float ExplosionResistance => 0.8f;
         public bool IsTransparent => false;

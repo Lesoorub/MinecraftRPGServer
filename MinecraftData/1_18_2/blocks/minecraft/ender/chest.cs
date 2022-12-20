@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class ender_chest : IBlockData
     {
         public short DefaultStateID => 5458;
+        public state DefaultState => States[1];
         public float Hardness => 22.5f;
         public float ExplosionResistance => 600f;
         public bool IsTransparent => false;

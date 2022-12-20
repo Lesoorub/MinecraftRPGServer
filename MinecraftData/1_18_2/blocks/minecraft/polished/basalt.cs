@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class polished_basalt : IBlockData
     {
         public short DefaultStateID => 4075;
+        public state DefaultState => States[1];
         public float Hardness => 1.25f;
         public float ExplosionResistance => 4.2f;
         public bool IsTransparent => false;

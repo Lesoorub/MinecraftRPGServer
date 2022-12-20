@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class water_cauldron : IBlockData
     {
         public short DefaultStateID => 5343;
+        public state DefaultState => States[0];
         public float Hardness => 2f;
         public float ExplosionResistance => 2f;
         public bool IsTransparent => true;

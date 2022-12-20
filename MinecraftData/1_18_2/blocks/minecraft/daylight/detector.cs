@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class daylight_detector : IBlockData
     {
         public short DefaultStateID => 6916;
+        public state DefaultState => States[16];
         public float Hardness => 0.2f;
         public float ExplosionResistance => 0.2f;
         public bool IsTransparent => false;

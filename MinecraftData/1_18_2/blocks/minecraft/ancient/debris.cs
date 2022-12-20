@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class ancient_debris : IBlockData
     {
         public short DefaultStateID => 16081;
+        public state DefaultState => States[0];
         public float Hardness => 30f;
         public float ExplosionResistance => 1200f;
         public bool IsTransparent => false;

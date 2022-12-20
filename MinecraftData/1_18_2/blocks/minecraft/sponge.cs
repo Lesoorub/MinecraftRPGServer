@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class sponge : IBlockData
     {
         public short DefaultStateID => 260;
+        public state DefaultState => States[0];
         public float Hardness => 0.6f;
         public float ExplosionResistance => 0.6f;
         public bool IsTransparent => false;

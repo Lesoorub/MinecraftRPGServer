@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class black_candle_cake : IBlockData
     {
         public short DefaultStateID => 17663;
+        public state DefaultState => States[1];
         public float Hardness => 0.5f;
         public float ExplosionResistance => 0.5f;
         public bool IsTransparent => false;

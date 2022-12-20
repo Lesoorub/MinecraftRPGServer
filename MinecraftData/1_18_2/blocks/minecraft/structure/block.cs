@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class structure_block : IBlockData
     {
         public short DefaultStateID => 15990;
+        public state DefaultState => States[1];
         public float Hardness => -1f;
         public float ExplosionResistance => 3600000f;
         public bool IsTransparent => false;

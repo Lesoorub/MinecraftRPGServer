@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class cyan_concrete : IBlockData
     {
         public short DefaultStateID => 9697;
+        public state DefaultState => States[0];
         public float Hardness => 1.8f;
         public float ExplosionResistance => 1.8f;
         public bool IsTransparent => false;

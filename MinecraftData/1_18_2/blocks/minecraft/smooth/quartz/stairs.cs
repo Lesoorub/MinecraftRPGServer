@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class smooth_quartz_stairs : IBlockData
     {
         public short DefaultStateID => 10570;
+        public state DefaultState => States[11];
         public float Hardness => 2f;
         public float ExplosionResistance => 6f;
         public bool IsTransparent => false;

@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class dispenser : IBlockData
     {
         public short DefaultStateID => 267;
+        public state DefaultState => States[1];
         public float Hardness => 3.5f;
         public float ExplosionResistance => 3.5f;
         public bool IsTransparent => false;

@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class birch_pressure_plate : IBlockData
     {
         public short DefaultStateID => 3945;
+        public state DefaultState => States[1];
         public float Hardness => 0.5f;
         public float ExplosionResistance => 0.5f;
         public bool IsTransparent => true;

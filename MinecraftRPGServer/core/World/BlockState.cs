@@ -15,7 +15,7 @@ public struct BlockState
         get
         {
             var block = iBlockData;
-            var collisionShape = block.States.First(x => x.Id == block.DefaultStateID).CollisionShape;
+            var collisionShape = block.DefaultState.CollisionShape;
             return collisionShape.HasValue || collisionShape.Value == 0;
         }
     }

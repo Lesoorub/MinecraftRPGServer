@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class waxed_oxidized_cut_copper_slab : IBlockData
     {
         public short DefaultStateID => 18499;
+        public state DefaultState => States[3];
         public float Hardness => 3f;
         public float ExplosionResistance => 6f;
         public bool IsTransparent => false;

@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class wither_skeleton_wall_skull : IBlockData
     {
         public short DefaultStateID => 6732;
+        public state DefaultState => States[0];
         public float Hardness => 1f;
         public float ExplosionResistance => 1f;
         public bool IsTransparent => false;

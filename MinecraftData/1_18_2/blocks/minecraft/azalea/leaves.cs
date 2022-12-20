@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class azalea_leaves : IBlockData
     {
         public short DefaultStateID => 245;
+        public state DefaultState => States[13];
         public float Hardness => 0.2f;
         public float ExplosionResistance => 0.2f;
         public bool IsTransparent => true;

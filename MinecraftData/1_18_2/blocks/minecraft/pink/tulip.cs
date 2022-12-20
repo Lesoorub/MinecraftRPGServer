@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class pink_tulip : IBlockData
     {
         public short DefaultStateID => 1476;
+        public state DefaultState => States[0];
         public float Hardness => 0f;
         public float ExplosionResistance => 0f;
         public bool IsTransparent => true;

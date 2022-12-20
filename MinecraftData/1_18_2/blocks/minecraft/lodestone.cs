@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class lodestone : IBlockData
     {
         public short DefaultStateID => 16092;
+        public state DefaultState => States[0];
         public float Hardness => 3.5f;
         public float ExplosionResistance => 3.5f;
         public bool IsTransparent => false;

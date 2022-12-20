@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class bell : IBlockData
     {
         public short DefaultStateID => 15105;
+        public state DefaultState => States[1];
         public float Hardness => 5f;
         public float ExplosionResistance => 5f;
         public bool IsTransparent => false;

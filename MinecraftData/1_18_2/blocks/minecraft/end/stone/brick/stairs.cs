@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class end_stone_brick_stairs : IBlockData
     {
         public short DefaultStateID => 10330;
+        public state DefaultState => States[11];
         public float Hardness => 3f;
         public float ExplosionResistance => 9f;
         public bool IsTransparent => false;

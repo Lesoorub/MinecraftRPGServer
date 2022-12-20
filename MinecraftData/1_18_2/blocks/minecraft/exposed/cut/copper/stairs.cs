@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class exposed_cut_copper_stairs : IBlockData
     {
         public short DefaultStateID => 17995;
+        public state DefaultState => States[11];
         public float Hardness => 3f;
         public float ExplosionResistance => 6f;
         public bool IsTransparent => false;

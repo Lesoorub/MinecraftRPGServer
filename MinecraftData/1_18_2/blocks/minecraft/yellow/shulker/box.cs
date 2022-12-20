@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class yellow_shulker_box : IBlockData
     {
         public short DefaultStateID => 9556;
+        public state DefaultState => States[4];
         public float Hardness => 2f;
         public float ExplosionResistance => 2f;
         public bool IsTransparent => true;

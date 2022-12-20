@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class sandstone_wall : IBlockData
     {
         public short DefaultStateID => 14036;
+        public state DefaultState => States[3];
         public float Hardness => 0.8f;
         public float ExplosionResistance => 0.8f;
         public bool IsTransparent => false;

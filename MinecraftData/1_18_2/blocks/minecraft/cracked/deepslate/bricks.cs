@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class cracked_deepslate_bricks : IBlockData
     {
         public short DefaultStateID => 20331;
+        public state DefaultState => States[0];
         public float Hardness => 3.5f;
         public float ExplosionResistance => 6f;
         public bool IsTransparent => false;

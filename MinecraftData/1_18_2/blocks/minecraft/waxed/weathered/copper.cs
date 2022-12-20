@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class waxed_weathered_copper : IBlockData
     {
         public short DefaultStateID => 18169;
+        public state DefaultState => States[0];
         public float Hardness => 3f;
         public float ExplosionResistance => 6f;
         public bool IsTransparent => false;

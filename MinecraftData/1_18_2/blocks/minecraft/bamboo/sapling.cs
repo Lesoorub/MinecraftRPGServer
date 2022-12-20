@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class bamboo_sapling : IBlockData
     {
         public short DefaultStateID => 9901;
+        public state DefaultState => States[0];
         public float Hardness => 1f;
         public float ExplosionResistance => 1f;
         public bool IsTransparent => true;

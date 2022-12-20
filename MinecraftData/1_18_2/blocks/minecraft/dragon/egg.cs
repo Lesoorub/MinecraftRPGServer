@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class dragon_egg : IBlockData
     {
         public short DefaultStateID => 5360;
+        public state DefaultState => States[0];
         public float Hardness => 3f;
         public float ExplosionResistance => 9f;
         public bool IsTransparent => true;

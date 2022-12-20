@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class chiseled_quartz_block : IBlockData
     {
         public short DefaultStateID => 6945;
+        public state DefaultState => States[0];
         public float Hardness => 0.8f;
         public float ExplosionResistance => 0.8f;
         public bool IsTransparent => false;

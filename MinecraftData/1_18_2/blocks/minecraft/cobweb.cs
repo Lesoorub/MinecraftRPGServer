@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class cobweb : IBlockData
     {
         public short DefaultStateID => 1397;
+        public state DefaultState => States[0];
         public float Hardness => 4f;
         public float ExplosionResistance => 4f;
         public bool IsTransparent => true;

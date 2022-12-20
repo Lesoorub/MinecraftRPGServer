@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class large_fern : IBlockData
     {
         public short DefaultStateID => 8146;
+        public state DefaultState => States[1];
         public float Hardness => 0f;
         public float ExplosionResistance => 0f;
         public bool IsTransparent => true;

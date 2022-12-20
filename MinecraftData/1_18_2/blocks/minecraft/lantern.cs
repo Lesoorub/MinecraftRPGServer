@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class lantern : IBlockData
     {
         public short DefaultStateID => 15139;
+        public state DefaultState => States[3];
         public float Hardness => 3.5f;
         public float ExplosionResistance => 3.5f;
         public bool IsTransparent => true;

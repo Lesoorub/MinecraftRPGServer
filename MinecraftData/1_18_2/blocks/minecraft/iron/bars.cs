@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class iron_bars : IBlockData
     {
         public short DefaultStateID => 4797;
+        public state DefaultState => States[31];
         public float Hardness => 5f;
         public float ExplosionResistance => 6f;
         public bool IsTransparent => true;

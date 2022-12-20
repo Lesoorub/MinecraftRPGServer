@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class mossy_cobblestone_stairs : IBlockData
     {
         public short DefaultStateID => 10250;
+        public state DefaultState => States[11];
         public float Hardness => 2f;
         public float ExplosionResistance => 6f;
         public bool IsTransparent => false;

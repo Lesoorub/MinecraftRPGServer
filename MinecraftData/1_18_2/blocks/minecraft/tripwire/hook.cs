@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class tripwire_hook : IBlockData
     {
         public short DefaultStateID => 5474;
+        public state DefaultState => States[9];
         public float Hardness => 0f;
         public float ExplosionResistance => 0f;
         public bool IsTransparent => true;

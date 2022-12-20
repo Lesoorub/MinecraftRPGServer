@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class stone_slab : IBlockData
     {
         public short DefaultStateID => 8589;
+        public state DefaultState => States[3];
         public float Hardness => 2f;
         public float ExplosionResistance => 6f;
         public bool IsTransparent => false;

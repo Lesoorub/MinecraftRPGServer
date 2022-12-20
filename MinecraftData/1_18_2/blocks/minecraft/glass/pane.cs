@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class glass_pane : IBlockData
     {
         public short DefaultStateID => 4835;
+        public state DefaultState => States[31];
         public float Hardness => 0.3f;
         public float ExplosionResistance => 0.3f;
         public bool IsTransparent => true;

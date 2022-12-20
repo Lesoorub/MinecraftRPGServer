@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class big_dripleaf : IBlockData
     {
         public short DefaultStateID => 18625;
+        public state DefaultState => States[1];
         public float Hardness => 0.1f;
         public float ExplosionResistance => 0.1f;
         public bool IsTransparent => false;

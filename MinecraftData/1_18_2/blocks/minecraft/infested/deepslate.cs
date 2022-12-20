@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class infested_deepslate : IBlockData
     {
         public short DefaultStateID => 20334;
+        public state DefaultState => States[1];
         public float Hardness => 1.5f;
         public float ExplosionResistance => 0.75f;
         public bool IsTransparent => false;

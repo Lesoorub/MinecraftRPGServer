@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class chorus_flower : IBlockData
     {
         public short DefaultStateID => 9378;
+        public state DefaultState => States[0];
         public float Hardness => 0.4f;
         public float ExplosionResistance => 0.4f;
         public bool IsTransparent => true;

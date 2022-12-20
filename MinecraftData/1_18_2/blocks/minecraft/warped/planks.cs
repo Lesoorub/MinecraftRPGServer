@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class warped_planks : IBlockData
     {
         public short DefaultStateID => 15300;
+        public state DefaultState => States[0];
         public float Hardness => 2f;
         public float ExplosionResistance => 3f;
         public bool IsTransparent => false;

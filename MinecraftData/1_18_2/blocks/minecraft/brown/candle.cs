@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class brown_candle : IBlockData
     {
         public short DefaultStateID => 17569;
+        public state DefaultState => States[3];
         public float Hardness => 0.1f;
         public float ExplosionResistance => 0.1f;
         public bool IsTransparent => true;

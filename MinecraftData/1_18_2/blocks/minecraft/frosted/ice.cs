@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class frosted_ice : IBlockData
     {
         public short DefaultStateID => 9499;
+        public state DefaultState => States[0];
         public float Hardness => 0.5f;
         public float ExplosionResistance => 0.5f;
         public bool IsTransparent => true;

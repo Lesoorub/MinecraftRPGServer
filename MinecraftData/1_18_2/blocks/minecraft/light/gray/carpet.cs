@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class light_gray_carpet : IBlockData
     {
         public short DefaultStateID => 8124;
+        public state DefaultState => States[0];
         public float Hardness => 0.1f;
         public float ExplosionResistance => 0.1f;
         public bool IsTransparent => false;

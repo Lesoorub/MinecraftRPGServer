@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class piston : IBlockData
     {
         public short DefaultStateID => 1410;
+        public state DefaultState => States[6];
         public float Hardness => 1.5f;
         public float ExplosionResistance => 1.5f;
         public bool IsTransparent => false;

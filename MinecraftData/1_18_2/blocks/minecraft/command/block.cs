@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class command_block : IBlockData
     {
         public short DefaultStateID => 5856;
+        public state DefaultState => States[6];
         public float Hardness => -1f;
         public float ExplosionResistance => 3600000f;
         public bool IsTransparent => false;

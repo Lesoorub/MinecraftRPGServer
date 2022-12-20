@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class birch_wall_sign : IBlockData
     {
         public short DefaultStateID => 3819;
+        public state DefaultState => States[1];
         public float Hardness => 1f;
         public float ExplosionResistance => 1f;
         public bool IsTransparent => true;

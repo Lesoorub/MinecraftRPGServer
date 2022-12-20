@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class powered_rail : IBlockData
     {
         public short DefaultStateID => 1350;
+        public state DefaultState => States[13];
         public float Hardness => 0.7f;
         public float ExplosionResistance => 0.7f;
         public bool IsTransparent => true;

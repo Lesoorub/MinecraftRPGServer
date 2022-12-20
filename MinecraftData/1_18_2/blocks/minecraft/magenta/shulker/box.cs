@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class magenta_shulker_box : IBlockData
     {
         public short DefaultStateID => 9544;
+        public state DefaultState => States[4];
         public float Hardness => 2f;
         public float ExplosionResistance => 2f;
         public bool IsTransparent => true;

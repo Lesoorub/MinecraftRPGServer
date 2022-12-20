@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class jigsaw : IBlockData
     {
         public short DefaultStateID => 16003;
+        public state DefaultState => States[10];
         public float Hardness => -1f;
         public float ExplosionResistance => 3600000f;
         public bool IsTransparent => false;

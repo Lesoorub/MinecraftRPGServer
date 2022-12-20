@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class blast_furnace : IBlockData
     {
         public short DefaultStateID => 15062;
+        public state DefaultState => States[1];
         public float Hardness => 3.5f;
         public float ExplosionResistance => 3.5f;
         public bool IsTransparent => false;

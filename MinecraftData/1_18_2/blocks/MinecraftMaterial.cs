@@ -1,4 +1,4 @@
-﻿namespace MinecraftData._1_18_2.blocks.minecraft
+namespace MinecraftData._1_18_2.blocks.minecraft 
 {
     public enum MinecraftMaterial : byte
     {

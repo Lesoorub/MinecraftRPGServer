@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class deepslate_lapis_ore : IBlockData
     {
         public short DefaultStateID => 264;
+        public state DefaultState => States[0];
         public float Hardness => 4.5f;
         public float ExplosionResistance => 3f;
         public bool IsTransparent => false;

@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class lava : IBlockData
     {
         public short DefaultStateID => 50;
+        public state DefaultState => States[0];
         public float Hardness => 100f;
         public float ExplosionResistance => 100f;
         public bool IsTransparent => true;

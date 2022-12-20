@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class end_portal_frame : IBlockData
     {
         public short DefaultStateID => 5355;
+        public state DefaultState => States[4];
         public float Hardness => -1f;
         public float ExplosionResistance => 3600000f;
         public bool IsTransparent => false;

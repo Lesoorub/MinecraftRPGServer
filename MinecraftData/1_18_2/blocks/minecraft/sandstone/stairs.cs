@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class sandstone_stairs : IBlockData
     {
         public short DefaultStateID => 5386;
+        public state DefaultState => States[11];
         public float Hardness => 0.8f;
         public float ExplosionResistance => 0.8f;
         public bool IsTransparent => false;

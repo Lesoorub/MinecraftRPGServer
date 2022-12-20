@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class sea_lantern : IBlockData
     {
         public short DefaultStateID => 8112;
+        public state DefaultState => States[0];
         public float Hardness => 0.3f;
         public float ExplosionResistance => 0.3f;
         public bool IsTransparent => false;

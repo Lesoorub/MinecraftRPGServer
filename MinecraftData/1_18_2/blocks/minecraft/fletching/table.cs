@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class fletching_table : IBlockData
     {
         public short DefaultStateID => 15070;
+        public state DefaultState => States[0];
         public float Hardness => 2.5f;
         public float ExplosionResistance => 2.5f;
         public bool IsTransparent => false;

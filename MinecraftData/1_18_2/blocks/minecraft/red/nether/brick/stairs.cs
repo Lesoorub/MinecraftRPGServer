@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class red_nether_brick_stairs : IBlockData
     {
         public short DefaultStateID => 10810;
+        public state DefaultState => States[11];
         public float Hardness => 2f;
         public float ExplosionResistance => 6f;
         public bool IsTransparent => false;

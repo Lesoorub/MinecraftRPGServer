@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class stripped_jungle_log : IBlockData
     {
         public short DefaultStateID => 101;
+        public state DefaultState => States[1];
         public float Hardness => 2f;
         public float ExplosionResistance => 2f;
         public bool IsTransparent => false;

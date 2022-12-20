@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class magenta_carpet : IBlockData
     {
         public short DefaultStateID => 8118;
+        public state DefaultState => States[0];
         public float Hardness => 0.1f;
         public float ExplosionResistance => 0.1f;
         public bool IsTransparent => false;

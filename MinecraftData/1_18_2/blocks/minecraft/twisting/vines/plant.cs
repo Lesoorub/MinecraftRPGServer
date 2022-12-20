@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class twisting_vines_plant : IBlockData
     {
         public short DefaultStateID => 15297;
+        public state DefaultState => States[0];
         public float Hardness => 0f;
         public float ExplosionResistance => 0f;
         public bool IsTransparent => true;

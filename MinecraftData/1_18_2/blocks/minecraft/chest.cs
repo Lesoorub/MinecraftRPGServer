@@ -5,6 +5,7 @@ namespace MinecraftData._1_18_2.blocks.minecraft
     public class chest : IBlockData
     {
         public short DefaultStateID => 2091;
+        public state DefaultState => States[1];
         public float Hardness => 2.5f;
         public float ExplosionResistance => 2.5f;
         public bool IsTransparent => false;
