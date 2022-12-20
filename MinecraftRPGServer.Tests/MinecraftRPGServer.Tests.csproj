@@ -45,6 +45,10 @@
     <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\MSTest.TestFramework.2.2.7\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="MinecraftData, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\MinecraftData\src\bin\Release\MinecraftData.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -84,10 +88,6 @@
     <ProjectReference Include="..\MineSocket.NET\MineSocket.NET\MineSocket.NET.csproj">
       <Project>{7a7b12b6-1122-4238-a5c3-5d4c08d8a2e9}</Project>
       <Name>MineSocket.NET</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MinecraftData\MinecraftData.csproj">
-      <Project>{d6cf6dd8-ca83-4709-8f64-0e2048ff3dfc}</Project>
-      <Name>MinecraftData</Name>
     </ProjectReference>
     <ProjectReference Include="..\MinecraftRPGServer\MinecraftRPGServer.csproj">
       <Project>{7d271b0c-0b8e-43de-8e07-227f48378cce}</Project>

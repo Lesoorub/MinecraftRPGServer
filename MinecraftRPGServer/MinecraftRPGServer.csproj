@@ -91,6 +91,9 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
+    <Reference Include="MinecraftData">
+      <HintPath>..\..\MinecraftData\src\bin\Release\MinecraftData.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -531,10 +534,6 @@
     <ProjectReference Include="..\DebugArrayTools\DebugArrayTools.csproj">
       <Project>{4ef61a5a-3d81-45b0-889d-e815f56d3306}</Project>
       <Name>DebugArrayTools</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MinecraftData\MinecraftData.csproj">
-      <Project>{d6cf6dd8-ca83-4709-8f64-0e2048ff3dfc}</Project>
-      <Name>MinecraftData</Name>
     </ProjectReference>
     <ProjectReference Include="..\MinecraftLightEngine\MinecraftLightEngine.csproj">
       <Project>{30b9731c-6feb-43c4-a1a7-0904bdbbd551}</Project>

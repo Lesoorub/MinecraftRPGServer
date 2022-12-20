@@ -61,14 +61,6 @@ public abstract class World : ICollisionProvider, ILightWorld
 
     public bool IsLightTransparent(int ax, short ay, int az)
     {
-        var block = GetBlock(ax, ay, az);
-        var data = block.iBlockData;
-        return data.IsTransparent;
-        //GlobalPalette.GetBlockData(GlobalPalette.GetNameID(block.StateID));
-        if (block == DefaultBlockState.air) return true;
-        if (block == DefaultBlockState.dead_bush) return true;
-        if (block == DefaultBlockState.grass) return true;
-        if (block == DefaultBlockState.fern) return true;
-        return false;
+        return GetBlock(ax, ay, az).iBlockData.IsTransparent;
     }
 }
