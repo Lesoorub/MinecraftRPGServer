@@ -23,14 +23,6 @@ namespace MinecraftRPGServer
         //public static extern int Sum(int a, int b);
         static void Main(string[] args)
         {
-            MinecraftData._1_18_2.CodeGenerators.BlocksGenerator.ConvertRawDataBlockFormatToBlockFormat(
-                inJsonPath: @"D:\minecraft\blocks.json",
-                outputJsonPath: @"D:\minecraft\blocksData.json");
-            MinecraftData._1_18_2.CodeGenerators.BlocksGenerator.GenerateCode(
-                jsonInPath: @"D:\minecraft\blocksData.json",
-                outputCodeDir: @"D:\minecraft\blocks");
-            return;
-
             var server = new RPGServer(StartUpSettings.Parse(args));
             server.Start();
             while (server.isStarted)

@@ -29,7 +29,6 @@ C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftRPGServer.Tests\bin\D
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftRPGServer.Tests\bin\Debug\System.Buffers.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftRPGServer.Tests\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftRPGServer.Tests\bin\Debug\MineSocket.NET.pdb
-C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftRPGServer.Tests\bin\Debug\MinecraftData.pdb
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftRPGServer.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.xml
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftRPGServer.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.xml
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\MinecraftRPGServer.Tests\bin\Debug\Newtonsoft.Json.xml

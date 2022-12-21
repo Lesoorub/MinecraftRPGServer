@@ -1,6 +1,4 @@
 ﻿using MinecraftLightEngine;
-using System.Collections.Generic;
-using System.Linq;
 public abstract class World : ICollisionProvider, ILightWorld
 {
     public string publicName; 
@@ -54,13 +52,11 @@ public abstract class World : ICollisionProvider, ILightWorld
 
     public byte GetBlockLightPower(int ax, short ay, int az)
     {
-        if (GetBlock(ax, ay, az) == DefaultBlockState.dead_bush)
-            return 15;
-        return 0;
+        return GetBlock(ax, ay, az).DefaultState.Luminance;
     }
 
     public bool IsLightTransparent(int ax, short ay, int az)
     {
-        return GetBlock(ax, ay, az).iBlockData.IsTransparent;
+        return GetBlock(ax, ay, az).IsTransparent;
     }
 }

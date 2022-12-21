@@ -35,7 +35,6 @@ public sealed partial class RPGServer : MineServer.MineServer
                 if (PluginManager.plugins.Count > 0)
                     PluginManager.OnPreInit(this);
             } },
-            { "Load custom blocks by", () => BlockAttribute.Init() },
             { "Load custom items by", () => Inventory.Item.InitItems() },
             { "Load protocolPackets by", () => LoadPackets() },
             { "Load worlds by", () => LoadWorlds() },

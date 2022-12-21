@@ -126,7 +126,7 @@ public class WorldInteractController : IModule
 
         //tool impact
         float toolMultiplier = ToolMath.getToolSpeed(tool);
-        float blockHardness = breakingblockstate.hardness;
+        float blockHardness = breakingblockstate.Hardness;
         if (blockHardness < 0) return -1;
         bool canHarvest = ToolMath.canHarvest(tool, breakingBlock);
         bool isBestTool = ToolMath.isSpecificTool(ToolMath.ToolType.none, breakingBlock);
