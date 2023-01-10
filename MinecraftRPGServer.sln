@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBT", "NBT\NBT.csproj", "{A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBT.Tests", "NBT.Tests\NBT.Tests.csproj", "{EA03F115-24CF-4518-A264-5B878CECC183}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VectorMath", "..\VectorMath\VectorMath.csproj", "{30134B25-1CF1-4DC7-8397-8C289BAA6026}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -139,6 +141,18 @@ Global
 		{EA03F115-24CF-4518-A264-5B878CECC183}.Release|x64.Build.0 = Release|Any CPU
 		{EA03F115-24CF-4518-A264-5B878CECC183}.Release|x86.ActiveCfg = Release|Any CPU
 		{EA03F115-24CF-4518-A264-5B878CECC183}.Release|x86.Build.0 = Release|Any CPU
+		{30134B25-1CF1-4DC7-8397-8C289BAA6026}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30134B25-1CF1-4DC7-8397-8C289BAA6026}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30134B25-1CF1-4DC7-8397-8C289BAA6026}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{30134B25-1CF1-4DC7-8397-8C289BAA6026}.Debug|x64.Build.0 = Debug|Any CPU
+		{30134B25-1CF1-4DC7-8397-8C289BAA6026}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{30134B25-1CF1-4DC7-8397-8C289BAA6026}.Debug|x86.Build.0 = Debug|Any CPU
+		{30134B25-1CF1-4DC7-8397-8C289BAA6026}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30134B25-1CF1-4DC7-8397-8C289BAA6026}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30134B25-1CF1-4DC7-8397-8C289BAA6026}.Release|x64.ActiveCfg = Release|Any CPU
+		{30134B25-1CF1-4DC7-8397-8C289BAA6026}.Release|x64.Build.0 = Release|Any CPU
+		{30134B25-1CF1-4DC7-8397-8C289BAA6026}.Release|x86.ActiveCfg = Release|Any CPU
+		{30134B25-1CF1-4DC7-8397-8C289BAA6026}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

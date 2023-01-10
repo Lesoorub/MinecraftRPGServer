@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using MineServer;
-using Packets.Play;
+using MinecraftRPGServer.core.SubSystems.Physics;
 
 public class Player : PlayerProtocol, IDisposable
 {
@@ -48,6 +48,20 @@ public class Player : PlayerProtocol, IDisposable
     public void PlayerUpdate()
     {
         keepAlive.Tick();
+
+        //RaycastEntityHit[] hits = new RaycastEntityHit[5];
+        //int hits_count;
+
+        //if ((hits_count = Raycast.AllEntitites(world, EyePosition, ForwardDir, 10, ref hits)) != 0)
+        //{
+        //    for (int k = 0; k < hits_count; k++)
+        //    {
+        //        var hit = hits[k];
+        //        if (hit.Entity.EntityID == EntityID)
+        //            continue;
+        //        //EchoIntoChatFromServer($"ID={hit.Entity.ID}, position={hit.Entity.Position}, distance={hit.distance}, point={hit.point}");
+        //    }
+        //}
 
         if (isInit)
             PlayerTick();

@@ -122,15 +122,7 @@ public class AnvilWorld : World
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override BlockState GetBlock(Position location) => 
         GetBlock(location.x, (short)location.y, location.z);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void GetChunkSectionFromCoords(
-        int x, int y, int z, 
-        out int csx, out int csy, out int csz)
-    {
-        csx = x >> 4;
-        csy = y >> 4;
-        csz = z >> 4;
-    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool GetChunkSection(int csx, int csy, int csz, out Chunk chunk, out ChunkSection section)
     {

@@ -28,7 +28,7 @@ public abstract class Entity
     /// Entity ID, minecraft:player, minecraft:armor_stand and e.t.c
     /// </summary>
     public virtual string ID { get; }
-    public v2i ChunkPos => new v2i((int)position.x >> 4, (int)position.z >> 4);
+    public v2i ChunkPos => new v2i(World.PosToChunk1D(position.x), World.PosToChunk1D(position.z));
     public v3i BlockPos => new v3i((int)position.x, (int)position.y, (int)position.z);
     protected v3f position = new v3f(0, 64, 0);
     public virtual v3f Position 

@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Collision;
+using MinecraftRPGServer.core.SubSystems.Physics;
 
 namespace Entities
 {

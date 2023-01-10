@@ -108,6 +108,10 @@ public class MCA
             }
         }
     }
+    public void SaveChunks2()
+    {
+
+    }
     public byte[] ToByteArray()
     {
         return FastByteArrayExtensions.Combine(location_table_raw, timestamp_table_raw, chunks_raw);
@@ -174,7 +178,13 @@ public class MCA
             return false;
         return true;
     }
-    int GetChunkIndex(int rx, int rz) => ((rx % 32) + (rz % 32) * 32) * 4;
+    int GetChunkIndex(int rx, int rz)
+    {
+        const int chunkSizeInBytes = 4;
+        const int regionSizeX = 32;
+        const int regionSizeY = 32;
+        return ((rx % regionSizeX) + (rz % regionSizeY) * regionSizeX) * chunkSizeInBytes;
+    }
     int GetChunkPages(int bytes_length) => (int)Math.Ceiling((float)bytes_length / 4096);
     byte[] CompressLoadedChunk(v2i cpos, out int pages)
     {
@@ -199,5 +209,4 @@ public class MCA
         pages = GetChunkPages(bytes.Length);
         return bytes;
     }
-
 }
