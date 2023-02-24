@@ -11,7 +11,7 @@
         {
             this.item = item;
             this.allowedItems = allowed;
-            this.blacklistItems = new string[] {};
+            this.blacklistItems = new string[] { };
             readOnly = false;
         }
         public IndexedItem(Item item, string[] allowed, string[] blacklist)

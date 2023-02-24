@@ -1,5 +1,4 @@
-﻿using System.Linq;
-namespace Inventory
+﻿namespace Inventory
 {
     public sealed class PlayerInventoryWindow : AbstractWindow
     {

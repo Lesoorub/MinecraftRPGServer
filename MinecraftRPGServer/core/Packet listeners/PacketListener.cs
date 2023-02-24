@@ -1,5 +1,5 @@
-﻿using MineServer;
-using System;
+﻿using System;
+using MineServer;
 
 public class PacketListener : IPacketListener
 {

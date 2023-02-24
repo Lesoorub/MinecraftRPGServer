@@ -1,17 +1,12 @@
-﻿using MineServer;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
+using MineServer;
+using Org.BouncyCastle.OpenSsl;
+using Org.BouncyCastle.Security;
 using Packets.Login;
 using Packets.Play;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
-using Org.BouncyCastle.Security;
-using System.IO;
-using Org.BouncyCastle.OpenSsl;
-using System.Net.Sockets;
 
 namespace Authentication
 {
@@ -81,7 +76,7 @@ namespace Authentication
                     DimensionsNames = new string[] { "minecraft:overworld" },
                     DimensionCodec = SupportedProtocol.allprotocols[client.protocolVersion].DimensionCodec,
                     Dimension = SupportedProtocol.allprotocols[client.protocolVersion].Dimension,
-                    DimensionName = player.world.publicName,
+                    DimensionName = player.world.PublicName,
                     HashedSeed = 0,
                     MaxPlayers = server.maxPlayers,
                     ViewDistance = server.config.world.MaxViewDistance,

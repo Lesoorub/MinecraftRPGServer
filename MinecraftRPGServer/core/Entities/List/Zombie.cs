@@ -10,7 +10,7 @@ namespace Entities
         public override int EntityType => 107;
         public override EntityMetadata meta { get; set; } = new ZombieMetadata();
         public override Sound HurtSound => new Sound(SoundID.entity_zombie_hurt, Categories.PLAYERS);
-        public Zombie(World world) : base(world) 
+        public Zombie(World world) : base(world)
         {
             Health = MaxHealth = 40;
 
@@ -22,13 +22,13 @@ namespace Entities
             int tickmod = 10;
             if (tick % tickmod != 0) return;//Every 10 ticks (0.5 seconds)
             int maxDistance = 32;
-            var player = world.entities.GetEntitiesInCircle(position, maxDistance)
+            var player = world.EntityWorld.GetEntitiesInCircle(position, maxDistance)
                 .Where(x => x.ID.Equals(Player.NameID)).FirstOrDefault() as Player;
             if (player == null) return;
 
 
-            if ((player.Position.x - Position.x) + 
-                (player.Position.y - Position.y) + 
+            if ((player.Position.x - Position.x) +
+                (player.Position.y - Position.y) +
                 (player.Position.z - Position.z) > maxDistance) return;
             var pf = new SimplePathfinding(player.world, maxDistance, BoxCollider, false, player);
             if (pf.TryGetPath(Position, player.Position, out var path))

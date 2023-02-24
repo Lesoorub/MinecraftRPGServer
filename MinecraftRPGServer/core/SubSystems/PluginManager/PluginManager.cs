@@ -1,13 +1,6 @@
-﻿using Microsoft.CSharp;
-using System;
-using System.IO;
-using System.CodeDom;
-using System.CodeDom.Compiler;
+﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace MinecraftRPGServer
 {
@@ -45,7 +38,7 @@ namespace MinecraftRPGServer
             }
         }
 
-        public static void OnPreInit(RPGServer server) 
+        public static void OnPreInit(RPGServer server)
         {
             foreach (var pl in plugins)
                 pl.Value.plugin.OnPreInit(server);

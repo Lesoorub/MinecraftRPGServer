@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Packets.Play;
-using System;
-using System.Runtime.CompilerServices;
-using Inventory;
+using WorldSystemV2;
 
 public class WorldInteractController : IModule
 {
@@ -43,26 +42,10 @@ public class WorldInteractController : IModule
                         if (loadedChunks.Contains(rpos))
                             continue;
                         loadedChunks.Add(rpos);
-                        Chunk chunk = player.world.GetChunk(rpos);
+                        IChunk chunk = player.world.GetChunk(rpos.x, rpos.y);
                         if (chunk == null)
                             continue;
-                        //Нам придется каждый раз либо создавать новый пакет,
-                        //либо использовать кешированный
-                        player.network.Send(new ChunkDataAndUpdateLight()
-                        {
-                            ChunkX = chunk.cPos.x,
-                            ChunkZ = chunk.cPos.y,
-                            Heightmaps = chunk.Heightmaps,
-                            Data = chunk.Data,
-                            BlockEntities = chunk.BlockEntities,
-                            TrustEdges = true,
-                            SkyLightMask = chunk.SkyMask,
-                            BlockLightMask = chunk.BlockMask,
-                            EmptySkyLightMask = chunk.EmptySkyMask,
-                            EmptyBlockLightMask = chunk.EmptyBlockMask,
-                            SkyLightArray = chunk.SkyLightArrays,
-                            BlockLightArray = chunk.BlockLightArrays
-                        });
+                        player.network.Send(chunk.packet);
                     }
             //Unload chunks
             foreach (var pos in loadedChunks)
@@ -157,20 +140,20 @@ public class WorldInteractController : IModule
                 speedMultiplier += (float)Math.Pow(efficiencyLevel, 2) + 1;
         }
         if (hasteEffect)
-          speedMultiplier *= 0.2f * hasteLevel + 1;
+            speedMultiplier *= 0.2f * hasteLevel + 1;
         if (miningFatigue)
-          speedMultiplier *= (float)Math.Pow(0.3, Math.Min(miningFatigueLevel, 4));
+            speedMultiplier *= (float)Math.Pow(0.3, Math.Min(miningFatigueLevel, 4));
         if (inWater && !hasAquaAffinity)
-          speedMultiplier /= 5f;
+            speedMultiplier /= 5f;
         if (!onGround)
-          speedMultiplier /= 5f;
+            speedMultiplier /= 5f;
         damage = speedMultiplier / blockHardness;
         if (canHarvest)
-          damage /= 30f;
+            damage /= 30f;
         else
-          damage /= 100f;
+            damage /= 100f;
         if (damage > 1)
-          return 0;
+            return 0;
         float ticks = (float)Math.Ceiling(1f / damage);
         Console.WriteLine($"ticks=" + ticks);
         return ticks / 20f;

@@ -1,29 +1,22 @@
 ﻿using System;
-using System.Security.Cryptography;
-using System.Text;
 using System.Collections.Generic;
-using System.Collections.Concurrent;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using NBT;
 using static ChunkSection;
-using Newtonsoft.Json.Linq;
-using System.IO;
-using Newtonsoft.Json;
-using System.Runtime.CompilerServices;
-using System.Buffers.Binary;
 
 public static class ChunkSectionParser
 {
     public static readonly List<string> biomeNames = Enum.GetNames(typeof(BiomeID)).ToList();
 
-    static PalettedContainer default_biomes => 
+    static PalettedContainer default_biomes =>
         new PalettedContainer(
             new List<short>() { (short)BiomeID.the_void },
             null,
             BiomesSizePerSection,
             BiomesThreasholdPerSection,
             GlobalBiomesMaxBitsPerEntry);
-    static PalettedContainer default_blockstates => 
+    static PalettedContainer default_blockstates =>
         new PalettedContainer(
             palette: new List<short>() { (short)DefaultBlockState.air },
             data: null,
@@ -44,20 +37,25 @@ public static class ChunkSectionParser
         {
             try
             {
-                obj.biomes = new PalettedContainer(
-                    (biomes_tag["palette"] as TAG_List)?.data
+                var palette = (biomes_tag["palette"] as TAG_List)?.data
                     .Select(x => (short)biomeNames.FindIndex(y => y.Equals(((string)x).Replace("minecraft:", ""))))
-                    .ToList(),
-                    (biomes_tag["data"] as TAG_Long_Array)?.data,
+                    .ToList();
+                var data = (biomes_tag["data"] as TAG_Long_Array)?.data;
+
+                obj.biomes = new PalettedContainer(
+                    palette,
+                    data,
                     BiomesSizePerSection,
                     BiomesThreasholdPerSection,
                     GlobalBiomesMaxBitsPerEntry);
+
+                if (obj.biomes.container == null)
+                {
+                    throw new Exception("Невозможные данные");
+                }
             }
             catch (Exception e)
             {
-#if DEBUG
-                throw e;
-#endif
                 obj.biomes = default_biomes;
             }
         }
@@ -71,24 +69,28 @@ public static class ChunkSectionParser
         {
             try
             {
-                obj.block_states = new PalettedContainer(
-                    palette: (block_states_tag["palette"] as TAG_List)?.data
+                var palette = (block_states_tag["palette"] as TAG_List)?.data
                     .Select(x =>
                         StateIDFromTAG(
                             x["Name"] as TAG_String,
                             x["Properties"] as TAG_Compound
                         )
-                    ).ToList(),
-                    data: (block_states_tag["data"] as TAG_Long_Array)?.data,
+                    ).ToList();
+                var data = (block_states_tag["data"] as TAG_Long_Array)?.data;
+                obj.block_states = new PalettedContainer(
+                    palette,
+                    data,
                     size: BlocksSizePerSection,
                     threshold: BlocksThreasholdPerSection,
                     directBitsPerEntry: GlobalBlockStatesMaxBitsPerEntry);
+
+                if (obj.block_states.container == null)
+                {
+                    throw new Exception("Невозможные данные");
+                }
             }
             catch (Exception e)
             {
-#if DEBUG
-                throw e;
-#endif
                 obj.block_states = default_blockstates;
             }
         }

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MineServer;
 using static BossBar;
 public static class BossBarManager
@@ -13,9 +11,9 @@ public static class BossBarManager
         ActionColor color = ActionColor.White,
         DivisionType division = DivisionType.NoDivision,
         FlagsType flags = FlagsType.ShouldDarkenSky) => Create(new List<Player>() { player }, title, health, color, division, flags);
-    public static BossBar Create(List<Player> players, string title, float health, 
-        ActionColor color = ActionColor.White, 
-        DivisionType division = DivisionType.NoDivision, 
+    public static BossBar Create(List<Player> players, string title, float health,
+        ActionColor color = ActionColor.White,
+        DivisionType division = DivisionType.NoDivision,
         FlagsType flags = FlagsType.ShouldDarkenSky)
     {
         var t = new BossBar(title, health, color, division, flags);
@@ -153,9 +151,9 @@ public class BossBar
     public FlagsType Flags { get => flags; set { flags = value; OnFlagsChanged?.Invoke(flags); } }
 
 
-    public delegate void TitleArgs (string title);
+    public delegate void TitleArgs(string title);
     public event TitleArgs OnTitleChanged;
-    public delegate void HealthArgs (float health);
+    public delegate void HealthArgs(float health);
     public event HealthArgs OnHealthChanged;
     public delegate void StyleArgs(ActionColor color, DivisionType division);
     public event StyleArgs OnStyleChanged;

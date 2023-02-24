@@ -1,9 +1,4 @@
 ﻿using MineServer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 [PacketListener(0x0D, State.Play)]
 public class OnInteractEntity : PacketListener
@@ -16,7 +11,7 @@ public class OnInteractEntity : PacketListener
 
         if (pack.Type == Packets.Play.InteractEntity.InteractType.Attack)
         {
-            var target = player.world.entities.GetByEID(pack.EntityID);
+            var target = player.world.EntityWorld.GetByEID(pack.EntityID);
             if (target is LivingEntity livingEntity_target)
                 player.Attack(livingEntity_target);
         }

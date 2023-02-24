@@ -1,6 +1,4 @@
-﻿using MineServer;
-
-public class ItemMetadata : EntityMetadata
+﻿public class ItemMetadata : EntityMetadata
 {
     [Index(8)] public Inventory.Item Item;
 }

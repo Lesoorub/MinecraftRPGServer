@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-
-[ChatCommand]
+﻿[ChatCommand]
 public class PerfomanceCommand : IChatCommand
 {
     public void Register()

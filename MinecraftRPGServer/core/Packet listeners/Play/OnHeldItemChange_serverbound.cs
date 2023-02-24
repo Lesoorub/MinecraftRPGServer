@@ -1,6 +1,6 @@
-﻿using MineServer;
+﻿using System;
+using MineServer;
 using Packets.Play;
-using System;
 
 [PacketListener(0x25, State.Play)]
 public class OnHeldItemChange_serverbound : PacketListener

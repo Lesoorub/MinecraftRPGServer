@@ -1,14 +1,12 @@
-﻿using MinecraftRPGServer.core.SubSystems.Physics;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MinecraftRPGServer.core.SubSystems.Physics;
 
 
 public interface ICollisionProvider
 {
-    bool hasCollision(v3i position);
+    bool HasCollision(v3i position);
 }
 
 public interface IPathfinder
@@ -60,15 +58,15 @@ public class SimplePathfinding : ModifiedAStarAlgoritm, IGetAllowedSteps
         if (!canFly)
         {
             return
-                collisionProvider.hasCollision(position.RoundToInt + v3i.down) &&
-                !collisionProvider.hasCollision(position.RoundToInt) &&
-                !collisionProvider.hasCollision(position.RoundToInt + v3i.up);
+                collisionProvider.HasCollision(position.RoundToInt + v3i.down) &&
+                !collisionProvider.HasCollision(position.RoundToInt) &&
+                !collisionProvider.HasCollision(position.RoundToInt + v3i.up);
         }
         else
         {
             return
-                !collisionProvider.hasCollision(position.RoundToInt) &&
-                !collisionProvider.hasCollision(position.RoundToInt + v3i.up);
+                !collisionProvider.HasCollision(position.RoundToInt) &&
+                !collisionProvider.HasCollision(position.RoundToInt + v3i.up);
         }
 
         if (canFly)
@@ -118,7 +116,7 @@ public class ModifiedAStarAlgoritm : IPathfinder
 
         List<v3i> stack = new List<v3i>(128);
         Dictionary<v3i, DWSpoint> map = new Dictionary<v3i, DWSpoint>(128);//Дискретное рабочее поле (ДРП)
-        
+
         void Add(v3i p)
         {
             stack.Add(p);
@@ -164,7 +162,7 @@ public class ModifiedAStarAlgoritm : IPathfinder
             }
             else
             {
-                var minw = stack.Select(x => map.TryGetValue(x, out var y) ? x : null ).Where(x => x != null).Min(x => map[x].width);
+                var minw = stack.Select(x => map.TryGetValue(x, out var y) ? x : null).Where(x => x != null).Min(x => map[x].width);
                 GetMin(stack.Where(x => map.TryGetValue(x, out var y) && y.width == minw), x => x, round_to, out var min, out var result);
                 stack.Remove(result);
                 return result;

@@ -8,7 +8,7 @@ public class ZombieMetadata : MonsterMetadata
 }
 public class HuskMetadata : ZombieMetadata { }
 public class ZombifiedPiglinMetadata : ZombieMetadata { }
-public class EndermanMetadata : MonsterMetadata 
+public class EndermanMetadata : MonsterMetadata
 {
     [Index(16)] public OptBlockID CarriedBlock = OptBlockID.Absent;
     [Index(17)] public bool isScreaming = false;

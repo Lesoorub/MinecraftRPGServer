@@ -1,6 +1,4 @@
-﻿using System;
-
-public class LoadedEntity<T> where T : Entity
+﻿public class LoadedEntity<T> where T : Entity
 {
     public v2f PreviousRotation;
     public v3f PreviousPosition;

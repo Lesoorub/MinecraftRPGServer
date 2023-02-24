@@ -1,5 +1,4 @@
 ﻿using MineServer;
-using System.Linq;
 using Packets.Play;
 
 [PacketListener(0x1A, State.Play)]

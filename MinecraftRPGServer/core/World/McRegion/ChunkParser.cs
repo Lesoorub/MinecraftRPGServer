@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using NBT;
-using Newtonsoft.Json;
 
 public static class ChunkParser
 {
@@ -76,7 +74,7 @@ public static class ChunkParser
         nbt["sections"] = new TAG_List(
             obj.sections
                 .Select(x => (TAG)ChunkSectionParser.Serialize(x.Value))
-                .ToList(), 
+                .ToList(),
             TAG_Compound._TypeID);
         return nbt;
     }

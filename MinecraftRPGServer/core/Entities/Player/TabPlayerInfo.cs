@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using MineServer;
 using Packets.Play;
 
@@ -64,8 +63,8 @@ public class TabPlayerInfo
             pl.Value.network.Send(new PlayerInfo()
             {
                 Action = PlayerInfo.Player.Add.ActionID,
-                players = new PlayerInfo.Player[] 
-                { 
+                players = new PlayerInfo.Player[]
+                {
                     new PlayerInfo.Player()
                     {
                         uuid = player.PlayerUUID,

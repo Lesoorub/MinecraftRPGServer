@@ -1,8 +1,7 @@
-﻿using MineServer;
-using System;
-using System.Linq;
+﻿using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+using System.Linq;
+using MineServer;
 
 public class PalettedContainer
 {
@@ -47,9 +46,13 @@ public class PalettedContainer
             }
             else//Indirect
             {
-                var bps = (byte)((data.Length * 64) / (size * size * size));
-                var unpacked = UnpackData(size, bps, data);
-                container = new InDirectPalette(palette, unpacked, size);
+                var bpe = (byte)((data.Length * 64) / (size * size * size));
+
+                var unpacked = UnpackData(size, bpe, data);
+                var indir = new InDirectPalette(palette, unpacked, size, data);
+                if (indir.isBroken)
+                    return;
+                container = indir;
             }
         }
     }
@@ -233,7 +236,7 @@ public class PalettedContainer
 
         public byte size;
         public byte BitsPerEntry => (byte)Math.Ceiling(Math.Log(Palette.Count, 2));
-
+        public bool isBroken = false;
         /// <summary>
         /// O(1)
         /// </summary>
@@ -278,17 +281,44 @@ public class PalettedContainer
             Palette = new List<PaletteElement>() { new PaletteElement(0, (short)(size * size * size)) };
             data = new short[size * size * size];
         }
-        public InDirectPalette(List<short> palette, short[] data, byte size)
+        public InDirectPalette(List<short> palette, short[] data, byte size, long[] longs)
         {
             this.size = size;
             PaletteElement[] paletteElements = palette.Select(x => new PaletteElement(x, 0)).ToArray();
             this.data = data;
-            
+
             for (int k = 0; k < data.Length; k++)
+            {
+                if (data[k] < 0 || data[k] >= paletteElements.Length)
+                {
+                    RecoveryData(palette, longs);
+                    return;
+                }
                 paletteElements[data[k]].count++;
-            
+            }
+
             Palette = paletteElements.ToList();
         }
+
+        void RecoveryData(List<short> palette, long[] longs)
+        {
+            PaletteElement[] paletteElements = palette.Select(x => new PaletteElement(x, 0)).ToArray();
+            var bpe = (byte)Math.Ceiling(Math.Log(palette.Count, 2));
+            this.data = UnpackData(size, bpe, longs);
+
+            for (int k = 0; k < data.Length; k++)
+            {
+                if (data[k] < 0 || data[k] >= paletteElements.Length)
+                {
+                    isBroken = true;
+                    return;
+                }
+                paletteElements[data[k]].count++;
+            }
+
+            Palette = paletteElements.ToList();
+        }
+
         public short Get(int rx, int ry, int rz)
         {
             return Palette[data[ry * size * size + rz * size + rx]].value;

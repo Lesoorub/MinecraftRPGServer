@@ -9,7 +9,7 @@ public sealed class EntityAttribute : Attribute
     {
         this.nameid = nameid;
     }
-    public EntityAttribute(string nameid, Type customCmd) 
+    public EntityAttribute(string nameid, Type customCmd)
     {
         this.nameid = nameid;
         this.customCmd = Activator.CreateInstance(customCmd) as CustomCommandNode;

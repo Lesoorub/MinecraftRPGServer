@@ -29,7 +29,7 @@ namespace Inventory.Items
                 1,
                 Radius,
                 36);
-            foreach (var entity in player.world.entities.GetEntitiesInCircle(player.Position, Radius))
+            foreach (var entity in player.world.EntityWorld.GetEntitiesInCircle(player.Position, Radius))
             {
                 if (entity is LivingEntity living &&
                     entity.EntityID != player.EntityID &&

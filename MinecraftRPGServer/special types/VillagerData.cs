@@ -9,8 +9,8 @@ public struct VillagerData : ISerializable, IDeserializable
     }
     public enum Profession : byte
     {
-        none, armored, butcher, cartographer, cleric, 
-        farmer, fisherman, fletcher, leatherworker, librarian, 
+        none, armored, butcher, cartographer, cleric,
+        farmer, fisherman, fletcher, leatherworker, librarian,
         mason, nitwit, shepherd, toolsmith, weaponsmith
     }
 

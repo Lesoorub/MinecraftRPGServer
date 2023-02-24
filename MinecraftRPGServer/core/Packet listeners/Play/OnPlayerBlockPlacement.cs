@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
+using MinecraftData._1_18_2.items.minecraft;
 using MineServer;
 using Packets.Play;
-using MinecraftData._1_18_2.items.minecraft;
 
 [PacketListener(0x2E, State.Play)]
 public class OnPlayerBlockPlacement : PacketListener
@@ -55,7 +55,7 @@ public class OnPlayerBlockPlacement : PacketListener
         if (item == null)//Если предмета в руке нет - игнор
         {
             return;
-        }    
+        }
 
         BlockState state = new BlockState(GlobalPalette.GetBlockData(item.block).DefaultStateID);
         if (state.StateID != 0 && !player.world.SetBlock(player, pos.x, (short)pos.y, pos.z, state))

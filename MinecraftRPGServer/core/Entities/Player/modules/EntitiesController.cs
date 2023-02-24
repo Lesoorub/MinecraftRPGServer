@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using MineServer;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using MineServer;
 using Packets.Play;
 
 public class EntitiesController : IModule
@@ -125,7 +125,7 @@ public class EntitiesController : IModule
     {
         foreach (var EID in EIDs)
         {
-            var entity = player.world.entities.GetByEID(EID);
+            var entity = player.world.EntityWorld.GetByEID(EID);
             if (entity != null)
                 OnEntityDespawn?.Invoke(entity);
         }
@@ -133,7 +133,7 @@ public class EntitiesController : IModule
     }
     public void UnloadEntity(int EID)
     {
-        var entity = player.world.entities.GetByEID(EID);
+        var entity = player.world.EntityWorld.GetByEID(EID);
         if (entity != null)
         {
             OnEntityDespawn?.Invoke(entity);
@@ -151,7 +151,7 @@ public class EntitiesController : IModule
         if (view.entities.Count > 0)
         {
             var unloadSqrDistance = Math.Pow(cfg.entities.MaxDrawEntitiesRange + cfg.entities.MaxDrawEntitiesRangeThreshold, 2);
-            bool f(KeyValuePair<int, LoadedEntity<Entity>> x) => 
+            bool f(KeyValuePair<int, LoadedEntity<Entity>> x) =>
                 x.Value.entity.isDestroyed || //Ентити уничтожено
                 v3f.SqrDistance(x.Value.entity.Position, player.Position) >= unloadSqrDistance; //Ентити дальше радиуса выгрузки
             if (view.entities.Any(x => f(x)))

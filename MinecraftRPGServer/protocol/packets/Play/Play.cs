@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MineServer;
 using NBT;
 
@@ -744,11 +740,11 @@ namespace Packets.Play
         }
         public enum EquipmentSlot : byte
         {
-            MainHand = 0, 
-            OffHand, 
-            Boots, 
-            Leggins, 
-            Chestplate, 
+            MainHand = 0,
+            OffHand,
+            Boots,
+            Leggins,
+            Chestplate,
             Helmet = 5,
             NextPresent = 128
         }

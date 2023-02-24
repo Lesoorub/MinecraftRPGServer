@@ -1,11 +1,5 @@
 ﻿using System;
-using System.IO;
-using System.IO.Compression;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Ionic.Zlib;
-using MineServer;
 
 namespace Compressions
 {
@@ -57,7 +51,7 @@ namespace Compressions
         /// <returns></returns>
         [Obsolete("Use TryCompress")]
         public static byte[] Compress(byte[] uncompressed)
-        {            
+        {
             return ZlibStream.CompressBuffer(uncompressed);
         }
     }

@@ -43,7 +43,7 @@ namespace Inventory
                 abs.button = button;
                 abs.CarriedItem = pinv.CarriedItem.item;
                 abs.window = this;
-                abs.player = player;     
+                abs.player = player;
                 var result = abs.ClickOnSlot(ref item);
                 pinv.CarriedItem.item = abs.CarriedItem;
                 if (pinv.CarriedItem.item != null && pinv.CarriedItem.item.ItemCount == 0)
@@ -52,7 +52,7 @@ namespace Inventory
                 return result;
             }
             //Console.WriteLine($"mode={mode}, button={button}, slot={slot}, GetItem(slot)={(Slot)GetItem(slot)}, CI={(Slot)pinv.CarriedItem.item}");
-            if (GetSlot(slot).readOnly) 
+            if (GetSlot(slot).readOnly)
                 return false;
             if (slot != -1)
             {
@@ -193,7 +193,7 @@ namespace Inventory
                             if (CanPlace(window.GetSlot(slot), CarriedItem))
                             {
                                 Swap(ref item, ref CarriedItem);
-                                return true; 
+                                return true;
                             }
                         }
                         else//CI == null && item != null
@@ -342,7 +342,7 @@ namespace Inventory
                 bool isInventory => slot >= 0 && slot < window.inventory.Length;
                 public override bool ClickOnSlot(ref Item item)
                 {
-                    if (window.GetSlot(slot).readOnly) 
+                    if (window.GetSlot(slot).readOnly)
                         return false;
                     if (window.Type == -1)
                     {

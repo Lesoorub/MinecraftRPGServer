@@ -1,6 +1,6 @@
-﻿using Inventory;
+﻿using System.Runtime.CompilerServices;
+using Inventory;
 using NBT;
-using System.Runtime.CompilerServices;
 
 public class InventoryWindowWatcher : DataWatcher<InventoryWindowWatcher.InventoryArgs>
 {
@@ -46,9 +46,9 @@ public class InventoryWindowWatcher : DataWatcher<InventoryWindowWatcher.Invento
     private bool hasItemChanged(Item real, Item dumpItem)
     {
         if (real == null && dumpItem == null) return false;
-        if (real != null && dumpItem != null) return 
-            real.ItemID != dumpItem.ItemID || 
-            real.ItemCount != dumpItem.ItemCount || 
+        if (real != null && dumpItem != null) return
+            real.ItemID != dumpItem.ItemID ||
+            real.ItemCount != dumpItem.ItemCount ||
             !NBTTag.Equals(real.NBT, dumpItem.NBT);
         return true;
     }

@@ -61,7 +61,7 @@ public class Hologram
     }
     public static void Destroy(int ID)
     {
-        if (list.TryGetValue(ID, out var h)) 
+        if (list.TryGetValue(ID, out var h))
             h.Destroy();
     }
     public interface IHologram
@@ -77,8 +77,8 @@ public class Hologram
         protected override bool HasHealthHolo => false;
         public bool visible = true;
         public override float Health { get => 0; set { } }
-        public bool Visible 
-        { 
+        public bool Visible
+        {
             get => visible;
             set
             {
@@ -86,12 +86,12 @@ public class Hologram
                 meta["isCustomNameVisible"] = visible;
                 ForceUpdateMetadata();
             }
-        } 
+        }
 
         public HologramEntity(World world) : base(world)
         {
             meta.SetFlag("entityStatus", (byte)EntityMetadata.EntityStatus.IsInvisible);
-            meta.SetFlag("armorStandStatus", (byte) ArmorStandMetadata.ArmorStandStatus.IsMarker);
+            meta.SetFlag("armorStandStatus", (byte)ArmorStandMetadata.ArmorStandStatus.IsMarker);
         }
 
         public void SetText(string text)
@@ -104,7 +104,7 @@ public class Hologram
     {
         public int EntityID { get; set; }
 
-        public v3f position = v3f.zero; 
+        public v3f position = v3f.zero;
         public bool visible = true;
         public bool Visible
         {
@@ -123,7 +123,7 @@ public class Hologram
                 });
             }
         }
-        public v3f Position 
+        public v3f Position
         {
             get => position;
             set => SetPosition(value);

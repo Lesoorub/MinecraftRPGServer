@@ -1,12 +1,11 @@
 ﻿using System;
-using Newtonsoft.Json;
-using System.Linq;
 using System.IO;
 using Inventory;
+using Newtonsoft.Json;
 
 public class PlayerData
 {
-    public const string players_save_path = "World/Players";
+    public const string players_save_path = "playerdata";
     public static string save_path(Guid uuid) => Path.Combine(players_save_path, uuid.ToString() + ".json");
     public string username;
     public string loginname;
@@ -38,7 +37,7 @@ public class PlayerData
         loginname = name;
         WorldName = server.spawnWorldName;
         position = server.spawnWorld.SpawnPoint;
-        rotation = new v2f(server.spawnWorld.SpawnRotation, 0);
+        rotation = server.spawnWorld.SpawnRotation;
         Health = Player.baseMaxHealth;
     }
     /// <summary>
@@ -51,7 +50,7 @@ public class PlayerData
     public static PlayerData Get(Guid uuid, string name, RPGServer server)
     {
         string path = save_path(uuid);
-        new DirectoryInfo(players_save_path).Create();
+        new DirectoryInfo(Path.Combine(server.config.world.WorldPath, players_save_path)).Create();
         if (File.Exists(path))
         {
             var text = File.ReadAllText(path);
@@ -81,7 +80,7 @@ public class PlayerData
     /// <param name="player"></param>
     public void Save(Player player)
     {
-        WorldName = player.world.publicName;
+        WorldName = player.world.PublicName;
         position = player.Position;
         rotation = player.Rotation;
         inventory = new PressedInventory(player.inventory);

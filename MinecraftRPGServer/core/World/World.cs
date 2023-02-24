@@ -1,82 +1,44 @@
-﻿using MinecraftLightEngine;
-using System.Runtime.CompilerServices;
+﻿using WorldSystemV2;
 
-public abstract class World : ICollisionProvider, ILightWorld
+public abstract class World : IWorld, ICollisionProvider//, ILightWorld
 {
-    public string publicName; 
-    public v3f SpawnPoint = new v3f(0, 64, 0);
-    public float SpawnRotation;
-    public EntityWorld entities = new EntityWorld();
+    public const int MinSection = -4;
+    public const int MaxSection = 19;
+    public const int MinLightSection = -5;
+    public const int MaxLughtSection = 20;
 
-    public virtual Chunk GetChunk(v2i cpos) => throw new System.NotImplementedException();
-    public virtual BlockState GetBlock(v3i location) => throw new System.NotImplementedException();
-    public virtual BlockState GetBlock(Position location) => throw new System.NotImplementedException();
-    public virtual BlockState GetBlock(int x, short y, int z) => throw new System.NotImplementedException();
-    public virtual bool SetBlock(Player player, int x, short y, int z, BlockState blockId) => throw new System.NotImplementedException();
+    public virtual string Path { get; set; }
+    public virtual string PublicName { get; set; }
+    public virtual v3f SpawnPoint { get; set; } = new v3f(0, 64, 0);
+    public virtual v2f SpawnRotation { get; set; } = new v2f(0, 0);
+    public virtual IChunkGenerator Generator { get; set; }
+
+    public virtual WorldInfo Info { get; set; }
+
+    public virtual EntityWorld EntityWorld { get; set; } = new EntityWorld();
+
+    public virtual BlockState GetBlock(v3i location) => 
+        throw new System.NotImplementedException();
+    public virtual BlockState GetBlock(Position location) => 
+        throw new System.NotImplementedException();
+    public virtual BlockState GetBlock(int x, short y, int z) => 
+        throw new System.NotImplementedException();
+    public virtual bool SetBlock(Player player, int x, short y, int z, BlockState blockId) => 
+        throw new System.NotImplementedException();
     public virtual void Update() { }
+    public virtual void PrepairingToSpawnWorld(int radius) { }
 
-    public bool hasCollision(v3i position)
+    public virtual bool HasCollision(v3i position)
     {
         return GetBlock(position).haveCollision;
     }
 
-    public byte[] GetSkyLightData(int chunk_x, int section_y, int chunk_z)
-    {
-        var cpos = new v2i(chunk_x >> 4, chunk_z >> 4);
-        var chunk = GetChunk(cpos);
-        if (chunk == null) return null;
-        return chunk.GetSkyLightData(section_y);
-    }
+    public virtual bool HasChunk(int x, int y) =>
+        throw new System.NotImplementedException();
 
-    public byte[] GetBlockLightData(int chunk_x, int section_y, int chunk_z)
-    {
-        var cpos = new v2i(chunk_x >> 4, chunk_z >> 4);
-        var chunk = GetChunk(cpos);
-        if (chunk == null) return null;
-        return chunk.GetBlockLightData(section_y);
-    }
+    public virtual IChunk GetChunk(int x, int y) =>
+        throw new System.NotImplementedException();
 
-    public void SetSkyLightData(int chunk_x, int section_y, int chunk_z, byte[] data)
-    {
-        var cpos = new v2i(chunk_x >> 4, chunk_z >> 4);
-        var chunk = GetChunk(cpos);
-        if (chunk == null) return;
-        chunk.SetSkyLightData(section_y, data);
-    }
-
-    public void SetBlockLightData(int chunk_x, int section_y, int chunk_z, byte[] data)
-    {
-        var cpos = new v2i(chunk_x >> 4, chunk_z >> 4);
-        var chunk = GetChunk(cpos);
-        if (chunk == null) return;
-        chunk.SetBlockLightData(section_y, data);
-    }
-
-    public byte GetBlockLightPower(int ax, short ay, int az)
-    {
-        return GetBlock(ax, ay, az).DefaultState.Luminance;
-    }
-
-    public bool IsLightTransparent(int ax, short ay, int az)
-    {
-        return GetBlock(ax, ay, az).IsTransparent;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int PosToChunk1D(float x) => x < 0 ? (int)(x - 1) >> 4 : (int)x >> 4;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void GetChunkSectionFromCoords(
-        int x, int y, int z,
-        out int csx, out int csy, out int csz)
-    {
-        csx = PosToChunk1D(x);
-        csy = PosToChunk1D(y);
-        csz = PosToChunk1D(z);
-    }
-
-    public static v2i GetChunkFromCoords(v3f position)
-    {
-        return new v2i(PosToChunk1D(position.x), PosToChunk1D(position.z));
-    }
+    public virtual void Save(string path) =>
+        throw new System.NotImplementedException();
 }

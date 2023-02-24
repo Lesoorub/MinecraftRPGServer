@@ -1,8 +1,6 @@
-﻿using MineServer;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
+using MineServer;
 
 [PacketListener(0x03, State.Play)]
 public sealed class OnChatMessage : PacketListener
@@ -34,7 +32,7 @@ public sealed class OnChatMessage : PacketListener
             if (message.Length > cfg.maxMessageSize)
                 return;
             foreach (var pl in server.loginnedPlayers)
-                pl.Value.Echo(player.PlayerUUID, Packets.Play.ChatMessage_clientbound.PositionType.chat, 
+                pl.Value.Echo(player.PlayerUUID, Packets.Play.ChatMessage_clientbound.PositionType.chat,
                     Chat.ColoredText(message));
         }
         else//Local message

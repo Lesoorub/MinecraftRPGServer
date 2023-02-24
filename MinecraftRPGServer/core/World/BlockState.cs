@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using MinecraftData._1_18_2;
 using MinecraftData._1_18_2.blocks.minecraft;
 
 public struct BlockState : IBlockData

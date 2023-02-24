@@ -1,9 +1,4 @@
 ﻿using MineServer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 [PacketListener(0x08, State.Play)]
 public class OnClickWindow : PacketListener
@@ -20,7 +15,7 @@ public class OnClickWindow : PacketListener
         }
         else
         {
-            if (player.SecondWindow != null && 
+            if (player.SecondWindow != null &&
                 clickWindow.WindowID == player.SecondWindow.WindowID)
             {
                 if (!player.SecondWindow.ClickWindow(player, clickWindow))

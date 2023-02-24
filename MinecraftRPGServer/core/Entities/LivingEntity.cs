@@ -1,10 +1,9 @@
-﻿using MineServer;
-using Packets.Play;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Inventory.Items;
 using Inventory;
+using MineServer;
+using Packets.Play;
 
 public class LivingEntity : Entity
 {
@@ -12,9 +11,9 @@ public class LivingEntity : Entity
     private float maxHealth = 20;
     private float health = 20;
     public virtual float HeadYaw { get; set; }
-    public virtual float MaxHealth 
+    public virtual float MaxHealth
     {
-        get => maxHealth; 
+        get => maxHealth;
         set
         {
             maxHealth = value;
@@ -27,7 +26,7 @@ public class LivingEntity : Entity
         }
     }
     public virtual float RegenerationPerSecond { get; set; } = 1;
-    public virtual float Health 
+    public virtual float Health
     {
         get => health;
         set
@@ -57,7 +56,7 @@ public class LivingEntity : Entity
 
     public delegate void HealthChangedArgs(LivingEntity sender, float newHealth, float oldHealth);
     public event HealthChangedArgs OnHealthChanged;
-    public LivingEntity(World world) : base(world) 
+    public LivingEntity(World world) : base(world)
     {
         if (HasHealthHolo)
         {
@@ -117,7 +116,7 @@ public class LivingEntity : Entity
     }
     protected virtual void TakeDamage()
     {
-        if (HealthHolo == null && 
+        if (HealthHolo == null &&
             health != maxHealth)
         {
             HealthHolo = Hologram.Create(world, position + v3f.up * BoxCollider.y + HoloOffset, HoloText);

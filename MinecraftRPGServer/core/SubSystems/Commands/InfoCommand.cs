@@ -73,7 +73,7 @@ public class InfoCommand : IChatCommand
         if (args.Length == 0) return;
         if (args[0].Equals("world"))
         {
-            player.EchoIntoChatFromServer($"World: {player.world.publicName}");
+            player.EchoIntoChatFromServer($"World: {player.world.PublicName}");
             return;
         }
 
@@ -85,7 +85,7 @@ public class InfoCommand : IChatCommand
         {
             if (args.Length == 1)
             {
-                player.EchoIntoChatFromServer($"&fFound {player.world.entities.entities.Count} entities in current world");
+                player.EchoIntoChatFromServer($"&fFound {player.world.EntityWorld.entities.Count} entities in current world");
                 return;
             }
             switch (args[1])
@@ -95,9 +95,9 @@ public class InfoCommand : IChatCommand
                         var cpos = player.ChunkPos;
                         player.EchoIntoChatFromServer(
                             $"&fFor chunk [{cpos.x},{cpos.y}]\n" +
-                            (player.world.entities.chunks.TryGetValue(cpos, out var dict) 
-                            ? $"  {dict.Count} entities: \n" + 
-                              string.Join("\n", dict.Values.Select(x => "   " + EntityFormat(x))) 
+                            (player.world.EntityWorld.chunks.TryGetValue(cpos, out var dict)
+                            ? $"  {dict.Count} entities: \n" +
+                              string.Join("\n", dict.Values.Select(x => "   " + EntityFormat(x)))
                             : "Empty") +
                             $""
                             );
@@ -107,7 +107,7 @@ public class InfoCommand : IChatCommand
                     {
                         if (args.Length >= 3 && float.TryParse(args[2], out var radius))
                         {
-                            var ents = player.world.entities.GetEntitiesInCircle(player.Position, radius);
+                            var ents = player.world.EntityWorld.GetEntitiesInCircle(player.Position, radius);
                             player.EchoIntoChatFromServer(
                                 $"&6In radius found {ents.Count} entities:\n" +
                                 string.Join("\n", ents.Select(x => "   " + EntityFormat(x))));
@@ -118,7 +118,7 @@ public class InfoCommand : IChatCommand
                     {
                         if (args.Length >= 3 && int.TryParse(args[2], out var eid))
                         {
-                            var ent = player.world.entities.GetByEID(eid);
+                            var ent = player.world.EntityWorld.GetByEID(eid);
                             if (ent != null)
                                 player.EchoIntoChatFromServer(EntityFormat(ent));
                             else

@@ -1,7 +1,7 @@
-﻿using MineServer;
-using NBT;
-using System;
+﻿using System;
 using System.Linq;
+using MineServer;
+using NBT;
 public struct Position : ISerializable, IDeserializable
 {
     public int x, y, z;

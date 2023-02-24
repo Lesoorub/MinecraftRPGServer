@@ -1,5 +1,4 @@
-﻿using MineServer;
-using System;
+﻿using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,13 +26,13 @@ public class ChunkSection
     public const byte BiomesThreasholdPerSection = 4;
     public const byte BlocksThreasholdPerSection = 9;
 
-    public ChunkSection() 
-    { 
+    public ChunkSection()
+    {
     }
     public ChunkSection(int x, int z)
     {
         this.X = x;
-        this.Z = z; 
+        this.Z = z;
         biomes = new PalettedContainer(
             palette: new List<short>() { (short)BiomeID.the_void },
             data: null,
@@ -52,7 +51,7 @@ public class ChunkSection
     {
         return (short)block_states.GetPalette().Sum(x => x.value != (short)DefaultBlockState.air ? x.count : 0);
     }
-    public byte[] GetBytes() 
+    public byte[] GetBytes()
     {
         //var writer = new ArrayWriter();
         //writer.Write(BlockCount);

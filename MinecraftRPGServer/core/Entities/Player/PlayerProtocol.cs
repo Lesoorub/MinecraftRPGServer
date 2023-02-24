@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using MineServer;
-using Packets.Play;
-using System;
 using System.Threading.Tasks;
 using Inventory;
+using MineServer;
+using Packets.Play;
 
 public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
 {
@@ -67,8 +67,8 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     public v3f ForwardDir => v3f.FromRotationInvertX(rotation);
     public v3f EyePosition => Position + new v3f(0, IsSneaking ? 1.5f : 1.62f, 0);
     private byte selectedSlot = 0;
-    public byte SelectedSlot 
-    { 
+    public byte SelectedSlot
+    {
         get => selectedSlot;
         set
         {
@@ -338,7 +338,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     /// </summary>
     public void SendArrayHitSound() =>
         SendChangeGameState(ChangeGameState.ReasonType.ArrowHitPlayer, 0);
-    public void SendChangeGamemode(GamemodeType newgm) => 
+    public void SendChangeGamemode(GamemodeType newgm) =>
         SendChangeGameState(ChangeGameState.ReasonType.ChangeGamemode, (byte)newgm);
     public void SendChangeGameState(ChangeGameState.ReasonType reason, float value)
     {
@@ -396,11 +396,11 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
             PickupItemCount = count
         });
     }
-    
+
     protected void PlayerTick()
     {
         entitiesController.Tick();
-        foreach(var item in GetEntityInRadius(Position, PlayerSettings.ItemPickUpRadius)
+        foreach (var item in GetEntityInRadius(Position, PlayerSettings.ItemPickUpRadius)
             .Select(x => x as Entities.Item)
             .Where(x => x != null))
         {
@@ -474,7 +474,7 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         foreach (var loaded_ent_pair in view.players)
             if (Send(loaded_ent_pair.Value.PreviousMetadataTime, loaded_ent_pair.Value.entity.network))
                 loaded_ent_pair.Value.PreviousMetadataTime = now;
-    } 
+    }
 
     public void PlayAnimation(EntityAnimation_clientbound.AnimationType animation)
     {

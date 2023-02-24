@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
 
@@ -79,7 +79,7 @@ namespace Inventory.Items
         public bool SetCooldown(Player player, int ticks)
         {
             var now = player.rpgserver.currentTick;
-            if (player.Cooldowns.TryGetValue(ItemID, out var cooldown) && cooldown > now) 
+            if (player.Cooldowns.TryGetValue(ItemID, out var cooldown) && cooldown > now)
                 return false;
             player.Cooldowns[ItemID] = now + ticks;
             player.SendCooldown(ItemID, ticks);

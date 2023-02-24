@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Linq;
-using System.Threading;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
-using MineServer;
+using System.Threading;
 using System.Threading.Tasks;
 using MinecraftRPGServer;
-using System.Collections.Generic;
 using MinecraftRPGServer.core.Configs;
+using MineServer;
+using WorldSystemV2;
 
 public sealed partial class RPGServer : MineServer.MineServer
 {
@@ -15,6 +16,7 @@ public sealed partial class RPGServer : MineServer.MineServer
 
     public TabPlayerInfo tab;
     public Logger logger = new Logger();
+    public Dispatcher dispatcher = new Dispatcher();
     public RPGServer(StartUpSettings settings) : base(settings.port)
     {
         var partTimer = new System.Diagnostics.Stopwatch();
@@ -29,8 +31,8 @@ public sealed partial class RPGServer : MineServer.MineServer
                 else
                     config = new ServerConfig();
             } },
-            { "Load plugins by", () => 
-            { 
+            { "Load plugins by", () =>
+            {
                 PluginManager.LoadPlugins(this, config.PluginsFolder);
                 if (PluginManager.plugins.Count > 0)
                     PluginManager.OnPreInit(this);
@@ -115,6 +117,7 @@ public sealed partial class RPGServer : MineServer.MineServer
         {
             while (isStarted)
             {
+                dispatcher.DispatchAll();
                 await Task.Delay(50);
                 currentTick++;
                 lastTickTime = DateTime.Now;
@@ -141,7 +144,7 @@ public sealed partial class RPGServer : MineServer.MineServer
                 await WaitTick(lastProcessingTick);
                 //TODO OPTIMIZE THIS!
                 foreach (var loaded_ent_pair in loginnedPlayers
-                    .SelectMany(x => x.Value.view.entities))
+                    .SelectMany(x => x.Value.view.entities).Distinct())
                 {
                     var ent = loaded_ent_pair.Value.entity;
 
@@ -183,7 +186,7 @@ public sealed partial class RPGServer : MineServer.MineServer
         player = null;
         if (loginnedPlayers.ContainsKey(login))
         {
-            reason = "Already connected"; 
+            reason = "Already connected";
             return false;
         }
 
@@ -230,6 +233,8 @@ public sealed partial class RPGServer : MineServer.MineServer
 //World
 public sealed partial class RPGServer : MineServer.MineServer
 {
+    public IWorldsProvider worldsProvider = /*Default provider*/new AnvilWorldsProvider();
+    public ILightEngine LightEngine;
     public ConcurrentDictionary<string, World> worlds = new ConcurrentDictionary<string, World>();
     public string spawnWorldName = "overworld";
     public World spawnWorld => worlds[spawnWorldName];
@@ -240,8 +245,7 @@ public sealed partial class RPGServer : MineServer.MineServer
 
     public void LoadWorlds()
     {
-        var world = new AnvilWorld(config.world.WorldPath, spawnWorldName);
-        world.LoadMCAFromPath(config.world.WorldPath);
+        var world = worldsProvider.CreateOrLoad(config.world.WorldPath, spawnWorldName);
         worlds.TryAdd(spawnWorldName, world);
         logger.Write("Load area around spawn");
 
@@ -284,8 +288,4 @@ public sealed partial class RPGServer : MineServer.MineServer
         obj.server = this;
         PackageRegistry.Register(packetid, state, obj);
     }
-}
-
-namespace MinecraftRPGServer
-{
 }

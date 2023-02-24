@@ -21,17 +21,10 @@ C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\MineSocket
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\NBT.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\Newtonsoft.Json.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\MinecraftData.dll
-C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\MinecraftLightEngine.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\BouncyCastle.Crypto.dll
-C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\System.Text.Json.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\System.Memory.dll
-C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\System.Text.Encodings.Web.dll
-C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\System.ValueTuple.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\System.Numerics.Vectors.dll
-C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\System.Threading.Tasks.Extensions.dll
-C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\Microsoft.Bcl.AsyncInterfaces.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\System.Buffers.dll
-C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\MineSocket.NET.pdb
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\NBT.pdb
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.xml

@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-[ChatCommand]
+﻿[ChatCommand]
 public class TeleportCommand : IChatCommand
 {
     public void Register()

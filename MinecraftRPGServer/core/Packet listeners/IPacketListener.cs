@@ -1,5 +1,4 @@
 ﻿using MineServer;
-using System;
 
 public interface IPacketListener
 {

@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Text;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Text;
+using MineServer;
+using NBT;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using MineServer;
-using System.Globalization;
-using NBT;
 
 public struct Chat : ISerializable, IDeserializable
 {
@@ -20,8 +20,8 @@ public struct Chat : ISerializable, IDeserializable
     public _clickEvent clickEvent;
     public _hoverEvent hoverEvent;
 
-    private static JsonSerializerSettings notNull = new JsonSerializerSettings() 
-    { 
+    private static JsonSerializerSettings notNull = new JsonSerializerSettings()
+    {
         DefaultValueHandling = DefaultValueHandling.Ignore,
         NullValueHandling = NullValueHandling.Ignore,
     };
@@ -99,9 +99,9 @@ public struct Chat : ISerializable, IDeserializable
     }
     public static string Gradient(string text, int start_color, int end_color)
     {
-        string ToColor(byte r, byte g, byte b) => 
-            r.ToString("X").PadLeft(2, '0') + 
-            g.ToString("X").PadLeft(2, '0') + 
+        string ToColor(byte r, byte g, byte b) =>
+            r.ToString("X").PadLeft(2, '0') +
+            g.ToString("X").PadLeft(2, '0') +
             b.ToString("X").PadLeft(2, '0');
         void FromColor(int color, out byte r, out byte g, out byte b)
         {
@@ -308,27 +308,27 @@ public struct Chat : ISerializable, IDeserializable
     }
     public readonly struct ColorIndexes
     {
-        public const char black =         '0';
-        public const char dark_blue =     '1';
-        public const char dark_green =    '2';
-        public const char dark_aqua =     '3';
-        public const char dark_red =      '4';
-        public const char dark_purple =   '5';
-        public const char gold =          '6';
-        public const char gray =          '7';
-        public const char dark_gray =     '8';
-        public const char blue =          '9';
-        public const char green =         'a';
-        public const char aqua =          'b';
-        public const char red =           'c';
-        public const char light_purple =  'd';
-        public const char yellow =        'e';
-        public const char white =         'f';
-        public const char obfuscated =    'k';
-        public const char bold =          'l';
+        public const char black = '0';
+        public const char dark_blue = '1';
+        public const char dark_green = '2';
+        public const char dark_aqua = '3';
+        public const char dark_red = '4';
+        public const char dark_purple = '5';
+        public const char gold = '6';
+        public const char gray = '7';
+        public const char dark_gray = '8';
+        public const char blue = '9';
+        public const char green = 'a';
+        public const char aqua = 'b';
+        public const char red = 'c';
+        public const char light_purple = 'd';
+        public const char yellow = 'e';
+        public const char white = 'f';
+        public const char obfuscated = 'k';
+        public const char bold = 'l';
         public const char strikethrough = 'm';
-        public const char underline =     'n';
-        public const char italic =        'o';
-        public const char reset =         'r';
+        public const char underline = 'n';
+        public const char italic = 'o';
+        public const char reset = 'r';
     }
 }

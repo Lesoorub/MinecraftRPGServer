@@ -1,8 +1,5 @@
-﻿using MineServer;
-using System.Net;
-using System.IO;
-using System.Security.Cryptography;
-using System;
+﻿using System.Security.Cryptography;
+using MineServer;
 
 public class ConnectedClient : IClient
 {

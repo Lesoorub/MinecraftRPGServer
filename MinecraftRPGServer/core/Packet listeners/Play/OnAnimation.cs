@@ -10,8 +10,8 @@ public class OnAnimation : PacketListener
         var pack = packet as Animation_serverbound;
         if (player == null) return;
 
-        player.PlayAnimation(pack.Hand == 0 ? 
-            EntityAnimation_clientbound.AnimationType.SwingMainArm : 
+        player.PlayAnimation(pack.Hand == 0 ?
+            EntityAnimation_clientbound.AnimationType.SwingMainArm :
             EntityAnimation_clientbound.AnimationType.SwingOffhand);
     }
 }

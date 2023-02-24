@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using MineServer;
 using NBT;
 
@@ -29,52 +29,52 @@ public class Node : ISerializable
 
     public static class Parsers
     {
-        public readonly static string @bool              = "brigadier:bool";
-        public readonly static string @double            = "brigadier:double";
-        public readonly static string @float             = "brigadier:float";
-        public readonly static string integer            = "brigadier:integer";
-        public readonly static string @long              = "brigadier:long";
-        public readonly static string @string            = "brigadier:string";
-        public readonly static string entity             = "minecraft:entity";
-        public readonly static string game_profile       = "minecraft:game_profile";
-        public readonly static string block_pos          = "minecraft:block_pos";
-        public readonly static string column_pos         = "minecraft:column_pos";
-        public readonly static string vec3               = "minecraft:vec3";
-        public readonly static string vec2               = "minecraft:vec2";
-        public readonly static string block_state        = "minecraft:block_state";
-        public readonly static string block_predicate    = "minecraft:block_predicate";
-        public readonly static string item_stack         = "minecraft:item_stack";
-        public readonly static string item_predicate     = "minecraft:item_predicate";
-        public readonly static string color              = "minecraft:color";
-        public readonly static string component          = "minecraft:component";
-        public readonly static string message            = "minecraft:message";
-        public readonly static string nbt                = "minecraft:nbt";
-        public readonly static string nbt_path           = "minecraft:nbt_path";
-        public readonly static string objective          = "minecraft:objective";
+        public readonly static string @bool = "brigadier:bool";
+        public readonly static string @double = "brigadier:double";
+        public readonly static string @float = "brigadier:float";
+        public readonly static string integer = "brigadier:integer";
+        public readonly static string @long = "brigadier:long";
+        public readonly static string @string = "brigadier:string";
+        public readonly static string entity = "minecraft:entity";
+        public readonly static string game_profile = "minecraft:game_profile";
+        public readonly static string block_pos = "minecraft:block_pos";
+        public readonly static string column_pos = "minecraft:column_pos";
+        public readonly static string vec3 = "minecraft:vec3";
+        public readonly static string vec2 = "minecraft:vec2";
+        public readonly static string block_state = "minecraft:block_state";
+        public readonly static string block_predicate = "minecraft:block_predicate";
+        public readonly static string item_stack = "minecraft:item_stack";
+        public readonly static string item_predicate = "minecraft:item_predicate";
+        public readonly static string color = "minecraft:color";
+        public readonly static string component = "minecraft:component";
+        public readonly static string message = "minecraft:message";
+        public readonly static string nbt = "minecraft:nbt";
+        public readonly static string nbt_path = "minecraft:nbt_path";
+        public readonly static string objective = "minecraft:objective";
         public readonly static string objective_criteria = "minecraft:objective_criteria";
-        public readonly static string operation          = "minecraft:operation";
-        public readonly static string particle           = "minecraft:particle";
-        public readonly static string rotation           = "minecraft:rotation";
-        public readonly static string angle              = "minecraft:angle";
-        public readonly static string scoreboard_slot    = "minecraft:scoreboard_slot";
-        public readonly static string score_holder       = "minecraft:score_holder";
-        public readonly static string swizzle            = "minecraft:swizzle";
-        public readonly static string team               = "minecraft:team";
-        public readonly static string item_slot          = "minecraft:item_slot";
-        public readonly static string resource_location  = "minecraft:resource_location";
-        public readonly static string mob_effect         = "minecraft:mob_effect";
-        public readonly static string function           = "minecraft:function";
-        public readonly static string entity_anchor      = "minecraft:entity_anchor";
-        public readonly static string range              = "minecraft:range";
-        public readonly static string int_range          = "minecraft:int_range";
-        public readonly static string float_range        = "minecraft:float_range";
-        public readonly static string item_enchantment   = "minecraft:item_enchantment";
-        public readonly static string entity_summon      = "minecraft:entity_summon";
-        public readonly static string dimension          = "minecraft:dimension";
-        public readonly static string uuid               = "minecraft:uuid";
-        public readonly static string nbt_tag            = "minecraft:nbt_tag";
-        public readonly static string nbt_compound_tag   = "minecraft:nbt_compound_tag";
-        public readonly static string time               = "minecraft:time";
+        public readonly static string operation = "minecraft:operation";
+        public readonly static string particle = "minecraft:particle";
+        public readonly static string rotation = "minecraft:rotation";
+        public readonly static string angle = "minecraft:angle";
+        public readonly static string scoreboard_slot = "minecraft:scoreboard_slot";
+        public readonly static string score_holder = "minecraft:score_holder";
+        public readonly static string swizzle = "minecraft:swizzle";
+        public readonly static string team = "minecraft:team";
+        public readonly static string item_slot = "minecraft:item_slot";
+        public readonly static string resource_location = "minecraft:resource_location";
+        public readonly static string mob_effect = "minecraft:mob_effect";
+        public readonly static string function = "minecraft:function";
+        public readonly static string entity_anchor = "minecraft:entity_anchor";
+        public readonly static string range = "minecraft:range";
+        public readonly static string int_range = "minecraft:int_range";
+        public readonly static string float_range = "minecraft:float_range";
+        public readonly static string item_enchantment = "minecraft:item_enchantment";
+        public readonly static string entity_summon = "minecraft:entity_summon";
+        public readonly static string dimension = "minecraft:dimension";
+        public readonly static string uuid = "minecraft:uuid";
+        public readonly static string nbt_tag = "minecraft:nbt_tag";
+        public readonly static string nbt_compound_tag = "minecraft:nbt_compound_tag";
+        public readonly static string time = "minecraft:time";
         //public readonly static string modid              = "forge:modid";
         //public readonly static string @enum              = "forge:enum";
 
@@ -309,7 +309,7 @@ public class Node : ISerializable
                 this.Name = SuggestionsTypeOrName;
                 break;
         }
-            
+
     }
     public Node(Node[] Childrens, string Name,
         string Parser, ParserProp Properties,

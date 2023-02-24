@@ -1,6 +1,4 @@
-﻿using Packets.Play;
-
-public struct Sound
+﻿public struct Sound
 {
     public SoundID ID;
     public Categories category;

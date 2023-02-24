@@ -1,5 +1,5 @@
-﻿using Packets.Handhaking;
-using MineServer;
+﻿using MineServer;
+using Packets.Handhaking;
 
 [PacketListener(0x00, State.Handhaking)]
 public sealed class Handhaking : PacketListener

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using MineServer;
 using Packets.Play;
 
@@ -13,14 +12,14 @@ public abstract class Particle : SerializableToBytesBigEndian
     };
 
     public static void SpawnHorizontalCircle(
-        World world, 
-        Particles id, 
-        v3f position, 
-        v3f offset, 
-        float data, 
-        int count, 
-        float Radius, 
-        float circleParticles = 36, 
+        World world,
+        Particles id,
+        v3f position,
+        v3f offset,
+        float data,
+        int count,
+        float Radius,
+        float circleParticles = 36,
         params object[] additive)
     {
         for (float k = 0; k < circleParticles; k++)
@@ -79,7 +78,7 @@ public abstract class Particle : SerializableToBytesBigEndian
                     return new Dust((float)additive[0], (float)additive[1], (float)additive[2], (float)additive[3]);
                 case Particles.dust_color_transition:
                     return new DustColorTransition(
-                        (float)additive[0], (float)additive[1], (float)additive[2], 
+                        (float)additive[0], (float)additive[1], (float)additive[2],
                         (float)additive[3],
                         (float)additive[4], (float)additive[5], (float)additive[6]);
                 case Particles.item:
@@ -88,7 +87,7 @@ public abstract class Particle : SerializableToBytesBigEndian
                         Data = ((Slot)additive[0]).ToByteArray()
                     };
                 case Particles.vibration:
-                    return new Vibration((Position)additive[0], (string)additive[1], 
+                    return new Vibration((Position)additive[0], (string)additive[1],
                         (Position)additive[2], (int)additive[3], (int)additive[4]);
             }
             return new Empty();
@@ -115,8 +114,8 @@ public abstract class Particle : SerializableToBytesBigEndian
     private class DustColorTransition : Particle
     {
         public DustColorTransition(
-            float fromRed, float fromGreen, float fromBlue, 
-            float scale, 
+            float fromRed, float fromGreen, float fromBlue,
+            float scale,
             float toRed, float toGreen, float toBlue)
         {
             var writer = new ArrayWriter(true);

@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using MineServer;
 using NBT;
 using Packets.Play;
+using WorldSystemV2;
 
-public class Chunk
+public class Chunk : IChunk
 {
     public NBTTag Heightmaps = new NBTTag();
     public v2i cPos;
@@ -31,13 +26,46 @@ public class Chunk
         }
     }
 
-    public BitSet SkyMask = new BitSet();
-    public BitSet BlockMask = new BitSet();
-    public BitSet EmptySkyMask = new BitSet();
-    public BitSet EmptyBlockMask = new BitSet();
+    public int X => cPos.x;
 
-    public byte[][] SkyLightArrays;
-    public byte[][] BlockLightArrays;
+    public int Z => cPos.y;
+
+    ChunkDataAndUpdateLight _packet;//for cache packet
+    long _packet_LastModifyTimeStamp;//for cache packet
+    public ChunkDataAndUpdateLight packet 
+    { 
+        get
+        {
+            if (_packet == null || _packet_LastModifyTimeStamp != LastModifyTimeStamp)
+            {
+                _packet_LastModifyTimeStamp = LastModifyTimeStamp;
+                _packet = new ChunkDataAndUpdateLight()
+                {
+                    ChunkX = X,
+                    ChunkZ = Z,
+                    Heightmaps = Heightmaps,
+                    Data = Data,
+                    BlockEntities = BlockEntities,
+                    TrustEdges = true,
+                    SkyLightMask = SkyMask,
+                    BlockLightMask = BlockMask,
+                    EmptySkyLightMask = EmptySkyMask,
+                    EmptyBlockLightMask = EmptyBlockMask,
+                    SkyLightArray = SkyLightArrays,
+                    BlockLightArray = BlockLightArrays
+                };
+            }
+            return _packet;
+        } 
+    }
+
+    public BitSet SkyMask  { get; } = new BitSet();
+    public BitSet BlockMask { get; } = new BitSet();
+    public BitSet EmptySkyMask { get; } = new BitSet();
+    public BitSet EmptyBlockMask { get; } = new BitSet();
+
+    public byte[][] SkyLightArrays { get; protected set; }
+    public byte[][] BlockLightArrays { get; protected set; }
 
     private bool isChanged = false;
 
@@ -47,7 +75,7 @@ public class Chunk
         UpdateData();
         UpdateLight();
     }
-    public Chunk(byte[] raw)
+    public Chunk(byte[] raw, int Timestump)
     {
         if (raw == null)
             throw new Exception("Невозможно загрузить чанк из массива равного null");
@@ -55,6 +83,8 @@ public class Chunk
 
         UpdateData();
         UpdateLight();
+
+        LastModifyTimeStamp = Timestump;
     }
     public void UpdateLight()
     {
@@ -156,4 +186,21 @@ public class Chunk
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int GetRelativeCoord(int x) => x & 0xF;
 
+    public BlockState GetBlock(byte rx, short y, byte rz)
+    {
+        if (y > 319 || y < -64) return BlockState.air;
+        var section = sections[y >> 4];
+        if (section == null) return BlockState.air;
+        return section.GetBlock(rx, y, rz);
+    }
+
+    public bool SetBlock(byte rx, short y, byte rz, BlockState newState)
+    {
+        return SetBlock((byte)rx, (short)y, (byte)rz, newState.StateID);
+    }
+
+    public byte[] ExportToBytes()
+    {
+        return ChunkParser.Serialize(this).Bytes;
+    }
 }

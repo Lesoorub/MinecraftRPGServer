@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Reflection;
-using System.Linq;
-using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Reflection;
 using MineServer;
 using Packets.Play;
 
@@ -28,18 +27,18 @@ public abstract class Entity
     /// Entity ID, minecraft:player, minecraft:armor_stand and e.t.c
     /// </summary>
     public virtual string ID { get; }
-    public v2i ChunkPos => new v2i(World.PosToChunk1D(position.x), World.PosToChunk1D(position.z));
+    public v2i ChunkPos => new v2i(MinecraftCoordinatesSystem.PosToChunk1D(position.x), MinecraftCoordinatesSystem.PosToChunk1D(position.z));
     public v3i BlockPos => new v3i((int)position.x, (int)position.y, (int)position.z);
     protected v3f position = new v3f(0, 64, 0);
-    public virtual v3f Position 
-    { 
+    public virtual v3f Position
+    {
         get => position.Clone();
-        set 
-        { 
-            var last = position.Clone(); 
-            position = value.Clone(); 
+        set
+        {
+            var last = position.Clone();
+            position = value.Clone();
             OnPositionChanged?.Invoke(last, value.Clone());
-        } 
+        }
     }
     public virtual v3f Velocity { get; set; } = new v3f(0, 0, 0);
     public virtual v2f Rotation { get; set; } = new v2f(0, 0);
@@ -69,7 +68,7 @@ public abstract class Entity
         this.world = world;
         EntityID = GetUniqEnityID();
         meta.InitFields();
-        world.entities.Add(this);
+        world.EntityWorld.Add(this);
         //Реализация тригера при перемещении между чанками для корректной работы системы энтити в мире
         OnChunkChanged += Entity_OnChunkChanged;
         OnPositionChanged += Entity_OnPositionChanged;
@@ -77,11 +76,11 @@ public abstract class Entity
 
     protected void Entity_OnChunkChanged(v2i lastchunk, v2i newchunk)
     {
-        world.entities.entities[EntityID] = newchunk;
-        lock (world.entities.chunks)
+        world.EntityWorld.entities[EntityID] = newchunk;
+        lock (world.EntityWorld.chunks)
         {
-            world.entities.chunks[lastchunk].TryRemove(EntityID, out var self);
-            world.entities.chunks
+            world.EntityWorld.chunks[lastchunk].TryRemove(EntityID, out var self);
+            world.EntityWorld.chunks
                 .GetOrAdd(
                     newchunk,
                     new Func<v2i, ConcurrentDictionary<int, Entity>>((cpos) => new ConcurrentDictionary<int, Entity>()))
@@ -104,11 +103,11 @@ public abstract class Entity
     /// </summary>
     /// <param name="radius"></param>
     /// <returns></returns>
-    public IEnumerable<Entity> GetEntityInRadius(v3f position, float Radius) => 
-        world.entities.GetEntitiesInCircle(position, Radius);
+    public IEnumerable<Entity> GetEntityInRadius(v3f position, float Radius) =>
+        world.EntityWorld.GetEntitiesInCircle(position, Radius);
     public void Destroy()
     {
-        world.entities.Remove(EntityID);
+        world.EntityWorld.Remove(EntityID);
         isDestroyed = true;
         OnDestroy?.Invoke();
     }
@@ -207,7 +206,7 @@ public abstract class Entity
             VelocityZ = (short)(Velocity.z * 8000),
         });
     }
-    
+
     public void ForceLoadSelfAnyPlayersInRadius(float radius)
     {
         var r = radius * radius;
@@ -216,7 +215,7 @@ public abstract class Entity
                 pl_pair.Value.entitiesController.LoadEntity(this);
     }
 
-    public void Tick(long tick) 
+    public void Tick(long tick)
     {
         OnTick?.Invoke(this, tick);
     }

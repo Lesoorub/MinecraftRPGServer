@@ -1,36 +1,35 @@
 ﻿using System;
-using System.Collections;
-using System.Linq;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 
 public class EntityWorld
 {
-    public ConcurrentDictionary<int, v2i> entities = 
+    public ConcurrentDictionary<int, v2i> entities =
         new ConcurrentDictionary<int, v2i>();
-    public ConcurrentDictionary<v2i, ConcurrentDictionary<int, Entity>> chunks = 
+    public ConcurrentDictionary<v2i, ConcurrentDictionary<int, Entity>> chunks =
         new ConcurrentDictionary<v2i, ConcurrentDictionary<int, Entity>>(v2iComparer.Instance);
     public void Add(Entity entity)
     {
         lock (entities)
-        lock (chunks)
-        {
-            var eid = entity.EntityID;
-            var cpos = entity.ChunkPos;
-            entities.TryAdd(eid, cpos);
-            Console.WriteLine($"Create entity EID={eid}, cpos={cpos}");
-            if (!chunks.ContainsKey(cpos))
+            lock (chunks)
             {
-                chunks.TryAdd(cpos, new ConcurrentDictionary<int, Entity>(new KeyValuePair<int, Entity>[]
+                var eid = entity.EntityID;
+                var cpos = entity.ChunkPos;
+                entities.TryAdd(eid, cpos);
+                Console.WriteLine($"Create entity EID={eid}, cpos={cpos}");
+                if (!chunks.ContainsKey(cpos))
                 {
+                    chunks.TryAdd(cpos, new ConcurrentDictionary<int, Entity>(new KeyValuePair<int, Entity>[]
+                    {
                 new KeyValuePair<int, Entity>(eid, entity)
-                }));
-                return;
+                    }));
+                    return;
+                }
+                else if (chunks.TryGetValue(cpos, out var list))
+                    list.TryAdd(eid, entity);
+                else throw new Exception("Что-то пошло не так");
             }
-            else if (chunks.TryGetValue(cpos, out var list))
-                list.TryAdd(eid, entity);
-            else throw new Exception("Что-то пошло не так");
-        }
     }
 
     public void Remove(int EID)
@@ -50,22 +49,22 @@ public class EntityWorld
                 }
             }
     }
-    public bool HasEID(int EID) 
-    { 
-        lock (entities) 
-            return entities.ContainsKey(EID); 
+    public bool HasEID(int EID)
+    {
+        lock (entities)
+            return entities.ContainsKey(EID);
     }
     public Entity GetByEID(int EntityID)
     {
         lock (entities)
-        lock (chunks)
-        {
-            return
-                entities.TryGetValue(EntityID, out var cpos) &&
-                chunks.TryGetValue(cpos, out var list) &&
-                list.TryGetValue(EntityID, out var entity)
-                ? entity : null;
-        }
+            lock (chunks)
+            {
+                return
+                    entities.TryGetValue(EntityID, out var cpos) &&
+                    chunks.TryGetValue(cpos, out var list) &&
+                    list.TryGetValue(EntityID, out var entity)
+                    ? entity : null;
+            }
     }
     public List<Entity> GetEntitiesInCircle(v3f position, float radius)
     {

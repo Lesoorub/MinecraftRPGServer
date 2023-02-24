@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using MineServer;
+﻿using MineServer;
 using Packets.Play;
 
 [PacketListener(0x11, State.Play)]
@@ -22,7 +18,7 @@ public class OnUpdatePlayerPosition : PacketListener
             case 0x12:
                 var plposandrot = packet as PlayerPositionAndRotation_serverbound;
                 player.ApplyNewPositionAndRotation(
-                    new v3f((float)plposandrot.X, (float)plposandrot.FeetY, (float)plposandrot.Z), 
+                    new v3f((float)plposandrot.X, (float)plposandrot.FeetY, (float)plposandrot.Z),
                     new v2f(plposandrot.Yaw, plposandrot.Pitch));
                 break;
             case 0x13:

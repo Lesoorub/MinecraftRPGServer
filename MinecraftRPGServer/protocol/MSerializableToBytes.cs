@@ -1,6 +1,6 @@
-﻿using MineServer;
+﻿using System.IO;
+using MineServer;
 using NBT;
-using System.IO;
 
 public class MSerializableToBytes : ISerializable, IDeserializable
 {

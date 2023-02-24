@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MinecraftRPGServer.core.SubSystems.Physics
 {
@@ -80,7 +78,7 @@ namespace MinecraftRPGServer.core.SubSystems.Physics
                     for (int z = f(t.z - a_size.z); z <= f(t.z + a_size.z); z++)
                     {
                         var loc = new v3i(x, y, z);
-                        if (world.hasCollision(loc) && IntersectionWithCube(a_pos, a_size, loc))
+                        if (world.HasCollision(loc) && IntersectionWithCube(a_pos, a_size, loc))
                         {
                             collidedBlocks[len++] = loc;
                         }
@@ -97,7 +95,7 @@ namespace MinecraftRPGServer.core.SubSystems.Physics
                     for (int z = f(t.z - a_size.x); z <= f(t.z + a_size.x); z++)
                     {
                         var loc = new v3i(x, y, z);
-                        if (world.hasCollision(loc) && IntersectionWithCube(a_pos, a_size, loc))
+                        if (world.HasCollision(loc) && IntersectionWithCube(a_pos, a_size, loc))
                         {
                             collidedBlocks[len++] = loc;
                         }

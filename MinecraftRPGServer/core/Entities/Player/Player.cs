@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Linq;
-using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 using MineServer;
-using MinecraftRPGServer.core.SubSystems.Physics;
 
 public class Player : PlayerProtocol, IDisposable
 {
@@ -70,15 +69,15 @@ public class Player : PlayerProtocol, IDisposable
         .Where(x => x.Value.world.Equals(world))
         .Select(x => x.Value);
     public static IEnumerable<Player> GetInWorldWithDistance(World world, v3f point, float radius) => players
-        .Where(x => x.Value.world.Equals(world) && 
+        .Where(x => x.Value.world.Equals(world) &&
                     v3f.Distance(x.Value.Position, point) <= radius)
         .Select(x => x.Value);
     public static IEnumerable<Player> GetInWorldWithSqrDistance(World world, v3f point, float sqrradius) => players
-        .Where(x => x.Value.world.Equals(world) && 
+        .Where(x => x.Value.world.Equals(world) &&
                     v3f.SqrDistance(x.Value.Position, point) <= sqrradius)
         .Select(x => x.Value);
     public static IEnumerable<Player> WhoViewChunk(World world, v2i chunkpos) => players
-        .Where(x => x.Value.world.Equals(world) && 
+        .Where(x => x.Value.world.Equals(world) &&
                     x.Value.worldController.loadedChunks.Any(y => y.x == chunkpos.x && y.y == chunkpos.y))
         .Select(x => x.Value);
 

@@ -260,6 +260,7 @@
     <Compile Include="core\Configs\EntitiesConfig.cs" />
     <Compile Include="core\Configs\MotdConfig.cs" />
     <Compile Include="core\Configs\WorldsConfig.cs" />
+    <Compile Include="core\Dispatcher.cs" />
     <Compile Include="core\Entities\Player\datawatchers\DataWatcher.cs" />
     <Compile Include="core\Entities\Player\datawatchers\InventoryWatcher.cs" />
     <Compile Include="core\Entities\Player\datawatchers\InventoryWindowWatcher.cs" />
@@ -281,6 +282,15 @@
     <Compile Include="core\PackageRegistry.cs" />
     <Compile Include="core\Packet listeners\Login\EncryptionResponse.cs" />
     <Compile Include="core\Packet listeners\Play\OnPlayerBlockPlacement.cs" />
+    <Compile Include="core\World\AnvilWorld\AnvilWorldsProvider.cs" />
+    <Compile Include="core\World\AnvilWorld\AnvilWorldLoader.cs" />
+    <Compile Include="core\World\AnvilWorld\MCA\Location.cs" />
+    <Compile Include="core\World\WorldSystemV2\IWorld.cs" />
+    <Compile Include="core\World\WorldSystemV2\IChunkGenerator.cs" />
+    <Compile Include="core\World\WorldSystemV2\IChunk.cs" />
+    <Compile Include="core\World\WorldSystemV2\ILightEngine.cs" />
+    <Compile Include="core\World\IWorldsProvider.cs" />
+    <Compile Include="core\World\MinecraftCoordinatesSystem.cs" />
     <Compile Include="StartUpSettings.cs" />
     <Compile Include="core\SubSystems\Commands\lib\CustomCommandNode.cs" />
     <Compile Include="core\Entities\EntityAttribute.cs" />
@@ -404,7 +414,7 @@
     <Compile Include="core\World\McRegion\ChunkParser.cs" />
     <Compile Include="core\World\McRegion\ChunkSectionParser.cs" />
     <Compile Include="core\World\McRegion\RegionParser.cs" />
-    <Compile Include="core\World\PaletteType.cs" />
+    <Compile Include="core\World\AnvilWorld\PaletteType.cs" />
     <Compile Include="core\World\Tags\Tags_1_18_2.cs" />
     <Compile Include="core\World\World.cs" />
     <Compile Include="core\World\WorldInfo.cs" />
@@ -459,11 +469,11 @@
     <Compile Include="core\World\ChunckSection.cs" />
     <Compile Include="core\World\Chunk.cs" />
     <Compile Include="core\World\GlobalPalette.cs" />
-    <Compile Include="core\World\MCA.cs" />
+    <Compile Include="core\World\AnvilWorld\MCA\MCA.cs" />
     <Compile Include="core\World\Optimization\BlockMeta.cs" />
-    <Compile Include="core\World\Palette.cs" />
-    <Compile Include="core\World\PalettedContainer.cs" />
-    <Compile Include="core\World\AnvilWorld.cs" />
+    <Compile Include="core\World\AnvilWorld\Palette.cs" />
+    <Compile Include="core\World\AnvilWorld\PalettedContainer.cs" />
+    <Compile Include="core\World\AnvilWorld\AnvilWorld.cs" />
     <Compile Include="libs\BitSet.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

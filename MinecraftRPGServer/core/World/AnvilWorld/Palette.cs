@@ -1,6 +1,6 @@
-﻿using MineServer;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using MineServer;
 
 public class Palette<T>
 {

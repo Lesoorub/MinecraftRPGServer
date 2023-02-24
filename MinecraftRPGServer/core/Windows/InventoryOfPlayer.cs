@@ -1,5 +1,5 @@
-﻿using static Inventory.Item;
-using System.Linq;
+﻿using System.Linq;
+using static Inventory.Item;
 
 namespace Inventory
 {

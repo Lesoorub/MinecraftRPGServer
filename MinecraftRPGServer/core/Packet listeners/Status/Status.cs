@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Linq;
+﻿using System;
 using System.IO;
-using Packets.Status;
+using System.Linq;
 using MineServer;
+using Newtonsoft.Json;
+using Packets.Status;
 
 [PacketListener(0x00, State.Status)]
 public sealed class Status : PacketListener

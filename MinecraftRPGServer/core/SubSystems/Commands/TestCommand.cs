@@ -1,7 +1,4 @@
-﻿using Packets.Play;
-using MineServer;
-using MinecraftLightEngine;
-using MinecraftRPGServer.core.SubSystems.Physics;
+﻿using MinecraftRPGServer.core.SubSystems.Physics;
 
 [ChatCommand]
 public class TestCommand : IChatCommand
@@ -19,7 +16,7 @@ public class TestCommand : IChatCommand
             for (int k = 0; k < hits_count; k++)
             {
                 var hit = hits[k];
-                if (hit.Entity.EntityID == player.EntityID) 
+                if (hit.Entity.EntityID == player.EntityID)
                     continue;
                 player.EchoIntoChatFromServer($"ID={hit.Entity.ID}, position={hit.Entity.Position}, distance={hit.distance}, point={hit.point}");
             }

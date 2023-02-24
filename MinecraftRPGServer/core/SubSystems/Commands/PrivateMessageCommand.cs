@@ -62,8 +62,8 @@ public class PrivateMessageCommand : IChatCommand
                 .Replace("{selfusername}", target.data.username)
                 .Replace("{message}", string.Join(" ", args.Skip(1)))));
         target.Echo(
-            player.PlayerUUID, 
-            Packets.Play.ChatMessage_clientbound.PositionType.chat, 
+            player.PlayerUUID,
+            Packets.Play.ChatMessage_clientbound.PositionType.chat,
             Chat.ColoredText(cfg.PMFormat
                 .Replace("{playername}", target.data.username)
                 .Replace("{selfusername}", player.data.username)

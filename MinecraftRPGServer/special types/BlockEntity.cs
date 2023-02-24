@@ -1,16 +1,11 @@
 ﻿using System;
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MineServer;
 using NBT;
 
 public class BlockEntity : ISerializable, IDeserializable
 {
-    public byte blockX 
-    { 
+    public byte blockX
+    {
         get => (byte)(PackedXZ >> 4);
         set => PackedXZ = (byte)((value << 4) | PackedXZ & 0x0F);
     }

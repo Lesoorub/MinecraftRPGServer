@@ -16,7 +16,7 @@ namespace Entities
             public override Node node => new Node()
             {
                 Name = "eye_of_ender",
-                Flags = Node.FlagsEnum.literal,  
+                Flags = Node.FlagsEnum.literal,
                 Childrens = new List<Node>()
                 {
                     new Node()

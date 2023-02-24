@@ -1,6 +1,6 @@
 ﻿using System.Linq;
-using Inventory;
 using System.Runtime.CompilerServices;
+using Inventory;
 
 public class InventoryWatcher : DataWatcher<InventoryWatcher.InventoryArgs>
 {

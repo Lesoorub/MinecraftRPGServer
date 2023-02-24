@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 [ChatCommand]
 public class CreateCommand : IChatCommand
@@ -175,8 +175,8 @@ public class CreateCommand : IChatCommand
                 quality = (int)Inventory.Items.Quality.Normal;
 
             GiveItem(player, Inventory.Items.RPGItem.Create(
-                nameid, 
-                (Inventory.Items.Rarity)rarity, 
+                nameid,
+                (Inventory.Items.Rarity)rarity,
                 (Inventory.Items.Quality)quality));
         }
         else

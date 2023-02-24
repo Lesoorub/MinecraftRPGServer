@@ -6,14 +6,14 @@
   "Gamemode": 1,
   "position": {
     "$type": "v3f, VectorMath",
-    "x": -40.0235176,
+    "x": -43.81643,
     "y": 64.0,
-    "z": -4.13512564
+    "z": -3.29447412
   },
   "rotation": {
     "$type": "v2f, VectorMath",
-    "x": 1510.28,
-    "y": 7.96187973
+    "x": 970.9795,
+    "y": 10.0317059
   },
   "Health": 100.0,
   "inventory": {

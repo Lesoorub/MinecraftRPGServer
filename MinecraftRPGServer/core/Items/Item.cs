@@ -1,16 +1,9 @@
 ﻿using System;
-using System.Linq;
-using System.Diagnostics;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
+using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using MineServer;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NBT;
+using Newtonsoft.Json;
 
 namespace Inventory
 {
@@ -72,7 +65,7 @@ namespace Inventory
                 return nbt;
             }
         }
-        
+
         [JsonIgnore]
         public virtual string Name { get; set; }
         [JsonIgnore]
@@ -93,7 +86,7 @@ namespace Inventory
         {
             ItemID = ItemNameID.air;
             int id = Array.IndexOf(ItemIDNames, nameID);
-            if (id == -1) 
+            if (id == -1)
                 return false;
             ItemID = (ItemNameID)id;
             return true;
@@ -191,9 +184,9 @@ namespace Inventory
             var item_oreDict = item.GetOreDict();
             if (to.blacklistItems != null && to.blacklistItems.All(x => item_oreDict.Contains(x)))
                 return false;
-            if (to.allowedItems == null || to.allowedItems.Length == 0) 
+            if (to.allowedItems == null || to.allowedItems.Length == 0)
                 return true;
-            if (to.allowedItems.All(x => item_oreDict.Contains(x))) 
+            if (to.allowedItems.All(x => item_oreDict.Contains(x)))
                 return true;
             return false;
         }

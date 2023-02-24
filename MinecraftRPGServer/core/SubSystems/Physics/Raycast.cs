@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using static Chat._hoverEvent;
 
 namespace MinecraftRPGServer.core.SubSystems.Physics
 {
@@ -75,11 +74,11 @@ namespace MinecraftRPGServer.core.SubSystems.Physics
         /// <returns>Список координат чанков пройденных лучем</returns>
         static List<v2i> GetChunks(v3f point, v3f direction, float distance, float width)
         {
-            v2i chunk = World.GetChunkFromCoords(point);
+            v2i chunk = MinecraftCoordinatesSystem.GetChunkFromCoords(point);
             float ycoef = (float)Math.Cos(direction.y * Math.PI * 2);
             v2f horizontalDir = new v2f(direction.x * ycoef, direction.z * ycoef).Normalized;
 
-            if (horizontalDir.SqrMagnitude <= epsilon * epsilon) 
+            if (horizontalDir.SqrMagnitude <= epsilon * epsilon)
                 return new List<v2i>()
                 {
                      chunk
@@ -120,23 +119,23 @@ namespace MinecraftRPGServer.core.SubSystems.Physics
                 (q * r1 - q1 * r);
 
             var point = new v3f(x, y, z);
-            if (PointOnLine(A1, A2, point) && 
+            if (PointOnLine(A1, A2, point) &&
                 PointOnLine(B1, B2, point))
                 return point;
             return null;
         }
         public static int AllEntitites(
-            World world, 
-            v3f point, 
+            World world,
+            v3f point,
             v3f direction,
-            float distance, 
+            float distance,
             ref RaycastEntityHit[] hit)
         {
             float sqrDistance = distance * distance;
 
 
             int count = 0;
-            foreach (var entity in GetEntities(world.entities, point, direction, distance, 0))
+            foreach (var entity in GetEntities(world.EntityWorld, point, direction, distance, 0))
             {
                 Console.WriteLine($"id={entity.ID}");
                 var delta = entity.Position - point;

@@ -1,6 +1,5 @@
 ﻿using MineServer;
 using Packets.Play;
-using System;
 
 [PacketListener(0x05, State.Play)]
 public class OnClientSettings : PacketListener

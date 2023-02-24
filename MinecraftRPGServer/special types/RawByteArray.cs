@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using MineServer;
 using NBT;
 
@@ -22,6 +17,6 @@ public struct RawByteArray : ISerializable, IDeserializable
         return bytes;
     }
 
-    public static implicit operator byte[] (RawByteArray t) => t.bytes;
+    public static implicit operator byte[](RawByteArray t) => t.bytes;
     public static implicit operator RawByteArray(byte[] t) => new RawByteArray() { bytes = t };
 }
