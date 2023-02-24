@@ -940,5 +940,15 @@ namespace Packets.Play
         public VarInt WindowType;
         public Chat WindowTitle;
     }
+    [BoundToClientPackage]
+    public class Effect : MSerializableToBytes, IPacket
+    {
+        public override int package_id => 0x23;
+
+        public int EffectID;
+        public Position Location;
+        public int Data;
+        public bool DisableRelativeVolume;
+    }
     #endregion
 }

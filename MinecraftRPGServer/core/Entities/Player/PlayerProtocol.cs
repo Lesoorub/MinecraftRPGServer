@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Threading.Tasks;
 using Inventory;
@@ -558,6 +559,16 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         {
             ItemID = (int)ItemID,
             CooldownTicks = ticks
+        });
+    }
+    public void SendEffect(EffectID EffectID, int x, int y, int z, int Data, bool DisableRelativeVolume)
+    {
+        network.Send(new Effect()
+        {
+            EffectID = (int)EffectID,
+            Location = new Position(x, y, z),
+            Data = Data,
+            DisableRelativeVolume = DisableRelativeVolume
         });
     }
 

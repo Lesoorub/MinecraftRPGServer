@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 using NBT;
 
 namespace AnvilWorldV2
@@ -93,18 +93,17 @@ namespace AnvilWorldV2
                 return BlockState.air;
             return section.GetBlock(Chunk.GetRelativeCoord(x), Chunk.GetRelativeCoord(y), Chunk.GetRelativeCoord(z));
         }
-        public bool SetBlock(Player player, int x, short y, int z, BlockState blockState)
+        public bool SetBlock(int x, short y, int z, BlockState blockState)
         {
-            int cposX = x >> 4;
-            int cposZ = z >> 4;
+            int cposX = MinecraftCoordinatesSystem.PosToChunk1D(x);
+            int cposZ = MinecraftCoordinatesSystem.PosToChunk1D(z);
             var chunk = GetChunk(cposX, cposZ);
             if (chunk == null)
                 return false;
-            var result = chunk.SetBlock((byte)((x - cposX * 16) % 16), (short)y, (byte)((z - cposZ * 16) % 16), (short)blockState.StateID);
-            //Следующий цикл можно и нужно заменить на вызов ивента установки блока в чанке на который будет подписываться игрок при пригрузке его и отписываться при разгрузке
-            foreach (var otherplayer in Player.WhoViewChunk(player.world, new v2i(cposX, cposZ)))
-                otherplayer.worldController.SendSetBlock(x, y, z, blockState);
-            return result;
+            return chunk.SetBlock(
+                (byte)((x - cposX * 16) % 16), y, 
+                (byte)((z - cposZ * 16) % 16), 
+                blockState.StateID);
         }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool GetChunkSection(int csx, int csy, int csz, out Chunk chunk, out ChunkSection section)

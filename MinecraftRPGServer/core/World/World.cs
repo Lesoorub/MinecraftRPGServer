@@ -7,6 +7,9 @@ public abstract class World : IWorld, ICollisionProvider//, ILightWorld
     public const int MinLightSection = -5;
     public const int MaxLughtSection = 20;
 
+    public const int MinBlockHeight = -64;
+    public const int MaxBlockHeight = 319;
+
     public virtual string Path { get; set; }
     public virtual string PublicName { get; set; }
     public virtual v3f SpawnPoint { get; set; } = new v3f(0, 64, 0);
@@ -23,7 +26,7 @@ public abstract class World : IWorld, ICollisionProvider//, ILightWorld
         throw new System.NotImplementedException();
     public virtual BlockState GetBlock(int x, short y, int z) => 
         throw new System.NotImplementedException();
-    public virtual bool SetBlock(Player player, int x, short y, int z, BlockState blockId) => 
+    public virtual bool SetBlock(Player player, int x, short y, int z, BlockState blockId, SetBlockMode mode = SetBlockMode.NoneSoundAndAnimation) => 
         throw new System.NotImplementedException();
     public virtual void Update() { }
     public virtual void PrepairingToSpawnWorld(int radius) { }

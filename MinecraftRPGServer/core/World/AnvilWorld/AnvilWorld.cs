@@ -71,11 +71,66 @@ public class AnvilWorld : World
         if (Info == null) return;
         SetTime(Info.Time + 1);
     }
-    public override bool SetBlock(Player player, int x, short y, int z, BlockState blockState)
+    public override bool SetBlock(
+        Player player,
+        int x,
+        short y,
+        int z,
+        BlockState blockState,
+        SetBlockMode mode = SetBlockMode.NoneSoundAndAnimation)
     {
-        if (!PluginManager.OnPlayerSetBlock(player, x, y, z, blockState.StateID))
+        if (player != null && !PluginManager.OnPlayerSetBlock(player, x, y, z, blockState.StateID))
             return false;
-        return loader.SetBlock(player, x, y, z, blockState);
+
+        var beforeBlockState = GetBlock(x, y, z);
+
+        var result = loader.SetBlock(x, y, z, blockState);
+
+        SendSetBlockPackageAllPlayersAround();
+        UpdateBlockAndNears();
+
+        return result;
+        void SendSetBlockPackageAllPlayersAround()
+        {
+            int cposX = MinecraftCoordinatesSystem.PosToChunk1D(x);
+            int cposZ = MinecraftCoordinatesSystem.PosToChunk1D(z);
+            //TODO 
+            //Следующий цикл можно и нужно заменить на вызов ивента установки блока в чанке на который будет подписываться игрок при пригрузке его и отписываться при разгрузке
+            foreach (var otherplayer in Player.WhoViewChunk(this, new v2i(cposX, cposZ)))
+            {
+                otherplayer.worldController.SendSetBlock(x, y, z, blockState);
+                if (mode == SetBlockMode.BreakSoundAndAnimation)
+                    SendBreakEffect(otherplayer);
+            }
+
+
+        }
+        void UpdateBlockAndNears()
+        {
+            var dict = BlockLogicAttribute.Dict;
+            //tick seted block
+            if (dict.TryGetValue(blockState.id, out var logic))
+                logic.OnUpdate(player, this, x, y, z, blockState);
+            //tick all blocks around
+            for (int dx = -1; dx <= 1; dx++)
+                for (int dy = -1; dy <= 1; dy++)
+                    for (int dz = -1; dz <= 1; dz++)
+                    {
+                        if (Math.Abs(dx) + Math.Abs(dy) + Math.Abs(dz) != 1)
+                            continue;
+                        int nx = x + dx,
+                            nz = z + dz;
+                        short ny = (short)Math.Min(Math.Max(y + dy, World.MinBlockHeight), World.MaxBlockHeight);
+                        var block = GetBlock(nx, ny, nz);
+                        if (block.isAir) continue;
+                        if (dict.TryGetValue(block.id, out logic))
+                            logic.OnUpdate(player, this, nx, ny, nz, blockState);
+                    }
+        }
+        void SendBreakEffect(Player otherplayer)
+        {
+            otherplayer.SendEffect(EffectID.Block_break, x, y, z, beforeBlockState.StateID, false);
+        }
     }
     public override void Save(string path)
     {
@@ -94,7 +149,6 @@ public class AnvilWorld : World
     {
         return loader.GetChunk(x, z);
     }
-
     private void SaveRegions(DirectoryInfo worldDir)
     {
         foreach (var pair in loader.regions)

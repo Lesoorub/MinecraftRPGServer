@@ -1,10 +1,11 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 
 public static class MinecraftCoordinatesSystem
 {
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int PosToChunk1D(float x) => x < 0 ? (int)(x - 1) >> 4 : (int)x >> 4;
+    public static int PosToChunk1D(float x) => (int)Math.Floor(x / 16f);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void GetChunkSectionFromCoords(

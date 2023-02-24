@@ -36,6 +36,7 @@ public struct BlockState : IBlockData
     public Dictionary<string, List<string>> Properties => iBlockData.Properties;
 
     public state[] States => iBlockData.States;
+    public bool isAir => StateID == 0;
 
     public BlockState(short StateID)
     {
