@@ -68,3 +68,7 @@
 # Поддержка проекта
 Поддержите проект добрым словом или советом, для этого можете связаться со мной через discord Lesoorub#8255.
 Так же любая помощь по коду или ресурсам (иконки, текстур-пак и т.д) приветствуется
+
+# Ссылки
+ Экспортированные в json данные minecraft 1.18.2 [gitlab/bixilon](https://gitlab.com/Bixilon/pixlyzer-data/-/tree/master/version/1.18.2)<br>
+ Protocol 758 [wiki.vg](https://wiki.vg/index.php?title=Protocol&oldid=17499)
