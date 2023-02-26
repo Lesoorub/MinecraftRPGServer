@@ -1,12 +1,13 @@
 ﻿using System;
 using System.IO;
 using Inventory;
+using MinecraftRPGServer.core.Configs;
 using Newtonsoft.Json;
+using static Packets.Play.PlayerInfo;
 
 public class PlayerData
 {
-    public const string players_save_path = "playerdata";
-    public static string save_path(Guid uuid) => Path.Combine(players_save_path, uuid.ToString() + ".json");
+    public const string players_dir_in_world = "playerdata";
     public string username;
     public string loginname;
     public string WorldName;
@@ -49,11 +50,10 @@ public class PlayerData
     /// <returns></returns>
     public static PlayerData Get(Guid uuid, string name, RPGServer server)
     {
-        string path = save_path(uuid);
-        new DirectoryInfo(Path.Combine(server.config.world.WorldPath, players_save_path)).Create();
-        if (File.Exists(path))
+        var fi = PathToSave(server.config.world, uuid);
+        if (fi.Exists)
         {
-            var text = File.ReadAllText(path);
+            var text = File.ReadAllText(fi.FullName);
             try
             {
                 return JsonConvert.DeserializeObject<PlayerData>(text, jsonSerializerSettings);
@@ -66,8 +66,8 @@ public class PlayerData
                     exception = ex,
                     wrongJson = text
                 };
-                File.WriteAllText(path + ".wrong", JsonConvert.SerializeObject(json));
-                File.Delete(path);
+                File.WriteAllText(fi.FullName + ".wrong", JsonConvert.SerializeObject(json));
+                File.Delete(fi.FullName);
                 return new PlayerData(name, server);
             }
         }
@@ -88,7 +88,17 @@ public class PlayerData
         SelectedSlot = player.SelectedSlot;
         Gamemode = (byte)player.Gamemode;
 
-        new DirectoryInfo(players_save_path).Create();
-        File.WriteAllText(save_path(player.PlayerUUID), JsonConvert.SerializeObject(this, jsonSerializerSettings));
+        File.WriteAllText(PathToSave(player).FullName, JsonConvert.SerializeObject(this, jsonSerializerSettings));
+    }
+
+    public static FileInfo PathToSave(WorldsConfig config, Guid player_uuid)
+    {
+        var fi = new FileInfo(Path.Combine(config.WorldPath, players_dir_in_world, player_uuid.ToString() + ".json"));
+        fi.Directory.Create();
+        return fi;
+    }
+    public static FileInfo PathToSave(Player player)
+    {
+        return PathToSave((player.server as RPGServer).config.world, player.PlayerUUID);
     }
 }

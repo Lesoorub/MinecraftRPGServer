@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Linq;
+using System.Runtime.InteropServices;
 using MinecraftData._1_18_2.blocks.minecraft;
 using BlocksData = MinecraftData._1_18_2.blocks.minecraft.BlockAttribute;
 
@@ -29,5 +30,11 @@ public class GlobalPalette
         result = BlocksData.blocks[nameid];
         blocksChache.TryAdd(nameid, result);
         return result;
+    }
+
+    public static bool GetStateIDByProperties(BlockNameID nameid, byte[] properties, out state state)
+    {
+        state = BlocksData.blocks[nameid].States.FirstOrDefault(x => x.Properties.SequenceEqual(properties));
+        return state.Id != 0 && state.Properties != null;
     }
 }

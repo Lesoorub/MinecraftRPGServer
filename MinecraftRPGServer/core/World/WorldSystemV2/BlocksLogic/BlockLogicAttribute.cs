@@ -5,32 +5,31 @@ using System.Reflection;
 [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
 public class BlockLogicAttribute : Attribute
 {
-    static Dictionary<BlockNameID, IBlockTickable> dict;
+    static BaseBlockLogic[] baseBlockLogics;
 
     public BlockNameID nameID;
-    public static Dictionary<BlockNameID, IBlockTickable> Dict
-    {
-        get
-        {
-            if (dict == null)
-                SpawnInstances();
-            return dict;
-        }
-    }
     public BlockLogicAttribute(BlockNameID nameID)
     {
         this.nameID = nameID;
     }
     public static void SpawnInstances()
     {
-        dict = new Dictionary<BlockNameID, IBlockTickable>();
+        baseBlockLogics = new BaseBlockLogic[Enum.GetValues(typeof(BlockNameID)).Length];
         foreach (var type in Tools.GetAllTypesWithAttribute<BlockLogicAttribute>())
         {
-            var obj = Activator.CreateInstance(type) as IBlockTickable;
+            var obj = Activator.CreateInstance(type) as BaseBlockLogic;
             foreach (var attr in type.GetCustomAttributes<BlockLogicAttribute>())
             {
-                dict.Add(attr.nameID, obj);
+                baseBlockLogics[(int)attr.nameID] = obj;
             }
         }
+    }
+
+    public static bool TryGetLogic(BlockNameID nameID, out BaseBlockLogic logic)
+    {
+        if (baseBlockLogics == null)
+            SpawnInstances();
+        logic = baseBlockLogics[(int)nameID];
+        return logic != null;
     }
 }

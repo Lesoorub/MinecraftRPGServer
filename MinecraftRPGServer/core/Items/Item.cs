@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Entities;
+using Inventory.Items;
+using MinecraftData._1_18_2.items.minecraft;
 using NBT;
 using Newtonsoft.Json;
 
@@ -75,6 +78,14 @@ namespace Inventory
         public int Damage;
 
         public virtual List<string> GetOreDict() => new List<string>() { GetNameID(ItemID) };
+        public virtual bool OnTryingPlace(Player player, v3i Location, Direction Face, v3f cursor, out BlockState state)
+        {
+            var placeble = itemData as ICanPlaceBlock;
+            state = default;
+            if (placeble == null) return false;
+            state = new BlockState(GlobalPalette.GetBlockData(placeble.block).DefaultStateID);
+            return true;
+        }
 
         public static implicit operator Item(Slot slot) => FromSlot(slot);
         public static implicit operator Slot(Item item) => item != null ? new Slot((int)item.ItemID, item.ItemCount, item.sendNBT ? item.NBT : null) : default(Slot);

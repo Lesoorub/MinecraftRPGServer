@@ -287,7 +287,7 @@
     <Compile Include="core\Entities\Player\EffectID.cs" />
     <Compile Include="core\World\AnvilWorld\MCA\Location.cs" />
     <Compile Include="core\World\WorldSystemV2\BlocksLogic\BlockLogicAttribute.cs" />
-    <Compile Include="core\World\WorldSystemV2\BlocksLogic\IBlockTickable.cs" />
+    <Compile Include="core\World\WorldSystemV2\BlocksLogic\BaseBlockLogic.cs" />
     <Compile Include="core\World\WorldSystemV2\IWorld.cs" />
     <Compile Include="core\World\WorldSystemV2\IChunkGenerator.cs" />
     <Compile Include="core\World\WorldSystemV2\IChunk.cs" />

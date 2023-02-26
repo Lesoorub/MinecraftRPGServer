@@ -23,8 +23,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBT.Tests", "NBT.Tests\NBT.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VectorMath", "..\VectorMath\VectorMath.csproj", "{30134B25-1CF1-4DC7-8397-8C289BAA6026}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BaseMinecraftBlocksLogic", "plugins\BaseMinecraftBlocksLogic\BaseMinecraftBlocksLogic.csproj", "{A60456A1-C864-4FBD-B182-202CDD1440DF}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -155,18 +153,6 @@ Global
 		{30134B25-1CF1-4DC7-8397-8C289BAA6026}.Release|x64.Build.0 = Release|Any CPU
 		{30134B25-1CF1-4DC7-8397-8C289BAA6026}.Release|x86.ActiveCfg = Release|Any CPU
 		{30134B25-1CF1-4DC7-8397-8C289BAA6026}.Release|x86.Build.0 = Release|Any CPU
-		{A60456A1-C864-4FBD-B182-202CDD1440DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A60456A1-C864-4FBD-B182-202CDD1440DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A60456A1-C864-4FBD-B182-202CDD1440DF}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{A60456A1-C864-4FBD-B182-202CDD1440DF}.Debug|x64.Build.0 = Debug|Any CPU
-		{A60456A1-C864-4FBD-B182-202CDD1440DF}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{A60456A1-C864-4FBD-B182-202CDD1440DF}.Debug|x86.Build.0 = Debug|Any CPU
-		{A60456A1-C864-4FBD-B182-202CDD1440DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A60456A1-C864-4FBD-B182-202CDD1440DF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A60456A1-C864-4FBD-B182-202CDD1440DF}.Release|x64.ActiveCfg = Release|Any CPU
-		{A60456A1-C864-4FBD-B182-202CDD1440DF}.Release|x64.Build.0 = Release|Any CPU
-		{A60456A1-C864-4FBD-B182-202CDD1440DF}.Release|x86.ActiveCfg = Release|Any CPU
-		{A60456A1-C864-4FBD-B182-202CDD1440DF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

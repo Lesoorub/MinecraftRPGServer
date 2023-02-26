@@ -179,8 +179,6 @@ public static class ChunkSectionParser
         if (biomes_data?.Length > 0)
         {
             var tmp = PalettedContainer.UnpackData(4, 4, biomes_data);
-            if (tmp.Any(x => x >= obj.biomes.GetPalette().Count))
-                ;
             nbt["biomes"]["data"] = new TAG_Long_Array(data: biomes_data);
         }
         nbt["block_states"] = new TAG_Compound(new List<TAG>()

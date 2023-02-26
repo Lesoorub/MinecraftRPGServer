@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using MinecraftData._1_18_2.blocks.minecraft;
 
 public struct BlockState : IBlockData
@@ -20,6 +21,14 @@ public struct BlockState : IBlockData
     public short DefaultStateID => iBlockData.DefaultStateID;
 
     public state DefaultState => iBlockData.DefaultState;
+    public state CurrentState
+    {
+        get
+        {
+            var sId = StateID;
+            return States.First(t => t.Id == sId);
+        }
+    }
 
     public float Hardness => iBlockData.Hardness;
 
@@ -37,7 +46,14 @@ public struct BlockState : IBlockData
 
     public state[] States => iBlockData.States;
     public bool isAir => StateID == 0;
-
+    public bool isSolid
+    {
+        get
+        {
+            var curState = CurrentState;
+            return curState.CollisionShape.HasValue && curState.CollisionShape.Value == 0;
+        }
+    }
     public BlockState(short StateID)
     {
         this.StateID = StateID;

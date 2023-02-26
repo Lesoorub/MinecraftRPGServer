@@ -88,8 +88,24 @@ public class AnvilWorld : World
 
         SendSetBlockPackageAllPlayersAround();
         UpdateBlockAndNears();
+        InvokingOnBlockPlacedAndDestroyed();
 
         return result;
+        void InvokingOnBlockPlacedAndDestroyed()
+        {
+            if (!result) return;
+
+            if (BlockLogicAttribute.TryGetLogic(beforeBlockState.id, out var logic))
+            {
+                logic.SetState(this, x, y, z, beforeBlockState);
+                logic.OnBlockDestroyed(player);
+            }
+            if (BlockLogicAttribute.TryGetLogic(blockState.id, out logic))
+            {
+                logic.SetState(this, x, y, z, blockState);
+                logic.OnBlockPlaced(player);
+            }
+        }
         void SendSetBlockPackageAllPlayersAround()
         {
             int cposX = MinecraftCoordinatesSystem.PosToChunk1D(x);
@@ -102,15 +118,15 @@ public class AnvilWorld : World
                 if (mode == SetBlockMode.BreakSoundAndAnimation)
                     SendBreakEffect(otherplayer);
             }
-
-
         }
         void UpdateBlockAndNears()
         {
-            var dict = BlockLogicAttribute.Dict;
             //tick seted block
-            if (dict.TryGetValue(blockState.id, out var logic))
-                logic.OnUpdate(player, this, x, y, z, blockState);
+            if (BlockLogicAttribute.TryGetLogic(blockState.id, out var logic))
+            {
+                logic.SetState(this, x, y, z, blockState);
+                logic.OnUpdate(player);
+            }
             //tick all blocks around
             for (int dx = -1; dx <= 1; dx++)
                 for (int dy = -1; dy <= 1; dy++)
@@ -123,8 +139,11 @@ public class AnvilWorld : World
                         short ny = (short)Math.Min(Math.Max(y + dy, World.MinBlockHeight), World.MaxBlockHeight);
                         var block = GetBlock(nx, ny, nz);
                         if (block.isAir) continue;
-                        if (dict.TryGetValue(block.id, out logic))
-                            logic.OnUpdate(player, this, nx, ny, nz, blockState);
+                        if (BlockLogicAttribute.TryGetLogic(block.id, out logic))
+                        {
+                            logic.SetState(this, nx, ny, nz, block);
+                            logic.OnUpdate(player);
+                        }
                     }
         }
         void SendBreakEffect(Player otherplayer)

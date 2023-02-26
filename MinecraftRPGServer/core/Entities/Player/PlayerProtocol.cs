@@ -4,8 +4,10 @@ using System.Data.SqlTypes;
 using System.Linq;
 using System.Threading.Tasks;
 using Inventory;
+using MinecraftData._1_18_2.items.minecraft;
 using MineServer;
 using Packets.Play;
+using static Packets.Play.PlayerInfo;
 
 public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
 {
@@ -136,7 +138,6 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
             SendUpdateHealth();
         }
     }
-
     private void PlayerProtocol_OnPositionChanged(v3f lastposition, v3f newposition)
     {
         if (v3f.Distance(lastposition, newposition) < 8)
@@ -151,8 +152,6 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
             TeleportTo(newposition.Clone());
         }
     }
-
-    public void InvokeOnConnected() => OnConnected?.Invoke();
     private void PlayerProtocol_OnConnected()
     {
         rpgserver.OnLogOut += Rpgserver_OnLogOut;
@@ -192,6 +191,97 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         inventory.Init(this as Player);
         MinecraftRPGServer.PluginManager.OnPlayerLoginInCompleted(this as Player);
     }
+    private void Rpgserver_OnLogOut(Player player)
+    {
+        rpgserver.OnLogOut -= Rpgserver_OnLogOut;
+
+        Player.players.TryRemove(player.data.username, out var _);
+        //Уничтожить себя у других игроков
+        foreach (var entitypair in view.players)
+        {
+            if (entitypair.Value.entity.isInit)
+                entitypair.Value.entity.entitiesController.UnloadEntity(EntityID);
+        }
+        OnPlayerTick?.Invoke(null);
+    }
+
+
+    public void OnPlayerTryPlaceBlock(v3i Location, Direction Face, bool isMainHand, v3f cursor)
+    {
+        v3i pos = Location;
+
+        var placedOn = world.GetBlock(Location);
+
+        if (!Tags_1_18_2.blocks.replaceable_plants_names.Contains(placedOn.id.ToString()))
+        {
+            pos += DirToV3f(Face);
+        }
+
+        //if (placePacket.CursorPositionX == 1 || placePacket.CursorPositionX == 0 ||
+        //    placePacket.CursorPositionY == 1 || placePacket.CursorPositionY == 0 ||
+        //    placePacket.CursorPositionZ == 1 || placePacket.CursorPositionZ == 0)
+        if (!rpgserver.config.world.AllowBreakBlocks)
+        {
+            network.Send(new BlockChange()
+            {
+                BlockID = new VarInt(world.GetBlock(pos).StateID),
+                Location = new Position(pos),
+            });
+            return;
+        }
+
+
+        if (placedOn.StateID == (short)DefaultBlockState.air)//Запрет ставить блок на воздух
+            return;
+
+        Item item;
+
+        //Определяем какой предмет в руке
+        if (isMainHand)
+            item = MainHand;
+        else
+            item = OffHand;
+
+        if (item == null || !item.OnTryingPlace(
+            this as Player, 
+            pos,
+            Face, 
+            cursor,
+            out var state))//Если предмета в руке нет - игнор
+        {
+            return;
+        }
+        //Если предмет можно поставить в данную позицию
+
+        if (state.StateID != 0 && 
+            !world.SetBlock(this as Player, pos.x, (short)pos.y, pos.z, state))
+        {
+            network.Send(new BlockChange()
+            {
+                BlockID = new VarInt(world.GetBlock(pos).StateID),
+                Location = new Position(pos),
+            });
+            return;
+        }
+
+        return;
+
+        v3i DirToV3f(Direction face)
+        {
+            switch (face)
+            {
+                case Direction.East: return v3i.right;
+                case Direction.West: return v3i.left;
+                case Direction.South: return v3i.forward;
+                case Direction.North: return v3i.back;
+                case Direction.Top: return v3i.up;
+                case Direction.Bottom: return v3i.down;
+            }
+            return v3i.zero;
+        }
+    }
+
+    public void InvokeOnConnected() => OnConnected?.Invoke();
     public void DropItem(ref Item item, byte count)
     {
         if (item == null || item.ItemCount < count) return;
@@ -208,19 +298,6 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         var item = inventoryWindow.GetItem(index);
         DropItem(ref item, count);
         inventoryWindow.SetSlot(index, item);
-    }
-    private void Rpgserver_OnLogOut(Player player)
-    {
-        rpgserver.OnLogOut -= Rpgserver_OnLogOut;
-
-        Player.players.TryRemove(player.data.username, out var _);
-        //Уничтожить себя у других игроков
-        foreach (var entitypair in view.players)
-        {
-            if (entitypair.Value.entity.isInit)
-                entitypair.Value.entity.entitiesController.UnloadEntity(EntityID);
-        }
-        OnPlayerTick?.Invoke(null);
     }
 
     public static Guid FromLoginName(string login) => new Guid(login.GetSha1().Take(16));
@@ -594,4 +671,5 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         if (WindowID == 0) return;//Ignore PlayerInventoryWindow
         SecondWindow = null;
     }
+
 }
