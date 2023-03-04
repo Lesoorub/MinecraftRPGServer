@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Runtime.CompilerServices;
+using CommandLine;
+using WorldSystemV2;
 
 namespace MinecraftRPGServer.core.SubSystems.Physics
 {
@@ -108,6 +111,8 @@ namespace MinecraftRPGServer.core.SubSystems.Physics
         static bool isOverlapping1D(bound a, bound b) => a.max >= b.min && b.max >= a.min;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static bool isOverlapping1D(bound a, int unit_cube_center) => a.max >= unit_cube_center - 0.5f && unit_cube_center + 0.5f >= a.min;
+        static bool isOverlapping1D(int unit_cube_center, float point) =>
+            point - 0.5f < unit_cube_center && point + 0.5f > unit_cube_center;
 
         public static bool EntityIntersectionWithPoint(Entity entity, v3f point)
         {
@@ -118,6 +123,93 @@ namespace MinecraftRPGServer.core.SubSystems.Physics
                 isOverlapping1D(collisionBox.z, point.z);
         }
 
+        public static bool ContainsInBlock(v3i block_pos, BlockState block, v3f point)
+        {
+            if (block_pos.y < World.MinBlockHeight || block_pos.y > World.MaxBlockHeight)
+                return false;
+            return 
+                isOverlapping1D(block_pos.x, point.x) &&
+                isOverlapping1D(block_pos.y, point.y) &&
+                isOverlapping1D(block_pos.z, point.z);
+        }
+        public static bool EasyBlockRaycast(
+            IWorld world,
+            v3f start,
+            v3f dir,
+            float distance,
+            out EasyBlockRaycastHit hit,
+            float step = 1f / 32f)
+        {
+            EasyBlockRaycastHit hit2 = default;
+            bool result = false;
+            baseEasyBlockRaycast(world, start, dir, distance, step, (h) =>
+            {
+                hit2 = h;
+                result = true;
+                return true;
+            });
+            hit = hit2;
+            return result;
+        }
+        public static bool EasyBlockRaycastAll(
+            IWorld world,
+            v3f start,
+            v3f dir,
+            float distance,
+            out List<EasyBlockRaycastHit> results,
+            float step = 1f / 32f)
+        {
+            var list = new List<EasyBlockRaycastHit>();
+            baseEasyBlockRaycast(world, start, dir, distance, step, (h) =>
+            {
+                list.Add(h);
+                return false;
+            });
+            results = list;
+            return results.Count > 0;
+        }
+        private static void baseEasyBlockRaycast(
+            IWorld world, 
+            v3f start, 
+            v3f dir, 
+            float distance, 
+            float step,
+            Func<EasyBlockRaycastHit, bool> onHit)
+        {
+            dir = dir.Normalized;
+            float way = 0;
+            v3f point = start.Clone();
+            v3i block_pos = point.RoundToInt;
+            while (way < distance)
+            {
+                if (!block_pos.Equals(point.RoundToInt))
+                {
+                    block_pos = point.RoundToInt;
+                    var block = world.GetBlock(block_pos.x, (short)block_pos.y, block_pos.z);
+                    if (!block.isAir && ContainsInBlock(block_pos, block, point))
+                    {
+                        var needBreak = onHit(new EasyBlockRaycastHit()
+                        {
+                            block = block,
+                            blockPos = block_pos,
+                            point = point
+                        });
+                        if (needBreak)
+                            return;
+                    }
+                }
+                way += step;
+                point = dir * way + start;
+            }
+            return;
+        }
+
+        public struct EasyBlockRaycastHit
+        {
+            public v3i blockPos;
+            public v3f point;
+            public BlockState block;
+        }
 
         struct bound
         {

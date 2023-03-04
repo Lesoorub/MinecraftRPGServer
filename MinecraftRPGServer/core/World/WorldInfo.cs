@@ -14,6 +14,7 @@ public class WorldInfo
     public long CycleTime = 24000;
     public long Seed;
     public long HashedSeed;
+    public int RandomTickSpeed = 3;
 
     public WorldInfo()
     {

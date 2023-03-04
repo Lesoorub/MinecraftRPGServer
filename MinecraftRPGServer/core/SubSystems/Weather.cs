@@ -5,9 +5,9 @@ public class Weather
     public bool IsRaining { get; private set; }
     public float IsThunder { get; private set; }
     public float Power { get; private set; }
-    PlayerProtocol pl;
+    Player pl;
 
-    public Weather(PlayerProtocol player)
+    public Weather(Player player)
     {
         pl = player;
     }
@@ -19,20 +19,20 @@ public class Weather
             if (Power == power) return;
 
             Power = power;
-            pl.SendChangeGameState(ChangeGameState.ReasonType.RainLevelChange, power);
+            pl.api.SendChangeGameState(ChangeGameState.ReasonType.RainLevelChange, power);
             return;
         }
         this.IsRaining = isRainging;
         if (IsRaining)
-            pl.SendChangeGameState(ChangeGameState.ReasonType.BeginRaining, 0);
+            pl.api.SendChangeGameState(ChangeGameState.ReasonType.BeginRaining, 0);
         else
-            pl.SendChangeGameState(ChangeGameState.ReasonType.EndRaining, 0);
+            pl.api.SendChangeGameState(ChangeGameState.ReasonType.EndRaining, 0);
     }
     public void SetThunder(float power)
     {
         if (!IsRaining)
             SetRaining(true);
         Power = power;
-        pl.SendChangeGameState(ChangeGameState.ReasonType.ThunderLevelChange, power);
+        pl.api.SendChangeGameState(ChangeGameState.ReasonType.ThunderLevelChange, power);
     }
 }

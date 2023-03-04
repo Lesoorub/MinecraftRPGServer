@@ -35,6 +35,7 @@ public partial class MCA
         chunks_raw = raw.Skip(4096 * 2);
     }
 
+    public IEnumerable<KeyValuePair<v2i, Chunk>> Chunks => chunks;
     public bool HasChunk(int rx, int rz)
     {
         var t = new v2i(rx, rz);

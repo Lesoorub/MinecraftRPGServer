@@ -70,6 +70,12 @@ public class AnvilWorld : World
     {
         if (Info == null) return;
         SetTime(Info.Time + 1);
+
+        foreach (var regPair in loader.regions)
+            foreach (var chunkPair in regPair.Value.Chunks)
+            {
+                chunkPair.Value.Tick();
+            }
     }
     public override bool SetBlock(
         Player player,
@@ -148,7 +154,7 @@ public class AnvilWorld : World
         }
         void SendBreakEffect(Player otherplayer)
         {
-            otherplayer.SendEffect(EffectID.Block_break, x, y, z, beforeBlockState.StateID, false);
+            otherplayer.api.SendEffect(EffectID.Block_break, x, y, z, beforeBlockState.StateID, false);
         }
     }
     public override void Save(string path)

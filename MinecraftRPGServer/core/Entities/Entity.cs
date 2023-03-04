@@ -90,8 +90,8 @@ public abstract class Entity
 
     protected void Entity_OnPositionChanged(v3f lastposition, v3f newposition)
     {
-        var lastcpos = Chunk.FromAbsolutePosition(lastposition);
-        var newcpos = Chunk.FromAbsolutePosition(newposition);
+        var lastcpos = MinecraftCoordinatesSystem.GetChunkFromCoords(lastposition);
+        var newcpos = MinecraftCoordinatesSystem.GetChunkFromCoords(newposition);
         if (!lastcpos.Equals(newcpos))
             OnChunkChanged?.Invoke(lastcpos, newcpos);
     }

@@ -19,7 +19,6 @@ public abstract partial class BaseBlockLogic
     }
 
     public virtual void OnUpdate(Player player) { }
-    public virtual void OnTick() { }//is never invoking
     public virtual void OnRandomTick() { }//is never invoking
     public virtual BlockState OnTryingPlaceBlock(Player player) => currentState;
     public virtual void OnBlockPlaced(Player player) { }

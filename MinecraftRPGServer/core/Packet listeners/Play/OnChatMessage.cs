@@ -32,7 +32,7 @@ public sealed class OnChatMessage : PacketListener
             if (message.Length > cfg.maxMessageSize)
                 return;
             foreach (var pl in server.loginnedPlayers)
-                pl.Value.Echo(player.PlayerUUID, Packets.Play.ChatMessage_clientbound.PositionType.chat,
+                pl.Value.api.Echo(player.PlayerUUID, Packets.Play.ChatMessage_clientbound.PositionType.chat,
                     Chat.ColoredText(message));
         }
         else//Local message
@@ -46,7 +46,7 @@ public sealed class OnChatMessage : PacketListener
 
             foreach (var pl in server.loginnedPlayers)
                 if (v3f.SqrDistance(pl.Value.Position, player.Position) < sqrDistance)
-                    pl.Value.Echo(player.PlayerUUID, Packets.Play.ChatMessage_clientbound.PositionType.chat,
+                    pl.Value.api.Echo(player.PlayerUUID, Packets.Play.ChatMessage_clientbound.PositionType.chat,
                         Chat.ColoredText(message));
         }
     }

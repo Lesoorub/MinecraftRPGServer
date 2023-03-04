@@ -37,7 +37,7 @@ public class UnloadCommand : IChatCommand
             {
                 player.worldController.UnloadChunks();
                 player.worldController.SendWorld();
-                player.SendPlayerPositionAndLook();
+                player.api.SendPlayerPositionAndLook();
                 player.EchoIntoChatFromServer("Chunks reloaded");
             }
         }

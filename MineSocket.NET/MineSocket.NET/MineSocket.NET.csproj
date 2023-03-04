@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="core\INetworkProvider.cs" />
     <Compile Include="enums\DisconnectReason.cs" />
     <Compile Include="intefaces\IClient.cs" />
     <Compile Include="libs\ArrayReader.cs" />

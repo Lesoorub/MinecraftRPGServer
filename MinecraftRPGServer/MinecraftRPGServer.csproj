@@ -264,6 +264,9 @@
     <Compile Include="core\Entities\Player\datawatchers\DataWatcher.cs" />
     <Compile Include="core\Entities\Player\datawatchers\InventoryWatcher.cs" />
     <Compile Include="core\Entities\Player\datawatchers\InventoryWindowWatcher.cs" />
+    <Compile Include="core\Entities\Player\FileSystemPlayerDataProvider.cs" />
+    <Compile Include="core\Entities\Player\IPlayerDataProvider.cs" />
+    <Compile Include="core\Entities\Player\PlayerAPI.cs" />
     <Compile Include="core\Entities\Player\ToolMath.cs" />
     <Compile Include="core\Entities\sound\Categories.cs" />
     <Compile Include="core\Items\BaseClasses\Backpack.cs" />
@@ -294,6 +297,9 @@
     <Compile Include="core\World\WorldSystemV2\ILightEngine.cs" />
     <Compile Include="core\World\IWorldsProvider.cs" />
     <Compile Include="core\World\MinecraftCoordinatesSystem.cs" />
+    <Compile Include="core\World\WorldSystemV2\SetBlockMode.cs" />
+    <Compile Include="special types\BlockEntityAttribute.cs" />
+    <Compile Include="special types\BlockEntityData.cs" />
     <Compile Include="StartUpSettings.cs" />
     <Compile Include="core\SubSystems\Commands\lib\CustomCommandNode.cs" />
     <Compile Include="core\Entities\EntityAttribute.cs" />

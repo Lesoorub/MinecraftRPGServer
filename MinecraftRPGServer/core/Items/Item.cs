@@ -22,7 +22,7 @@ namespace Inventory
             set => itemCount = Math.Min(Math.Max(value, (byte)0), DefaultMaxCount);
         }
         [JsonIgnore]
-        public MinecraftData._1_18_2.items.minecraft.IBaseItem itemData => MinecraftData._1_18_2.items.minecraft.ItemAttribute.items[ItemID];
+        public IBaseItem itemData => MinecraftData._1_18_2.items.minecraft.ItemAttribute.items[ItemID];
         [JsonIgnore]
         public const byte DefaultMaxCount = 64;
         [JsonIgnore]
@@ -148,11 +148,18 @@ namespace Inventory
             };
         }
 
+        public static JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings()
+        {
+            Formatting = Formatting.Indented,
+            TypeNameHandling = TypeNameHandling.All,
+            DefaultValueHandling = DefaultValueHandling.Ignore,
+            CheckAdditionalContent = true,
+        };
         public object Clone()
         {
             return JsonConvert.DeserializeObject(
-                JsonConvert.SerializeObject(this, PlayerData.jsonSerializerSettings),
-                PlayerData.jsonSerializerSettings);
+                JsonConvert.SerializeObject(this, jsonSerializerSettings),
+                jsonSerializerSettings);
         }
 
         public byte[] ToByteArray() => ((Slot)this).ToByteArray();

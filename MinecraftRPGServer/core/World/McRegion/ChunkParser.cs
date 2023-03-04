@@ -12,14 +12,14 @@ public static class ChunkParser
 
         if (block_entities != null && block_entities.data.Count > 0)
         {
-            obj.BlockEntities = new BlockEntity[block_entities.data.Count];
+            obj.BlockEntities = new BlockEntityData[block_entities.data.Count];
 
             int index = 0;
             foreach (var ent in block_entities.data)
             {
-                if (BlockEntity.GetByNameID(ent["id"] as TAG_String, out var type))
+                if (BlockEntityData.GetByNameID(ent["id"] as TAG_String, out var type))
                 {
-                    obj.BlockEntities[index++] = new BlockEntity()
+                    obj.BlockEntities[index++] = new BlockEntityData()
                     {
                         blockX = (byte)(ent["x"] as TAG_Int & 0xF),
                         blockZ = (byte)(ent["z"] as TAG_Int & 0xF),
@@ -62,7 +62,7 @@ public static class ChunkParser
         {
             nbt["block_entities"] = new TAG_List(obj.BlockEntities.Select(x =>
             {
-                if (!BlockEntity.GetNameIDByType((BlockEntityID)x.Type.value, out var nameid)) return null;
+                if (!BlockEntityData.GetNameIDByType((BlockEntityID)x.Type.value, out var nameid)) return null;
                 var t = new NBTTag(x.Data.ToByteArray());
                 t["x"] = new TAG_Int(x.blockX);
                 t["z"] = new TAG_Int(x.blockZ);

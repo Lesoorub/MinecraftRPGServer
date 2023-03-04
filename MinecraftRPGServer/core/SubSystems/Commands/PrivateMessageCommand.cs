@@ -54,14 +54,14 @@ public class PrivateMessageCommand : IChatCommand
         if (args.Length < 2) return;
         var target = player.rpgserver.FindByUsername(args[0]);
         var cfg = player.rpgserver.config.chat;
-        player.Echo(
+        player.api.Echo(
             player.PlayerUUID,
             Packets.Play.ChatMessage_clientbound.PositionType.chat,
             Chat.ColoredText(cfg.PMFormat
                 .Replace("{playername}", player.data.username)
                 .Replace("{selfusername}", target.data.username)
                 .Replace("{message}", string.Join(" ", args.Skip(1)))));
-        target.Echo(
+        target.api.Echo(
             player.PlayerUUID,
             Packets.Play.ChatMessage_clientbound.PositionType.chat,
             Chat.ColoredText(cfg.PMFormat

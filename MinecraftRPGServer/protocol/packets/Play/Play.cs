@@ -331,7 +331,7 @@ namespace Packets.Play
         public int ChunkZ;
         public NBTTag Heightmaps;
         public byte[] Data;
-        public BlockEntity[] BlockEntities;
+        public global::BlockEntityData[] BlockEntities;
         public bool TrustEdges;
         public BitSet SkyLightMask;
         public BitSet BlockLightMask;

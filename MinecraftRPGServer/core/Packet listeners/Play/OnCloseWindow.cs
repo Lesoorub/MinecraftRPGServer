@@ -11,6 +11,6 @@ public class OnCloseWindow : PacketListener
         if (pack == null || player == null) return;
         if (pack.WindowID != 0)
             player.CloseWindow(pack.WindowID);
-        player.SendInventory();
+        player.api.SendInventory();
     }
 }

@@ -189,7 +189,7 @@ public class CreateCommand : IChatCommand
     {
         if (item == null) return;
         if (player.inventory.AddItem(ref item))
-            player.SendInventory();
+            player.api.SendInventory();
         else
             player.EchoIntoChatFromServer("&6Not enought space");
 

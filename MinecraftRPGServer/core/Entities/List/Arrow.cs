@@ -49,7 +49,7 @@ namespace Entities
                         t.Health -= SenderBow.ArrowDamage;
                     //Уничтожить при попадании в энтити
                     Destroy();
-                    sender.SendArrayHitSound();
+                    sender.api.SendArrayHitSound();
                 }
                 else
                 {

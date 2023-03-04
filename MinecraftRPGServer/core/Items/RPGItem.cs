@@ -82,7 +82,7 @@ namespace Inventory.Items
             if (player.Cooldowns.TryGetValue(ItemID, out var cooldown) && cooldown > now)
                 return false;
             player.Cooldowns[ItemID] = now + ticks;
-            player.SendCooldown(ItemID, ticks);
+            player.api.SendCooldown(ItemID, ticks);
             return true;
         }
 

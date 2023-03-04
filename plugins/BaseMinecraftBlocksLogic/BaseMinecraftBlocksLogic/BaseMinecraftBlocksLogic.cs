@@ -97,6 +97,46 @@ namespace BaseLogic
                 return blockState.isSolid;
             }
         }
+
+        [BlockLogic(BlockNameID.farmland)]
+        public class Farmland : BaseBlockLogic
+        {
+            static BlockState Moistured0;
+            static BlockState Moistured7;
+            static Farmland()
+            {
+                if (GlobalPalette.GetStateIDByProperties(BlockNameID.farmland, new byte[] { 0 }, out var moistured))
+                    Moistured0 = new BlockState(moistured.Id);
+                if (GlobalPalette.GetStateIDByProperties(BlockNameID.farmland, new byte[] { 7 }, out var moistured))
+                    Moistured7 = new BlockState(moistured.Id);
+            }
+            public override void OnRandomTick()
+            {
+                if (currentState.id == Moistured0.id)
+                {
+                    //Не намочен
+                    if (FindWater())
+                        world.SetBlock(null, x, y, z, Moistured7);
+                }
+                else
+                {
+                    //Намочен
+                    if (!FindWater())
+                        world.SetBlock(null, x, y, z, Moistured0);
+                }
+            }
+            bool FindWater()
+            {
+                for (int rx = -4; rx <= 4; rx++)
+                    for (int rz = -4; rz <= 4; rz++)
+                    {
+                        var block = world.GetBlock(x + rx, y, z + rz);
+                        if (block.id == BlockNameID.water)
+                            return true;
+                    }
+                return false;
+            }
+        }
     }
     namespace Items
     {
@@ -108,6 +148,23 @@ namespace BaseLogic
                 state = Blocks.Vine.FromWorld(player.world, Location.x, (short)Location.y, Location.z);
                 return state.StateID != Blocks.Vine.emptyState;
             }
+        }
+        [Item(ItemNameID.potato)]
+        public class Potato : Item
+        {
+            public override bool OnTryingPlace(Player player, v3i Location, Direction Face, v3f cursor, out BlockState state)
+            {
+                var underBlock = player.world.GetBlock(Location + v3i.down);
+                state = default;
+                if (underBlock.id != BlockNameID.farmland)
+                    return false;
+                return base.OnTryingPlace(player, Location, Face, cursor, out state);
+            }
+        }
+        [Item(ItemNameID.iron_hoe)]
+        public class Hoe : Item, IUsable
+        {
+            
         }
     }
 }

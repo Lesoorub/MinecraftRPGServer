@@ -11,7 +11,7 @@ public class OnClickWindow : PacketListener
         if (clickWindow.WindowID == 0)
         {
             if (!player.inventoryWindow.ClickWindow(player, clickWindow))
-                player.SendInventory();
+                player.api.SendInventory();
         }
         else
         {

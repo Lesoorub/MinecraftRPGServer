@@ -9,7 +9,7 @@ public class LivingEntity : Entity
 {
     public Guid EntityUUID = Guid.NewGuid();
     private float maxHealth = 20;
-    private float health = 20;
+    protected float health = 20;
     public virtual float HeadYaw { get; set; }
     public virtual float MaxHealth
     {
@@ -123,7 +123,7 @@ public class LivingEntity : Entity
         }
         foreach (var player in whoViewMe)
         {
-            player.PlaySound(HurtSound, Position, 1f / v3f.Distance(position, player.position));
+            player.api.PlaySound(HurtSound, Position, 1f / v3f.Distance(position, player.position));
             SendPlayAnimation(EntityAnimation_clientbound.AnimationType.TakeDamage, player.network);
         }
     }

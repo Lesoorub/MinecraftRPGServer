@@ -40,7 +40,7 @@ namespace Inventory.Items
             var arrowItem = player.inventory.FindItem(ItemNameID.arrow);
             if (arrowItem == null) return false;
             arrowItem.ItemCount--;
-            player.SendInventory();
+            player.api.SendInventory();
             return true;
         }
         public virtual void Shot(Player player, float charge)

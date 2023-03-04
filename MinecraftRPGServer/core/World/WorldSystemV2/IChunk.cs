@@ -4,6 +4,7 @@ namespace WorldSystemV2
 {
     public interface IChunk
     {
+        IWorld World { get; set; }
         int X { get; }
         int Z { get; }
 
@@ -18,7 +19,7 @@ namespace WorldSystemV2
 
         byte[] Data { get; }
         ChunkDataAndUpdateLight packet { get; }
-
+        void Tick();
         BlockState GetBlock(byte rx, short y, byte rz);
         bool SetBlock(byte rx, short y, byte rz, BlockState newState);
 

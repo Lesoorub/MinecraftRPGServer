@@ -17,10 +17,4 @@
 
         void Save(string path);
     }
-
-    public enum SetBlockMode : byte
-    {
-        NoneSoundAndAnimation,
-        BreakSoundAndAnimation,
-    }
 }

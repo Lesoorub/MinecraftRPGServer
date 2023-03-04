@@ -71,7 +71,7 @@ public class EntityWorld
         lock (chunks)
         {
             var result = new List<Entity>();
-            var cpos = Chunk.FromAbsolutePosition(position);
+            var cpos = MinecraftCoordinatesSystem.GetChunkFromCoords(position);
             var crad = (int)Math.Ceiling(radius / 16f);
             var sqrRad = radius * radius;
 

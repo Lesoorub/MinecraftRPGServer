@@ -7,6 +7,7 @@ using MineServer;
 public class Player : PlayerProtocol, IDisposable
 {
     public static ConcurrentDictionary<string, Player> players = new ConcurrentDictionary<string, Player>();
+    public static IPlayerDataProvider playerDataProvider;
     public override int EntityType => 111;
     public override v2f BoxCollider => new v2f(0.6f, 1.8f);
     public const string NameID = "minecraft:player";
@@ -22,7 +23,7 @@ public class Player : PlayerProtocol, IDisposable
     /// <param name="login"></param>
     /// <param name="server"></param>
     public Player(World world) : base(world) { }
-    public Player(PlayerData data, RPGServer server) : base(server.worlds[data.WorldName])
+    public Player(PlayerData data, World world) : base(world)
     {
         this.data = data;
         PlayerUUID = FromLoginName(data.loginname);
@@ -33,7 +34,7 @@ public class Player : PlayerProtocol, IDisposable
         Entity_OnChunkChanged(lastcpos, ChunkPos);
         rotation = data.rotation;
         MaxHealth = GetMaxHealth();
-        Health = data.Health;
+        health = data.Health;
         gamemode = (GamemodeType)data.Gamemode;
         SelectedSlot = data.SelectedSlot;
     }
