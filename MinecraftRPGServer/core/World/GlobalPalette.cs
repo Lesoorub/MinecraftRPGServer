@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System.Collections;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Runtime.InteropServices;
 using MinecraftData._1_18_2.blocks.minecraft;
@@ -20,16 +21,9 @@ public class GlobalPalette
     public static IBlockData GetBlockData(short StateId) =>
         BlocksData.blocks[BlocksData.names[StateId]];
 
-    static ConcurrentDictionary<BlockNameID, IBlockData> blocksChache = new ConcurrentDictionary<BlockNameID, IBlockData>();
     public static IBlockData GetBlockData(BlockNameID nameid)
     {
-        IBlockData result;
-        if (blocksChache.TryGetValue(nameid, out result))
-            return result;
-
-        result = BlocksData.blocks[nameid];
-        blocksChache.TryAdd(nameid, result);
-        return result;
+        return BlocksData.block2[(int)nameid];
     }
 
     public static bool GetStateIDByProperties(BlockNameID nameid, byte[] properties, out state state)

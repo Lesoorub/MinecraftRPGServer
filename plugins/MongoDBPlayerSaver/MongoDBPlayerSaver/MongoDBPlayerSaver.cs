@@ -3,6 +3,7 @@ using MongoDB.Driver;
 using Newtonsoft.Json;
 using System;
 using System.Numerics;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -34,8 +35,13 @@ public class MongoDBPlayerSaver : Plugin
     {
         try
         {
-            var ping = db.RunCommandAsync((Command<BsonDocument>)"{ping:1}");
-            ping.Wait();
+            using (var source = new CancellationTokenSource(1000))
+            {
+                var ping = db.RunCommandAsync(
+                    (Command<BsonDocument>)"{ping:1}",
+                    cancellationToken: source.Token);
+                ping.Wait();
+            }
             return true;
         }
         catch

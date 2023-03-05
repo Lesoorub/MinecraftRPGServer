@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using MinecraftData._1_18_2.blocks.minecraft;
 using MinecraftRPGServer;
 using MinecraftRPGServer.core.Configs;
 using MineServer;
@@ -19,6 +20,7 @@ public sealed partial class RPGServer : MineServer.MineServer
     public Dispatcher dispatcher = new Dispatcher();
     public RPGServer(StartUpSettings settings) : base(settings.port)
     {
+
         var partTimer = new System.Diagnostics.Stopwatch();
         var timer = new System.Diagnostics.Stopwatch();
         timer.Start();
@@ -47,6 +49,15 @@ public sealed partial class RPGServer : MineServer.MineServer
         };
 
         partTimer.Start();
+        ////DEBUG
+        //config = ServerConfig.Load();
+        //for (int k = 0; k < 100; k++)
+        //{
+        //    partTimer.Restart();
+        //    LoadWorlds();
+        //    logger.Write($"{k} {((double)partTimer.ElapsedTicks / TimeSpan.TicksPerMillisecond):N3} ms");
+        //}
+        ////
         foreach (var i in init)
         {
             partTimer.Restart();

@@ -111,6 +111,18 @@ public static class ChunkSectionParser
             return string.Compare(x.name, y.name);
         }
     }
+
+    static Dictionary<string, BlockNameID> cast_block_name_id;
+    static ChunkSectionParser()
+    {
+        var arr = Enum.GetNames(typeof(BlockNameID));
+        cast_block_name_id = new Dictionary<string, BlockNameID>(arr.Length);
+        for (int k = 0; k < arr.Length; k++)
+        {
+            cast_block_name_id.Add(arr[k], (BlockNameID)k);
+        }
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static short StateIDFromTAG(string name, TAG_Compound propsTAG)
     {
@@ -119,7 +131,9 @@ public static class ChunkSectionParser
         var propsHash = StateIDFromTAGChahe.PropsHash(propsTAG);
         var nameHash = StateIDFromTAGChahe.StringHash(name);
 
-        if (!Enum.TryParse<BlockNameID>(name.Replace("minecraft:", ""), out var nameid)) return 0;
+        if (!cast_block_name_id.TryGetValue(name, out var nameid))
+            return 0;
+
 
         if (chache.Get(nameHash, propsHash, out var result))
             return result;
