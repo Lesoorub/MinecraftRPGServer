@@ -43,7 +43,6 @@ public class PlayerAPI
             DisableRelativeVolume = DisableRelativeVolume
         });
     }
-
     public void SendUpdateHealth()
     {
         network.Send(new UpdateHealth()
@@ -53,7 +52,6 @@ public class PlayerAPI
             FoodSaturation = 0
         });
     }
-
     public void SendCollectItem(int WhoIED, int ItemEID, int count)
     {
         network.Send(new CollectItem()
@@ -142,7 +140,6 @@ public class PlayerAPI
             Pitch = pitch,
         });
     }
-
     public void SendEnableRespawnScreen(bool isImmediatelyRespawn) =>
         SendChangeGameState(ChangeGameState.ReasonType.EnableRespawnScreen, isImmediatelyRespawn ? 1 : 0);
     public void SendHeldItemChanged()

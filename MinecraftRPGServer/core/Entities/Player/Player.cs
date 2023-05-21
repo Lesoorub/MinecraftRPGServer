@@ -3,6 +3,8 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using MineServer;
+using NBT;
+using Newtonsoft.Json;
 
 public class Player : PlayerProtocol, IDisposable
 {
@@ -14,6 +16,7 @@ public class Player : PlayerProtocol, IDisposable
     public override string ID => NameID;
     public override EntityMetadata meta { get; set; } = new PlayerMetadata();
     public PlayerData data;
+    public NBTTag rawData;
     public const float baseMaxHealth = 100;
     public const float baseHandDamage = 1;
 
@@ -23,20 +26,22 @@ public class Player : PlayerProtocol, IDisposable
     /// <param name="login"></param>
     /// <param name="server"></param>
     public Player(World world) : base(world) { }
-    public Player(PlayerData data, World world) : base(world)
+    public Player(NBTTag data, World world) : base(world)
     {
-        this.data = data;
-        PlayerUUID = FromLoginName(data.loginname);
+        this.rawData = data;
+        var json = data.ToJson();
+        this.data = JsonConvert.DeserializeObject<PlayerData>(json);
+        PlayerUUID = FromLoginName(this.data.loginname);
         inventory = new Inventory.InventoryOfPlayer();
-        data.inventory.UnloadTo(ref inventory);
+        this.data.inventory.UnloadTo(ref inventory);
         var lastcpos = ChunkPos;
-        position = data.position;
+        position = this.data.position;
         Entity_OnChunkChanged(lastcpos, ChunkPos);
-        rotation = data.rotation;
+        rotation = this.data.rotation;
         MaxHealth = GetMaxHealth();
-        health = data.Health;
-        gamemode = (GamemodeType)data.Gamemode;
-        SelectedSlot = data.SelectedSlot;
+        health = this.data.Health;
+        gamemode = (GamemodeType)this.data.Gamemode;
+        SelectedSlot = this.data.SelectedSlot;
     }
     public void OnDisconnected(DisconnectReason reason)
     {

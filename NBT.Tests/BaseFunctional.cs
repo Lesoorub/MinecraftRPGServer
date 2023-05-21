@@ -2,7 +2,7 @@
 using NBT;
 using System.Collections.Generic;
 
-namespace MinecraftRPGServer.Tests.NBT
+namespace NBT.Tests
 {
     [TestClass]
     public class HasTag

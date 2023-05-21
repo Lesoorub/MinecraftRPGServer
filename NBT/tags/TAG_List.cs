@@ -2,6 +2,7 @@
 using System.Buffers.Binary;
 using System.Collections;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 
@@ -34,7 +35,10 @@ namespace NBT
             {
                 for (int k = 0; k < data.Count; k++)
                     if (data[k].name == name)
+                    {
                         data[k] = value;
+                        break;
+                    }
             }
         }
         public TAG_List(byte[] raw, ref int offset) : base("")
@@ -112,5 +116,20 @@ namespace NBT
         public TAG[] ToArray() => data.ToArray();
 
         public IEnumerator GetEnumerator() => data.GetEnumerator();
+        public override dynamic ToDynamic()
+        {
+            return data.Select(x => x.ToDynamic()).ToArray();
+        }
+        public override string ToJson()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("[");
+            sb.Append(string.Join(
+                ",",
+                data.Select(
+                    pair => pair.ToJson())));
+            sb.Append("]");
+            return sb.ToString();
+        }
     }
 }

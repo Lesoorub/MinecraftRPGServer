@@ -8,21 +8,28 @@ using System.Runtime.InteropServices;
 using Compressions;
 using Entities;
 using MineServer;
+using NBT;
+using Rust.Option;
 using WorldSystemV2;
-
 public partial class MCA
 {
+
+    #region Fields
+
+    #region Private
+
     ConcurrentDictionary<v2i, Chunk> chunks = new ConcurrentDictionary<v2i, Chunk>(v2iComparer.Instance);
-    public byte[] location_table_raw;
-    public byte[] timestamp_table_raw;
-    public byte[] chunks_raw;
-    enum CompressionScheme : byte
-    {
-        gzip = 1,
-        zlib = 2,
-        none = 3
-    }
     readonly CompressionScheme GlobalCompressionScheme = CompressionScheme.zlib;
+    byte[] location_table_raw;
+    byte[] timestamp_table_raw;
+    byte[] chunks_raw;
+
+    #endregion
+
+    #endregion
+
+    #region Constructors
+    
     public MCA()
     {
         location_table_raw = new byte[4096];
@@ -35,6 +42,12 @@ public partial class MCA
         chunks_raw = raw.Skip(4096 * 2);
     }
 
+    #endregion
+
+    #region Methods
+
+    #region Public
+
     public IEnumerable<KeyValuePair<v2i, Chunk>> Chunks => chunks;
     public bool HasChunk(int rx, int rz)
     {
@@ -43,39 +56,23 @@ public partial class MCA
             return true;
         return ChunkSpawned(GetChunkIndex(rx, rz));
     }
-    public Chunk GetChunk(int rx, int rz)
+    public Option<Chunk> GetChunk(int rx, int rz)
     {
         var t = new v2i(rx, rz);
-        if (!chunks.ContainsKey(t))
-        {
-            var c = LoadChunk(rx, rz);
-            if (c == null)
-                throw new Exception("Can't load chunk");
-            return c;
-        }
-        return chunks[t];
-    }
-    public Chunk LoadChunk(int rx, int rz)
-    {
-        if (!ChunkSpawned(GetChunkIndex(rx, rz)))
-            return CreateChunk(rx, rz);
-        if (!TryGetChunkData(rx, rz, out var data))
-            return CreateChunk(rx, rz);
-        try
-        {
-            var chunk = new Chunk(data, GetTimestump(rx, rz));
-            var cpos = new v2i(rx, rz);
-            if (!chunks.TryAdd(cpos, chunk))
-                return chunks[cpos];
-            return chunk;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.ToString());
-            return null;
-        }
-    }
 
+        if (chunks.TryGetValue(t, out var chunk))
+        {
+            return Option<Chunk>.Some(chunk);
+        }
+        else
+        {
+            return LoadChunk(rx, rz);
+        }
+    }
+    public byte[] ToByteArray()
+    {
+        return FastByteArrayExtensions.Combine(location_table_raw, timestamp_table_raw, chunks_raw);
+    }
     public void SaveChunks()
     {
         if (chunks.All(predicate: pair =>
@@ -154,6 +151,23 @@ public partial class MCA
 #endif
     }
 
+    #endregion
+
+    #region Private
+
+    Option<Chunk> LoadChunk(int rx, int rz)
+    {
+        if (!ChunkSpawned(GetChunkIndex(rx, rz)) ||
+            !TryGetChunkData(rx, rz, out var data))
+            return CreateChunk(rx, rz);
+
+        return new Option<Chunk>(() =>
+        {
+            var cpos = new v2i(rx, rz);
+            var nbt = new NBTTag(data);
+            return new Chunk(cpos, nbt, GetTimestump(rx, rz));
+        });
+    }
     byte[] CompressChunk(IChunk chunk)
     {
         var bytes = chunk.ExportToBytes();
@@ -202,19 +216,17 @@ public partial class MCA
 #endif
 
     }
-
-    public byte[] ToByteArray()
+    Option<Chunk> CreateChunk(int rx, int rz)
     {
-        return FastByteArrayExtensions.Combine(location_table_raw, timestamp_table_raw, chunks_raw);
-    }
+        return new Option<Chunk>(() =>
+        {
+            var cpos = new v2i(rx, rz);
+            var chunk = new Chunk(cpos);
 
-    Chunk CreateChunk(int rx, int rz)
-    {
-        var cpos = new v2i(rx, rz);
-        var chunk = new Chunk(cpos);
-        if (!chunks.TryAdd(cpos, chunk))
-            throw new Exception("Can't add chunk in chunks");
-        return chunk;
+            if (!chunks.TryAdd(cpos, chunk))
+                throw new Exception("Can't add chunk in chunks");
+            return chunk;
+        });
     }
     byte[] GetFullPages(int index, out int Length)
     {
@@ -287,6 +299,11 @@ public partial class MCA
     {
         return GetTimestump(GetChunkIndex(rx, rz));
     }
+
+    #endregion
+
+    #endregion
+
     //chunk:
     //[length:be_int4]
     //[compressionType:int1]
@@ -296,6 +313,12 @@ public partial class MCA
     //[{[offset:be_int3][size:int1]}:4096]
     //[timestamp_table:int[4096]]
     //[pages:*]
+    enum CompressionScheme : byte
+    {
+        gzip = 1,
+        zlib = 2,
+        none = 3
+    }
 }
 
 

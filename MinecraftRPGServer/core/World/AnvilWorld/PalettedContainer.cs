@@ -27,6 +27,20 @@ public class PalettedContainer
     byte threshold;
     byte directBitsPerEntry;
 
+    #region Valid check
+
+    public bool IsValid => IsValid_container
+        && IsValid_size
+        && IsValid_threshold
+        && IsValid_directBitsPerEntry
+        ;
+    public bool IsValid_container => container != null && container.IsValid;
+    public bool IsValid_size => size > 0;
+    public bool IsValid_threshold => threshold > 0;
+    public bool IsValid_directBitsPerEntry => directBitsPerEntry > 0;
+
+    #endregion
+
     public PalettedContainer(List<short> palette, long[] data, byte size, byte threshold, byte directBitsPerEntry)
     {
         this.size = size;
@@ -181,6 +195,7 @@ public class PalettedContainer
 
     public interface IContainer
     {
+        bool IsValid { get; }
         byte BitsPerEntry { get; }
         void Set(int rx, int ry, int rz, short item);
         short Get(int rx, int ry, int rz);
@@ -191,6 +206,8 @@ public class PalettedContainer
 
     public class SinglePalette : IContainer
     {
+        public bool IsValid => size > 0;
+
         public short element;
         public byte size;
 
@@ -231,8 +248,28 @@ public class PalettedContainer
     }
     public class InDirectPalette : IContainer
     {
+        public bool IsValid => size > 0 
+            && !isBroken 
+            && BitsPerEntry != 0
+            && IsValid_Palette
+            && IsValid_data
+            ;
+#if DEBUG
+        public int IsValid_Palette_Sum => Palette.Sum(x => x.count);
+#endif
+
+        public bool IsValid_Palette => Palette != null
+            && Palette.Sum(x => x.count) == size * size * size
+            && Palette.GroupBy(x => x.value).Count() == Palette.Count
+            && Palette.All(x => x.value >= 0)
+            ;
+        public bool IsValid_data => data != null
+            && data.All(x => x >= 0 && x < Palette.Count)
+            && data.Length == size * size * size
+            ;
         public List<PaletteElement> Palette;
         public short[] data;
+        
 
         public byte size;
         public byte BitsPerEntry => (byte)Math.Ceiling(Math.Log(Palette.Count, 2));
@@ -417,6 +454,11 @@ public class PalettedContainer
     }
     public class DirectPalette : IContainer
     {
+        public bool IsValid => bitsPerEntry > 0 
+            && size > 0 
+            && data != null 
+            && data.Length == size * size * size;
+
         public short[] data;
 
         public byte bitsPerEntry;

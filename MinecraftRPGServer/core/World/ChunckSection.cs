@@ -10,21 +10,36 @@ public class ChunkSection
     public PalettedContainer biomes;
     public PalettedContainer block_states;
 
-    public const int BlocksSizePerSection = 16;
-    public const int BiomesSizePerSection = 4;
-
     public byte[] SkyLight;
     public byte[] BlockLight;
 
     public short BlockCount;
-    public byte BitsPerBlock;
 
+    #region consts
+
+    public const int BlocksSizePerSection = 16;
+    public const int BiomesSizePerSection = 4;
     public const byte GlobalBiomesMaxBitsPerEntry = 5;
     //public static readonly byte GlobalBiomesMaxBitsPerEntry = (byte)Math.Ceiling(Math.Log(ChunkSectionParser.biomeNames.Count, 2));
     public const byte GlobalBlockStatesMaxBitsPerEntry = 10;
     //public static readonly byte GlobalBlockStatesMaxBitsPerEntry = (byte)Math.Ceiling(Math.Log(GlobalPalette.Length, 2));
     public const byte BiomesThreasholdPerSection = 4;
     public const byte BlocksThreasholdPerSection = 9;
+
+    #endregion
+
+    #region Valid check
+
+    public bool IsValid => IsValid_biomes 
+        && IsValid_block_states
+        && IsValid_BlockLight
+        && IsValid_SkyLight;
+    public bool IsValid_biomes => biomes != null && biomes.IsValid;
+    public bool IsValid_block_states => block_states != null && block_states.IsValid;
+    public bool IsValid_SkyLight => true;
+    public bool IsValid_BlockLight => true;
+
+    #endregion
 
     public ChunkSection()
     {

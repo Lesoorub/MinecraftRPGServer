@@ -9,6 +9,7 @@ using MinecraftData._1_18_2.blocks.minecraft;
 using MinecraftRPGServer;
 using MinecraftRPGServer.core.Configs;
 using MineServer;
+using Newtonsoft.Json;
 using WorldSystemV2;
 
 public sealed partial class RPGServer : MineServer.MineServer
@@ -20,7 +21,6 @@ public sealed partial class RPGServer : MineServer.MineServer
     public Dispatcher dispatcher = new Dispatcher();
     public RPGServer(StartUpSettings settings) : base(settings.port)
     {
-
         var partTimer = new System.Diagnostics.Stopwatch();
         var timer = new System.Diagnostics.Stopwatch();
         timer.Start();
@@ -203,8 +203,8 @@ public sealed partial class RPGServer : MineServer.MineServer
             return false;
         }
 
-        var data = PlayerData.GetOrCreate(Player.FromLoginName(login), login);
-        player = new Player(data, worlds[data.WorldName]);
+        var data = PlayerData.GetOrCreate(login);
+        player = new Player(data, worlds[(string)data["WorldName"]]);
 
         player.network = client.network;
         if (config.OnlineMode)

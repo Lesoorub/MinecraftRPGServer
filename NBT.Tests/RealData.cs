@@ -6,7 +6,7 @@ using static NBT.Tests.Properties.Resources;
 using NBT;
 using MineServer;
 
-namespace MinecraftRPGServer.Tests.NBT
+namespace NBT.Tests
 {
     [TestClass]
     public class RealData

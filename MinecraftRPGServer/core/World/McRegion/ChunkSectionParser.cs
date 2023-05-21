@@ -23,6 +23,18 @@ public static class ChunkSectionParser
             size: BlocksSizePerSection,
             threshold: BlocksThreasholdPerSection,
             directBitsPerEntry: GlobalBlockStatesMaxBitsPerEntry);
+    static IComparer<TAG> comparer = new TAG_Comparer();
+    static Dictionary<string, BlockNameID> cast_block_name_id;
+
+    static ChunkSectionParser()
+    {
+        var arr = Enum.GetNames(typeof(BlockNameID));
+        cast_block_name_id = new Dictionary<string, BlockNameID>(arr.Length);
+        for (int k = 0; k < arr.Length; k++)
+        {
+            cast_block_name_id.Add(arr[k], (BlockNameID)k);
+        }
+    }
     public static void Parse(ChunkSection obj, NBTTag sectionNBT)
     {
         //shortcuts
@@ -102,26 +114,6 @@ public static class ChunkSectionParser
     }
 
 
-    static StateIDFromTAGChahe chache = new StateIDFromTAGChahe();
-    static IComparer<TAG> comparer = new TAG_Comparer();
-    class TAG_Comparer : IComparer<TAG>
-    {
-        public int Compare(TAG x, TAG y)
-        {
-            return string.Compare(x.name, y.name);
-        }
-    }
-
-    static Dictionary<string, BlockNameID> cast_block_name_id;
-    static ChunkSectionParser()
-    {
-        var arr = Enum.GetNames(typeof(BlockNameID));
-        cast_block_name_id = new Dictionary<string, BlockNameID>(arr.Length);
-        for (int k = 0; k < arr.Length; k++)
-        {
-            cast_block_name_id.Add(arr[k], (BlockNameID)k);
-        }
-    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static short StateIDFromTAG(string name, TAG_Compound propsTAG)
@@ -129,13 +121,14 @@ public static class ChunkSectionParser
         if (name.Length == 13 && name.Equals("minecraft:air")) return 0;
 
         var propsHash = StateIDFromTAGChahe.PropsHash(propsTAG);
-        var nameHash = StateIDFromTAGChahe.StringHash(name);
+        var cutname = name.StartsWith("minecraft:") ? name.Substring(10) : name;
 
-        if (!cast_block_name_id.TryGetValue(name, out var nameid))
-            return 0;
+        var nameHash = StateIDFromTAGChahe.StringHash(cutname);
 
+        if (!cast_block_name_id.TryGetValue(cutname, out var nameid))
+            return 0;//Неизвестный блок будет равен воздуху (0).
 
-        if (chache.Get(nameHash, propsHash, out var result))
+        if (StateIDFromTAGChahe.Get(nameHash, propsHash, out var result))
             return result;
 
         var data = GlobalPalette.GetBlockData(nameid);
@@ -143,23 +136,19 @@ public static class ChunkSectionParser
             return data.DefaultStateID;
 
         var d = Convert(data.Properties, propsTAG);
+#if DEBUG
         if (d.Any(x => x == 255))
         {
-#if DEBUG
             throw new Exception($"Can't get stateId from name and properties: " +
                 $"properties={string.Join(" ", d.Select(x => x.ToString("X")))}, " +
                 $"name={name}, " +
                 $"propsTag={propsTAG.ToString()}");
-#endif
-            return 0;
         }
+#endif
         short r = data.States.First(x => x.Properties.Length == propsTAG.Count && x.Properties.SequenceEqual(d)).Id;
 
-        lock (chache)
-        {
-            chache.Add(nameHash, propsHash, r);
-            return r;
-        }
+        StateIDFromTAGChahe.Add(nameHash, propsHash, r);
+        return r;
         IEnumerable<byte> Convert(Dictionary<string, List<string>> pallete, TAG_Compound dict)
         {
             dict.data.Sort(comparer);
@@ -247,13 +236,20 @@ public static class ChunkSectionParser
         }
     }
 
-
-    public class StateIDFromTAGChahe
+    class TAG_Comparer : IComparer<TAG>
     {
-        Dictionary<int, Dictionary<int, short>> data = new Dictionary<int, Dictionary<int, short>>(50);
+        public int Compare(TAG x, TAG y)
+        {
+            return string.Compare(x.name, y.name);
+        }
+    }
+
+    public static class StateIDFromTAGChahe
+    {
+        static Dictionary<int, Dictionary<int, short>> data = new Dictionary<int, Dictionary<int, short>>(50);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Get(int nameHash, int propsHash, out short value)
+        public static bool Get(int nameHash, int propsHash, out short value)
         {
             Dictionary<int, short> dict;
             lock (data)
@@ -276,7 +272,7 @@ public static class ChunkSectionParser
             }
         }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Add(int nameHash, int propsHash, short value)
+        public static void Add(int nameHash, int propsHash, short value)
         {
             Dictionary<int, short> list;
             lock (data)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Buffers.Binary;
 using System.Linq;
+using System.Text;
 
 //Documentation https://wiki.vg/NBT
 namespace NBT
@@ -50,6 +51,18 @@ namespace NBT
         public override bool Equals(TAG tag)
         {
             return tag is TAG_Long_Array t && data.SequenceEqual(t.data);
+        }
+        public override dynamic ToDynamic()
+        {
+            return data;
+        }
+        public override string ToJson()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("[");
+            sb.Append(string.Join(",", data.Select(x => x)));
+            sb.Append("]");
+            return sb.ToString();
         }
     }
 }

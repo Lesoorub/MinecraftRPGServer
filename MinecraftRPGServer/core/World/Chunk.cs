@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using NBT;
 using Packets.Play;
@@ -7,13 +8,41 @@ using WorldSystemV2;
 
 public class Chunk : IChunk
 {
+    #region Fields
+    
     public IWorld World { get; set; }
     public NBTTag Heightmaps = new NBTTag();
     public v2i cPos;
     public SortedDictionary<int, ChunkSection> sections = new SortedDictionary<int, ChunkSection>();
     public BlockEntityData[] BlockEntities = new BlockEntityData[0];
+    /// <summary>
+    /// Данные о секциях
+    /// </summary>
     byte[] data;
     public long LastModifyTimeStamp;
+    public const bool TrustEdges = true;
+    ChunkDataAndUpdateLight _packet;//for cache packet
+    long _packet_LastModifyTimeStamp;//for cache packet
+
+    #endregion
+
+    #region Valid check
+    public bool IsValid =>  
+        IsValid_Heightmaps 
+        && IsValid_cPos 
+        && IsValid_sections
+        && IsValid_BlockEntities
+        && IsValid_LastModifyTimeStamp;
+    public bool IsValid_Heightmaps => Heightmaps != null;
+    public bool IsValid_cPos => cPos != null;
+    public bool IsValid_sections => sections != null && 
+        sections.All(x => x.Value.IsValid);
+    public bool IsValid_BlockEntities => BlockEntities != null;
+    public bool IsValid_LastModifyTimeStamp => LastModifyTimeStamp != 0;
+    #endregion
+
+    #region Properties
+
     public byte[] Data
     {
         get
@@ -26,13 +55,8 @@ public class Chunk : IChunk
             return data;
         }
     }
-
     public int X => cPos.x;
     public int Z => cPos.y;
-
-
-    ChunkDataAndUpdateLight _packet;//for cache packet
-    long _packet_LastModifyTimeStamp;//for cache packet
     public ChunkDataAndUpdateLight packet 
     { 
         get
@@ -47,7 +71,7 @@ public class Chunk : IChunk
                     Heightmaps = Heightmaps,
                     Data = Data,
                     BlockEntities = BlockEntities,
-                    TrustEdges = true,
+                    TrustEdges = TrustEdges,
                     SkyLightMask = SkyMask,
                     BlockLightMask = BlockMask,
                     EmptySkyLightMask = EmptySkyMask,
@@ -59,37 +83,34 @@ public class Chunk : IChunk
             return _packet;
         } 
     }
-
     public BitSet SkyMask  { get; } = new BitSet();
     public BitSet BlockMask { get; } = new BitSet();
     public BitSet EmptySkyMask { get; } = new BitSet();
     public BitSet EmptyBlockMask { get; } = new BitSet();
-
     public byte[][] SkyLightArrays { get; protected set; }
     public byte[][] BlockLightArrays { get; protected set; }
 
     private bool isChanged = false;
 
+    #endregion
+
     public Chunk(v2i cpos)
     {
-        cPos = cpos;
+        this.cPos = cpos;
         UpdateData();
         UpdateLight();
     }
-    public Chunk(byte[] raw, int Timestump)
+    public Chunk(v2i cpos, NBTTag nbt, int Timestump)
     {
-        if (raw == null)
-            throw new Exception("Невозможно загрузить чанк из массива равного null");
-        ChunkParser.Parse(this, new NBTTag(raw));
-
+        this.cPos = cpos;
+        this.LastModifyTimeStamp = Timestump;
+        ChunkParser.Parse(this, nbt);
         UpdateData();
         UpdateLight();
-
-        LastModifyTimeStamp = Timestump;
     }
 
     static Random rnd = new Random();
-    public void Tick()
+    public void Tick(IWorld World)
     {
         foreach (var entityData in BlockEntities)
         {
@@ -225,5 +246,10 @@ public class Chunk : IChunk
     public byte[] ExportToBytes()
     {
         return ChunkParser.Serialize(this).Bytes;
+    }
+
+    public void SetMultiBlocks(IStructureSection structureSection)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -2,12 +2,6 @@ C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\obj\Debug\NBT.Tests.
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\obj\Debug\NBT.Tests.csproj.CoreCompileInputs.cache
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\obj\Debug\NBT.Tests.Properties.Resources.resources
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\obj\Debug\NBT.Tests.csproj.GenerateResource.cache
-C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\ru\Microsoft.TestPlatform.AdapterUtilities.resources.dll
-C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\ru\Microsoft.TestPlatform.CoreUtilities.resources.dll
-C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\ru\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.resources.dll
-C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\ru\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.resources.dll
-C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\ru\Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll
-C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\ru\Microsoft.VisualStudio.TestPlatform.TestFramework.resources.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
@@ -36,3 +30,11 @@ C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\obj\Debug\NBT.Tests.
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\NBT.Tests.dll.config
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\DotNetZip.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\VectorMath.dll
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\ru\Microsoft.TestPlatform.AdapterUtilities.resources.dll
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\ru\Microsoft.TestPlatform.CoreUtilities.resources.dll
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\ru\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.resources.dll
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\ru\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.resources.dll
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\ru\Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\ru\Microsoft.VisualStudio.TestPlatform.TestFramework.resources.dll
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\Rust.Option.dll
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Debug\Rust.Option.pdb

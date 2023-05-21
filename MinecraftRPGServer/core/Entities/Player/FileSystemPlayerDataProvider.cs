@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using NBT;
 using Newtonsoft.Json;
 
 public class FileSystemPlayerDataProvider : IPlayerDataProvider
@@ -20,7 +21,7 @@ public class FileSystemPlayerDataProvider : IPlayerDataProvider
         this.server = server;
     }
 
-    public Task<PlayerData> GetOrCreatePlayerData(string loginname)
+    public Task<NBTTag> GetOrCreatePlayerData(string loginname)
     {
         return Task.Run(() =>
         {
@@ -30,7 +31,7 @@ public class FileSystemPlayerDataProvider : IPlayerDataProvider
                 var text = File.ReadAllText(fi.FullName);
                 try
                 {
-                    return JsonConvert.DeserializeObject<PlayerData>(text, jsonSerializerSettings);
+                    return new NBTTag(JsonConvert.DeserializeObject<PlayerData>(text, jsonSerializerSettings));
                 }
                 catch (Exception ex)
                 {
@@ -42,19 +43,23 @@ public class FileSystemPlayerDataProvider : IPlayerDataProvider
                     };
                     File.WriteAllText(fi.FullName + ".wrong", JsonConvert.SerializeObject(json));
                     File.Delete(fi.FullName);
-                    return new PlayerData(loginname, server);
+                    return new NBTTag(new PlayerData(loginname, server));
                 }
             }
 
-            return new PlayerData(loginname, server);
+            return new NBTTag(new PlayerData(loginname, server));
         });
     }
 
-    public Task SavePlayerData(string loginname, PlayerData data)
+    public Task SavePlayerData(string loginname, NBTTag data)
     {
         return Task.Run(() =>
         {
-            File.WriteAllText(PathToSave(Player.FromLoginName(loginname)).FullName, JsonConvert.SerializeObject(data, jsonSerializerSettings));
+            File.WriteAllText(PathToSave(
+                Player.FromLoginName(loginname)).FullName, 
+                JsonConvert.SerializeObject(
+                    data.ToObject<PlayerData>(), 
+                jsonSerializerSettings));
         });
     }
 

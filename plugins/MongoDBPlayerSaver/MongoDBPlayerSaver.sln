@@ -5,6 +5,8 @@ VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDBPlayerSaver", "MongoDBPlayerSaver\MongoDBPlayerSaver.csproj", "{CD86FC74-8516-4293-AEAD-D7360C344C49}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBT", "..\..\NBT\NBT.csproj", "{A4532C66-968E-4B50-B66E-26A21EEB54AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{CD86FC74-8516-4293-AEAD-D7360C344C49}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD86FC74-8516-4293-AEAD-D7360C344C49}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD86FC74-8516-4293-AEAD-D7360C344C49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4532C66-968E-4B50-B66E-26A21EEB54AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4532C66-968E-4B50-B66E-26A21EEB54AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4532C66-968E-4B50-B66E-26A21EEB54AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4532C66-968E-4B50-B66E-26A21EEB54AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

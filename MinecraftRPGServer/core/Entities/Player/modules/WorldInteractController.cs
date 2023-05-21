@@ -42,10 +42,9 @@ public class WorldInteractController : IModule
                         if (loadedChunks.Contains(rpos))
                             continue;
                         loadedChunks.Add(rpos);
-                        IChunk chunk = player.world.GetChunk(rpos.x, rpos.y);
-                        if (chunk == null)
-                            continue;
-                        player.network.Send(chunk.packet);
+                        player.world.GetChunk(rpos.x, rpos.y)
+                            .Match((c) => player.network.Send(c.packet),
+                            (ex) => player.server.errorLoger.Write("Can't load chunk at positon " + cpos, nameof(WorldInteractController)));
                     }
             //Unload chunks
             foreach (var pos in loadedChunks)

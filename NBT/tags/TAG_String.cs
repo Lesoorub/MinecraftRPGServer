@@ -71,5 +71,13 @@ namespace NBT
             result[1] = (byte)((offset - 2) & 0xFF);
             return result.Take(offset);
         }
+        public override dynamic ToDynamic()
+        {
+            return data;
+        }
+        public override string ToJson()
+        {
+            return "\"" + data.ToString() + "\"";
+        }
     }
 }

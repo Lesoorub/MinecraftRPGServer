@@ -1,10 +1,11 @@
-﻿using Packets.Play;
+﻿using System.Collections.Generic;
+using Org.BouncyCastle.Utilities;
+using Packets.Play;
 
 namespace WorldSystemV2
 {
     public interface IChunk
     {
-        IWorld World { get; set; }
         int X { get; }
         int Z { get; }
 
@@ -19,10 +20,25 @@ namespace WorldSystemV2
 
         byte[] Data { get; }
         ChunkDataAndUpdateLight packet { get; }
-        void Tick();
+        void Tick(IWorld World);
         BlockState GetBlock(byte rx, short y, byte rz);
         bool SetBlock(byte rx, short y, byte rz, BlockState newState);
-
+        void SetMultiBlocks(IStructureSection structureSection);
         byte[] ExportToBytes();
+    }
+    public interface IBlocksStructure
+    {
+        string Name { get; }
+        IEnumerable<IStructureSection> Sections { get; }
+        BlockState GetBlock(int x, short y, int z);
+        void SetBlock(int x, short y, int z, BlockState state);
+    }
+    public interface IStructureSection
+    {
+        long ChunkSectionPosition { get; }
+        long[] Blocks { get; }
+
+        BlockState GetBlock(byte rx, byte y, byte rz);
+        void SetBlock(byte rx, byte y, byte rz, BlockState state);
     }
 }

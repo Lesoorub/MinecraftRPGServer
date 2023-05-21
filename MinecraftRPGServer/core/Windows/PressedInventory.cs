@@ -1,37 +1,64 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Inventory
 {
     public class PressedInventory
     {
-        public Item[] mainInv = new Item[27];
-        public Item[] hotbar = new Item[9];
-        public Item[] Armor = new Item[4];
-        public Item[] Craft = new Item[4];
-        public Item Offhand;
-        public Item CarriedItem;
+        public Dictionary<int, Item> Items = new Dictionary<int, Item>();
+
+        public PressedInventory()
+        {
+        }
+
         public PressedInventory(InventoryOfPlayer inv)
         {
-            mainInv = inv.mainInv.Select(x => x.item).ToArray();
-            hotbar = inv.hotbar.Select(x => x.item).ToArray();
-            Armor = inv.Armor.Select(x => x.item).ToArray();
-            Craft = inv.Craft.Select(x => x.item).ToArray();
-            Offhand = inv.Offhand.item;
-            CarriedItem = inv.CarriedItem.item;
+            var mainInv = inv.mainInv.Select(x => x.item).ToArray();
+            var hotbar = inv.hotbar.Select(x => x.item).ToArray();
+            var Armor = inv.Armor.Select(x => x.item).ToArray();
+            var Craft = inv.Craft.Select(x => x.item).ToArray();
+            var Offhand = inv.Offhand.item;
+            var CarriedItem = inv.CarriedItem.item;
+
+            int index = 0;
+            void Add(params Item[] items)
+            {
+                foreach (var item in items)
+                {
+                    if (item != null)
+                        Items.Add(index, item);
+                    index++;
+                }
+            }
+            Add(Craft);
+            Add(Armor);
+            Add(mainInv);
+            Add(hotbar);
+            Add(Offhand);
+            Add(CarriedItem);
         }
         public void UnloadTo(ref InventoryOfPlayer inv)
         {
-            void fill(ref IndexedItem[] target, Item[] from)
+            Item item;
+            void fill(ref IndexedItem[] target, ref int offset)
             {
-                for (int k = 0; k < target.Length; k++)
-                    target[k].item = from[k];
+                for (int i = 0; i < target.Length; i++)
+                {
+                    if (Items.TryGetValue(offset + i, out item))
+                        target[offset].item = item;
+                }
+                offset += target.Length;
             }
-            fill(ref inv.mainInv, mainInv);
-            fill(ref inv.hotbar, hotbar);
-            fill(ref inv.Armor, Armor);
-            fill(ref inv.Craft, Craft);
-            inv.Offhand.item = Offhand;
-            inv.CarriedItem.item = CarriedItem;
+            int index = 0;
+            fill(ref inv.Craft, ref index);
+            fill(ref inv.Armor, ref index);
+            fill(ref inv.mainInv, ref index);
+            fill(ref inv.hotbar, ref index);
+            if (Items.TryGetValue(45, out item))
+                inv.Offhand.item = item;
+            if (Items.TryGetValue(46, out item))
+                inv.CarriedItem.item = item;
         }
     }
 }

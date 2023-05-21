@@ -3,7 +3,7 @@ using NBT;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MinecraftRPGServer.Tests.NBT
+namespace NBT.Tests
 {
     [TestClass]
     public class BaseFunctionality

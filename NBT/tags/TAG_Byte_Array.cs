@@ -44,5 +44,15 @@ namespace NBT
         {
             return tag is TAG_Byte_Array t && data.SequenceEqual(t.data);
         }
+        public override dynamic ToDynamic()
+        {
+            return data;
+        }
+        public override string ToJson()
+        {
+            if (data.Length == 0)
+                return "";
+            return Convert.ToBase64String(data);
+        }
     }
 }

@@ -7,8 +7,17 @@ using Inventory;
 using MineServer;
 using Packets.Play;
 
-public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
+/// <summary>
+/// Протокол игрока.
+/// Класс изначально был предназначен для хранения
+/// методов игрока, вскоре класс будет упразнен
+/// </summary>
+public class PlayerProtocol : 
+    LivingEntity, 
+    IClient,
+    IEntityProtocol
 {
+    #region Fields
     public NetworkProvider network { get; set; }
     public MineServer.MineServer server { get; set; }
     public RPGServer rpgserver { get => server as RPGServer; }
@@ -108,10 +117,15 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     public Dictionary<ItemNameID, long> Cooldowns = new Dictionary<ItemNameID, long>();
 
     protected override v3f HoloOffset => new v3f(0, -.2f, 0);
+    
+    #endregion
 
+    #region Events
     public delegate void ConnectedArgs();
     public event ConnectedArgs OnConnected;
+    #endregion
 
+    #region Constructors
     public PlayerProtocol(World world) : base(world)
     {
         currentWeather = new Weather(this as Player);
@@ -126,6 +140,9 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         entitiesController.Init(this as Player);
     }
 
+    #endregion
+
+    #region Event handlers
     private void PlayerProtocol_OnHealthChanged(LivingEntity sender, float newHealth, float oldHealth)
     {
         if (isInit)
@@ -160,8 +177,8 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         inventoryWatcher.OnChange += (window, args) =>
         {
             Console.WriteLine($"index={args.index} item={args.item?.GetType()}");
-            if ((args.index >= 5 && args.index <= 8) ||
-                (args.index >= 36 && args.index <= 45))
+            if ((args.index >= 5 && args.index <= 8) ||//armor or
+                (args.index >= 36 && args.index <= 45))//hot bar
                 SendEquipments();//Если инвентарь изменен
         };
         api.SendHeldItemChanged();//16
@@ -205,7 +222,9 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         OnPlayerTick?.Invoke(null);
     }
 
+    #endregion
 
+    #region Methods
     public void OnPlayerTryPlaceBlock(v3i Location, Direction Face, bool isMainHand, v3f cursor)
     {
         v3i pos = Location;
@@ -301,8 +320,6 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
     }
 
     public static Guid FromLoginName(string login) => new Guid(login.GetSha1().Take(16));
-
-
 
     /// <summary>
     /// Устанавливает игроку новую позицию без отправки ему его позиции
@@ -521,5 +538,5 @@ public class PlayerProtocol : LivingEntity, IClient, IEntityProtocol
         if (WindowID == 0) return;//Ignore PlayerInventoryWindow
         SecondWindow = null;
     }
-
+    #endregion
 }

@@ -39,11 +39,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\MSTest.TestFramework.2.2.7\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\MSTest.TestFramework.2.2.7\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -62,6 +66,8 @@
     </Compile>
     <Compile Include="RealData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DynamicObjectTests.cs" />
+    <Compile Include="ToJsonTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -85,6 +91,10 @@
     <ProjectReference Include="..\NBT\NBT.csproj">
       <Project>{a4532c66-968e-4b50-b66e-26a21eeb54aa}</Project>
       <Name>NBT</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rust.Option\Rust.Option.csproj">
+      <Project>{C95C86CA-B4EE-4BBF-BDA6-C013EFAA52DD}</Project>
+      <Name>Rust.Option</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

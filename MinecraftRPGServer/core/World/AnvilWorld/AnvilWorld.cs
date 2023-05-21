@@ -6,20 +6,40 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using AnvilWorldV2;
 using MinecraftRPGServer;
+using Rust.Option;
 using WorldSystemV2;
 
 public class AnvilWorld : World
 {
-    public delegate void TimeChangedArgs(long newTime);
-    public event TimeChangedArgs OnTimeChanged;
+
+    #region Fields
+
     Thread worldThread;
     AnvilWorldLoader loader;
+
+    #region Events
+
+    public delegate void TimeChangedArgs(long newTime);
+    public event TimeChangedArgs OnTimeChanged;
+
+    #endregion
+
+    #region Properies
+
+    public override IWorldChunksProvider provider => this.loader;
+
+    #endregion
+
+    #endregion
+
+    #region Constructors
+
     public AnvilWorld(string path, string publicName)
     {
         this.PublicName = publicName;
         this.Path = path;
         loader = new AnvilWorldLoader(path);
-
+         
         worldThread = new Thread(() =>
         {
             while (true)
@@ -37,35 +57,12 @@ public class AnvilWorld : World
         worldThread.Start();
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public override BlockState GetBlock(v3i location) =>
-        GetBlock(location.x, (short)location.y, location.z);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public override BlockState GetBlock(Position location) =>
-        GetBlock(location.x, (short)location.y, location.z);
-    public override void PrepairingToSpawnWorld(int radius)
-    {
-        int r = radius + 2;
-        for (int x = -r; x < r; x++)
-        {
-            var cpos = new v2i(0, 0);
-            for (int z = -r; z < r; z++)
-            {
-                GetChunk(x + cpos.x, z + cpos.y);
-            }
-        };
-    }
+    #endregion
 
+    #region Methods
 
-    public override BlockState GetBlock(int x, short y, int z)
-    {
-        return loader.GetBlock(x, y, z);
-    }
-    public void SetTime(long newTime)
-    {
-        OnTimeChanged?.Invoke(newTime);
-        Info.Time = newTime;
-    }
+    #region Overrides
+
     public override void Update()
     {
         if (Info == null) return;
@@ -74,7 +71,7 @@ public class AnvilWorld : World
         foreach (var regPair in loader.regions)
             foreach (var chunkPair in regPair.Value.Chunks)
             {
-                chunkPair.Value.Tick();
+                chunkPair.Value.Tick(this);
             }
     }
     public override bool SetBlock(
@@ -157,6 +154,38 @@ public class AnvilWorld : World
             otherplayer.api.SendEffect(EffectID.Block_break, x, y, z, beforeBlockState.StateID, false);
         }
     }
+    public override BlockState GetBlock(int x, short y, int z)
+    {
+        return loader.GetBlock(x, y, z);
+    }
+    
+    public override bool HasChunk(int x, int z)
+    {
+        return loader.HasChunk(x, z);
+    }
+    public override Option<IChunk> GetChunk(int x, int z)
+    {
+        var cpos = new v2i(x, z);
+        return new Option<IChunk>(
+            () => loader.GetChunk(x, z)
+            .Select(
+            (t) => t,
+            (ex) => default
+            ));
+    }
+    
+    public override void PrepairingToSpawnWorld(int radius)
+    {
+        int r = radius + 2;
+        for (int x = -r; x < r; x++)
+        {
+            var cpos = new v2i(0, 0);
+            for (int z = -r; z < r; z++)
+            {
+                GetChunk(x + cpos.x, z + cpos.y);
+            }
+        };
+    }
     public override void Save(string path)
     {
         var worldDir = new DirectoryInfo(path);
@@ -166,13 +195,12 @@ public class AnvilWorld : World
         SaveRegions(worldDir);
     }
 
-    public override bool HasChunk(int x, int z)
+    #endregion
+
+    public void SetTime(long newTime)
     {
-        return loader.HasChunk(x, z);
-    }
-    public override IChunk GetChunk(int x, int z)
-    {
-        return loader.GetChunk(x, z);
+        OnTimeChanged?.Invoke(newTime);
+        Info.Time = newTime;
     }
     private void SaveRegions(DirectoryInfo worldDir)
     {
@@ -191,4 +219,7 @@ public class AnvilWorld : World
                 mca.ToByteArray());
         }
     }
+
+    #endregion
+
 }

@@ -49,10 +49,15 @@ namespace NBT
         }
         public class TagType
         {
-            public Type C;
+            public Type[] C;
             public Type NBT;
 
-            public TagType(Type c, Type nBT)
+            public TagType(Type nBT, Type c)
+            {
+                C = new Type[] { c };
+                NBT = nBT;
+            }
+            public TagType(Type nBT, params Type[] c)
             {
                 C = c;
                 NBT = nBT;
@@ -60,19 +65,19 @@ namespace NBT
         }
         public static Dictionary<int, TagType> TagTypes = new Dictionary<int, TagType>()
         {
-            {  0, new TagType(typeof(Nullable), typeof(TAG_END)) },
-            {  1, new TagType(typeof(sbyte),     typeof(TAG_Byte)) },
-            {  2, new TagType(typeof(short),    typeof(TAG_Short)) },
-            {  3, new TagType(typeof(int),      typeof(TAG_Int)) },
-            {  4, new TagType(typeof(long),     typeof(TAG_Long)) },
-            {  5, new TagType(typeof(float),    typeof(TAG_Float)) },
-            {  6, new TagType(typeof(double),   typeof(TAG_Double)) },
-            {  7, new TagType(typeof(byte[]),   typeof(TAG_Byte_Array)) },
-            {  8, new TagType(typeof(string),   typeof(TAG_String)) },
-            {  9, new TagType(typeof(Array),    typeof(TAG_List)) },
-            { 10, new TagType(typeof(object),   typeof(TAG_Compound)) },
-            { 11, new TagType(typeof(int[]),    typeof(TAG_Int_Array)) },
-            { 12, new TagType(typeof(long[]),   typeof(TAG_Long_Array)) },
+            {  0, new TagType(typeof(TAG_END)       , typeof(Nullable)             ) },
+            {  1, new TagType(typeof(TAG_Byte)      , typeof(sbyte), typeof(byte)  ) },
+            {  2, new TagType(typeof(TAG_Short)     , typeof(short)                ) },
+            {  3, new TagType(typeof(TAG_Int)       , typeof(int)                  ) },
+            {  4, new TagType(typeof(TAG_Long)      , typeof(long)                 ) },
+            {  5, new TagType(typeof(TAG_Float)     , typeof(float)                ) },
+            {  6, new TagType(typeof(TAG_Double)    , typeof(double)               ) },
+            {  7, new TagType(typeof(TAG_Byte_Array), typeof(byte[])               ) },
+            {  8, new TagType(typeof(TAG_String)    , typeof(string)               ) },
+            {  9, new TagType(typeof(TAG_List)      , typeof(Array)                ) },
+            { 10, new TagType(typeof(TAG_Compound)  , typeof(object)               ) },
+            { 11, new TagType(typeof(TAG_Int_Array) , typeof(int[])                ) },
+            { 12, new TagType(typeof(TAG_Long_Array), typeof(long[])               ) },
         };
         public static TAG Read(int type, byte[] raw, ref int offset, bool nammed)
         {
@@ -134,6 +139,9 @@ namespace NBT
             if (a != null && b != null) return a.Equals(b);
             return false;
         }
+
+        public virtual dynamic ToDynamic() => default;
+        public virtual string ToJson() => "{}";
 
         public static implicit operator TAG(bool value) => new TAG_Byte((byte)(value ? 1 : 0));
         public static implicit operator TAG(byte value) => new TAG_Byte(value);

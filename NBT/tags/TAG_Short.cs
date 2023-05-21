@@ -33,5 +33,13 @@ namespace NBT
         {
             return tag is TAG_Short t && data == t.data;
         }
+        public override dynamic ToDynamic()
+        {
+            return data;
+        }
+        public override string ToJson()
+        {
+            return data.ToString();
+        }
     }
 }

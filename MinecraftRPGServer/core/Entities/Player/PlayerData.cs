@@ -2,6 +2,7 @@
 using System.Xml.Linq;
 using Inventory;
 using MinecraftRPGServer.core.Configs;
+using NBT;
 using static Packets.Play.PlayerInfo;
 
 public class PlayerData
@@ -38,9 +39,10 @@ public class PlayerData
     /// <param name="name"></param>
     /// <param name="server"></param>
     /// <returns></returns>
-    public static PlayerData GetOrCreate(Guid uuid, string name)
+    public static NBTTag GetOrCreate( string name)
     {
-        return Player.playerDataProvider.GetOrCreatePlayerData(name).GetAwaiter().GetResult();
+        return Player.playerDataProvider.GetOrCreatePlayerData(name)
+            .GetAwaiter().GetResult();
     }
     /// <summary>
     /// Перенос данных из игрока в файл
@@ -56,6 +58,6 @@ public class PlayerData
         SelectedSlot = player.SelectedSlot;
         Gamemode = (byte)player.Gamemode;
 
-        Player.playerDataProvider.SavePlayerData(loginname, this).GetAwaiter().GetResult();
+        Player.playerDataProvider.SavePlayerData(loginname, new NBT.NBTTag(this)).GetAwaiter().GetResult();
     }
 }

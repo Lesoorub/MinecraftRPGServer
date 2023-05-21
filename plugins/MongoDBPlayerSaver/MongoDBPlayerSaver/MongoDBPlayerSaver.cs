@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
+using NBT;
 using Newtonsoft.Json;
 using System;
 using System.Numerics;
@@ -71,39 +72,47 @@ public class MongoDBPlayerDataProvider : IPlayerDataProvider
         this.players = players;
         this.server = server;
     }
-    public Task<PlayerData> GetOrCreatePlayerData(string loginname)
+    public Task<NBTTag> GetOrCreatePlayerData(string loginname)
     {
         return Task.Run(() =>
         {
-            var data = players.Find(filter: x => x.loginname.Equals(loginname)).FirstOrDefault();
-            if (data == null || string.IsNullOrEmpty(data.loginname)) //create
+            var data = players.Find(filter: x => loginname.Equals(GetLoginName(x.nbt))).FirstOrDefault();
+            if (data == null || string.IsNullOrEmpty(GetLoginName(data.nbt))) //create
             {
                 data = new MongoPlayerData()
                 {
-                    username = loginname,
-                    loginname = loginname,
-                    WorldName = server.spawnWorldName,
-                    position = server.spawnWorld.SpawnPoint,
-                    rotation = server.spawnWorld.SpawnRotation,
+                    nbt = new NBTTag(new PlayerData())
                 };
                 players.InsertOne(data);
             }
-            return data as PlayerData;
+            return new NBTTag(data);
         });
     }
 
-    public Task SavePlayerData(string loginname, PlayerData data)
+    public Task SavePlayerData(string loginname, NBTTag data)
     {
         return Task.Run(async () =>
         {
-            await players.ReplaceOneAsync(x => x.loginname.Equals(loginname), data as MongoPlayerData);
+            await players.ReplaceOneAsync(
+                x => loginname.Equals(GetLoginName(x.nbt)), 
+                new MongoPlayerData()
+                {
+                    nbt = data,
+                });
         });
+    }
+    
+    string GetLoginName(NBTTag nbt)
+    {
+        if (!nbt.HasTag("loginname")) return null;
+        return (string)nbt["loginname"];
     }
 }
 
-public class MongoPlayerData : PlayerData
+public class MongoPlayerData
 {
     public ObjectId _id;
+    public NBTTag nbt;
 }
 
 //[ChatCommand]

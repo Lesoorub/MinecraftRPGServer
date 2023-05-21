@@ -297,6 +297,7 @@
     <Compile Include="core\World\WorldSystemV2\ILightEngine.cs" />
     <Compile Include="core\World\IWorldsProvider.cs" />
     <Compile Include="core\World\MinecraftCoordinatesSystem.cs" />
+    <Compile Include="core\World\WorldSystemV2\IWorldDataProvider.cs" />
     <Compile Include="core\World\WorldSystemV2\SetBlockMode.cs" />
     <Compile Include="special types\BlockEntityAttribute.cs" />
     <Compile Include="special types\BlockEntityData.cs" />
@@ -522,6 +523,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="ClassDiagram1.cd" />
+    <None Include="Graph1.dgml" />
     <None Include="packages.config" />
     <None Include="Resources\blocks.json" />
     <None Include="Resources\block_entity_type_1.18.2.json" />
@@ -552,6 +555,10 @@
     <ProjectReference Include="..\NBT\NBT.csproj">
       <Project>{a4532c66-968e-4b50-b66e-26a21eeb54aa}</Project>
       <Name>NBT</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rust.Option\Rust.Option.csproj">
+      <Project>{c95c86ca-b4ee-4bbf-bda6-c013efaa52dd}</Project>
+      <Name>Rust.Option</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

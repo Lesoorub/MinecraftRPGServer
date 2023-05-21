@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using static NBT.Tests.Properties.Resources;
 
-namespace MinecraftRPGServer.Tests.NBT
+namespace NBT.Tests
 {
     [TestClass]
     public class Parse
@@ -226,6 +226,13 @@ namespace MinecraftRPGServer.Tests.NBT
             Assert.IsTrue(obj[0] == "a" && obj[1] == "b" && obj[2] == "c");
         }
         [TestMethod]
+        public void ToObjectArray()
+        {
+            var nbt = NBTTag.Parse(new string[] { "a", "b", "c" });
+            var obj = nbt.ToObject<string[]>();
+            Assert.IsTrue(obj[0] == "a" && obj[1] == "b" && obj[2] == "c");
+        }
+        [TestMethod]
         public void TagToObjectList()
         {
             var nbt = NBTTag.Parse(new { string_array = new string[] { "a", "b", "c" } });
@@ -241,6 +248,56 @@ namespace MinecraftRPGServer.Tests.NBT
             var parsed = NBTTag.ParseNotRecursive(nbt.Bytes, ref offset);
 
             Assert.IsTrue(parsed.Bytes.SequenceEqual(nbt.Bytes));
+        }
+        [TestMethod]
+        public void ToObjectDictionaryNotEmpty()
+        {
+            var nbt = NBTTag.Parse(new { dict = new Dictionary<int, int>() { { 0, 1 }, { 2, 5 } } });
+            var obj = nbt["dict"].ToObject<Dictionary<int, int>>();
+            Assert.IsTrue(obj[0] == 1 && obj[2] == 5 && !obj.ContainsKey(3) && obj.Count == 2);
+        }
+        [TestMethod]
+        public void ToObjectDictionaryEmpty()
+        {
+            var nbt = NBTTag.Parse(new { dict = new Dictionary<int, int>() { } });
+            var obj = nbt["dict"].ToObject<Dictionary<int, int>>();
+            Assert.IsTrue(obj.Count == 0);
+        }
+        [TestMethod]
+        public void ToObjectDictionaryNotEmptyWithClass()
+        {
+            var nbt = NBTTag.Parse(
+                new 
+                    { 
+                        dict = new Dictionary<int, ToObjectDictionaryNotEmptyWithClass_Element>() 
+                        { 
+                            { 0, new ToObjectDictionaryNotEmptyWithClass_Element("1") }, 
+                            { 2, new ToObjectDictionaryNotEmptyWithClass_Element("22") } 
+                        } 
+                    }
+                );
+            var obj = 
+                nbt["dict"].ToObject<Dictionary<int, ToObjectDictionaryNotEmptyWithClass_Element>>();
+            Assert.IsTrue(
+                obj[0].stringField == "1" 
+                && obj[2].stringField == "22"
+                && obj[0].intField == 1
+                && obj[2].intField == 2
+                && !obj.ContainsKey(3) 
+                && obj.Count == 2);
+        }
+
+        public class ToObjectDictionaryNotEmptyWithClass_Element
+        {
+            public int intField = 13;
+            public string stringField;
+
+            public ToObjectDictionaryNotEmptyWithClass_Element() { }
+            public ToObjectDictionaryNotEmptyWithClass_Element(string stringField)
+            {
+                this.stringField = stringField;
+                intField = stringField.Length;
+            }
         }
     }
 }

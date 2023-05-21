@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 //Documentation https://wiki.vg/NBT
@@ -121,6 +123,25 @@ namespace NBT
             return false;
         }
 
+        public override dynamic ToDynamic()
+        {
+            dynamic obj = new ExpandoObject();
+            var d = (ICollection<KeyValuePair<string, dynamic>>)obj;
+            foreach (var pair in data)
+                d.Add(new KeyValuePair<string, dynamic>(pair.name, pair.ToDynamic()));
+            return obj;
+        }
+        public override string ToJson()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("{");
+            sb.Append(string.Join(
+                ",",
+                data.Select(
+                    pair => $"\"{pair.name}\":{pair.ToJson()}")));
+            sb.Append("}");
+            return sb.ToString();
+        }
         #region listinterface
         public int Count => ((ICollection<TAG>)data).Count;
 

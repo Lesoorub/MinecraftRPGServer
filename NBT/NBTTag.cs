@@ -1,8 +1,10 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Schema;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Reflection;
 
@@ -86,7 +88,8 @@ namespace NBT
             root.SetDepth(0);
             return root.ToString();
         }
-
+        public dynamic ToDynamic() => root.ToDynamic();
+        public string ToJson() => root.ToJson();
         public byte[] ToByteArray()
         {
             return Bytes;
@@ -125,7 +128,6 @@ namespace NBT
         }
         public static NBTTag emptyCompaund => new NBTTag(new TAG_Compound(new List<TAG>()));
         public static implicit operator TAG_Compound(NBTTag nbt) => nbt == null ? null : nbt.root as TAG_Compound;
-
         public static NBTTag Parse(object obj)
         {
             var type = obj.GetType();
@@ -155,9 +157,9 @@ namespace NBT
         }
         static TAG ParseValue(object value)
         {
-            if (value == null) return new TAG_Byte(0);
+            if (value == null) return new TAG_Compound();
             Type val_type = value.GetType();
-            var type_pair = TAG.TagTypes.FirstOrDefault(x => x.Value.C.Equals(val_type));
+            var type_pair = TAG.TagTypes.FirstOrDefault(x => x.Value.C.Any(y => y.Equals(val_type)));
             Type nbt_type = null;
             if (type_pair.Value != default)
             {
@@ -173,20 +175,27 @@ namespace NBT
                     list.Add(ParseValue(arr.GetValue(k)));
                 return new TAG_List(list, list.First().TypeID);
             }
-            else if (val_type.IsSubclassOf(typeof(IEnumerable)))
+            else if (value is IDictionary idict)
+            {
+                var comp = new TAG_Compound();
+                if (idict.Count != 0)
+                {
+                    foreach (var pair in idict)
+                    {
+                        comp.Add(ParseValue(pair));
+                    }
+                }
+                return comp;
+            }
+            else if (value is IEnumerable enumerable)
             {
                 Type genericType = val_type.GetElementType();
-                var enumerable = val_type as IEnumerable;
                 var list = new List<TAG>();
                 var iterator = enumerable.GetEnumerator();
                 while (iterator.MoveNext())
                     list.Add(ParseValue(iterator.Current));
                 if (list.Count == 0) return new TAG_List(list, TAG_Byte._TypeID);
                 return new TAG_List(list, list.First().TypeID);
-            }
-            else if (val_type.IsSubclassOf(typeof(IDictionary)))
-            {
-                return ParseObject(value);
             }
             else if (val_type == typeof(bool))
             {
@@ -204,7 +213,7 @@ namespace NBT
             }
         }
 
-        public T ToObject<T>() where T : new()
+        public T ToObject<T>()
         {
             return (T)ToObject(typeof(T));
         }
@@ -216,19 +225,42 @@ namespace NBT
         {
             if (tag is TAG_List list)
             {
-                var el_type = TAG.TagTypes[list.elementsType].C;
+                Type el_type = null;
+                if (type.IsSubclassOf(typeof(Array)))
+                    el_type = type.GetElementType();
+                else if (type.IsSubclassOf(typeof(IList)))
+                    el_type = type.GenericTypeArguments[0];
+                else
+                    el_type = TAG.TagTypes[list.elementsType].C.First();
                 var arr = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(el_type), list.Count);
                 for (int k = 0; k < list.Count; k++)
                 {
                     var el = list[k];
                     arr.Add(ToObject(el, el.body.GetType()));
                 }
+                if (type.IsSubclassOf(typeof(Array)))
+                {
+                    var a = Array.CreateInstance(el_type, arr.Count);
+                    arr.CopyTo(a, 0);
+                    return a;
+                }
                 return arr;
             }
             else if (tag is TAG_Compound compound)
             {
-                //ToObject(new { x = 1, y = 2}, typeof(v2i));
                 var obj = Activator.CreateInstance(type);
+
+                if (obj is IDictionary idict)
+                {
+                    foreach (var element in compound.data)
+                    {
+                        var key = ToObject(element["Key"], type.GenericTypeArguments[0]);
+                        var value = ToObject(element["Value"], type.GenericTypeArguments[1]);
+                        idict.Add(key, value);
+                    }
+                    return obj;
+                }
+
                 foreach (var element in compound.data)
                 {
                     var field = type.GetField(element.name);
