@@ -54,7 +54,7 @@ public class ConnectedClient : IClient
         }
 #if !DEBUG
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             network.Disconnect();
         }

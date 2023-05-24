@@ -22,7 +22,14 @@ namespace MineServer
         /// <summary>
         /// Recalc every time, slowly
         /// </summary>
-        public IClient[] connected_clients => clients.Select(x => x.subclient).ToArray();
+        public IClient[] connected_clients
+        {
+            get
+            {
+                lock (clients)
+                    return clients.Select(x => x.subclient).ToArray();
+            }
+        }
 
         bool _isStarted = false;
         public bool isStarted { get => _isStarted; private set => _isStarted = value; }
@@ -61,8 +68,10 @@ namespace MineServer
             client.network.OnDisconnected += (reason) => OnClientDisconnect(client, reason);
             //client.network.OnPacketRecieved += (packet) => OnPacketRecieved(client, packet);
             client.network.OnError += (ex) => errorLoger.Write(ex.Message, nameof(MineServer));
-            clients.Add(client);
-
+            lock (clients)
+            {
+                clients.Add(client);
+            }
             connectionWaiter.Set();
         }
         /// <summary>
@@ -71,17 +80,20 @@ namespace MineServer
         public void Stop()
         {
             connectionWaiter.Set();
-            foreach (var cl in clients)
+            lock (clients)
             {
-                try
+                foreach (var cl in clients)
                 {
-                    cl.thread.Interrupt();
-                    cl.thread.Join();
-                    OnClientDisconnect(cl, DisconnectReason.Aborted);
-                }
-                catch
-                {
-                    continue;
+                    try
+                    {
+                        cl.thread.Interrupt();
+                        cl.thread.Join();
+                        OnClientDisconnect(cl, DisconnectReason.Aborted);
+                    }
+                    catch
+                    {
+                        continue;
+                    }
                 }
             }
             listener.Stop();
@@ -92,7 +104,11 @@ namespace MineServer
         /// Faster than connected_clients
         /// </summary>
         /// <param name="predicate"></param>
-        public void ConnectedClientsForeach(Action<IClient> predicate) => clients.ForEach(x => predicate(x.subclient));
+        public void ConnectedClientsForeach(Action<IClient> predicate)
+        {
+            lock (clients)
+                clients.ForEach(x => predicate(x.subclient));
+        }
         protected virtual IClient OnClientConnect(Client client) { return null; }
         protected virtual void OnClientDisconnect(Client client, DisconnectReason reason) { }
 
@@ -100,7 +116,11 @@ namespace MineServer
             SendTo(ip, new BytesBasedPacket(packet).ToByteArray());
         public void SendTo(IPAddress ip, byte[] data)
         {
-            var target = clients.FirstOrDefault(x => x.ip.Equals(ip));
+            Client target;
+            lock (clients)
+            {
+                target = clients.FirstOrDefault(x => x.ip.Equals(ip));
+            }
             if (target == null) return;
             target.network.Send(data);
         }
@@ -108,26 +128,31 @@ namespace MineServer
             Broadcast(new BytesBasedPacket(packet).ToByteArray());
         public void Broadcast(byte[] buffer)
         {
-            foreach (var cl in clients)
-                cl.network.Send(buffer);
+            lock (clients)
+                foreach (var cl in clients)
+                    cl.network.Send(buffer);
         }
         public void BroadcastWithout(IPacket packet, IPAddress ip) => 
             Broadcast(new BytesBasedPacket(packet).ToByteArray(), (xip) => !xip.Equals(ip));
         public void Broadcast(byte[] data, Func<IPAddress, bool> predicate)
         {
-            foreach (var cl in clients)
-                if (predicate(cl.ip))
-                    cl.network.Send(data);
+            lock (clients)
+                foreach (var cl in clients)
+                    if (predicate(cl.ip))
+                        cl.network.Send(data);
         }
         public void Broadcast(IPacket packet, Func<IPAddress, bool> predicate) =>
             Broadcast(new BytesBasedPacket(packet).ToByteArray(), predicate);
 
         public void ChangeSubClient(IClient last, IClient @new)
         {
-            var client = clients.FirstOrDefault(x => x.subclient == last);
-            if (client == null) return;
-            client.subclient = @new;
-            @new.server = last.server;
+            lock (clients)
+            {
+                var client = clients.FirstOrDefault(x => x.subclient == last);
+                if (client == null) return;
+                client.subclient = @new;
+                @new.server = last.server;
+            }
         }
         protected class Client
         {

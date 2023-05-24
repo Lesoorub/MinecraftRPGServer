@@ -22,15 +22,8 @@ C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Release\MineSock
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Release\NBT.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Release\Newtonsoft.Json.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Release\MinecraftData.dll
-C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Release\MinecraftLightEngine.dll
-C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Release\Ionic.Zlib.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Release\BouncyCastle.Crypto.dll
-C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Release\System.Text.Json.dll
-C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Release\System.Text.Encodings.Web.dll
-C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Release\System.ValueTuple.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Release\System.Numerics.Vectors.dll
-C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Release\System.Threading.Tasks.Extensions.dll
-C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Release\Microsoft.Bcl.AsyncInterfaces.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Release\System.Buffers.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Release\MineSocket.NET.pdb
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Release\NBT.pdb
@@ -40,3 +33,7 @@ C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Release\Newtonso
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\obj\Release\NBT.Tests.csproj.CopyComplete
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\obj\Release\NBT.Tests.dll
 C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\obj\Release\NBT.Tests.pdb
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Release\Rust.Option.dll
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Release\VectorMath.dll
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Release\System.Memory.dll
+C:\Users\Lesoorub\source\repos\MinecraftRPGServer\NBT.Tests\bin\Release\Rust.Option.pdb
