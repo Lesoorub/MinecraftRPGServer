@@ -1,9 +1,5 @@
-﻿using System;
-using System.Xml.Linq;
-using Inventory;
-using MinecraftRPGServer.core.Configs;
+﻿using Inventory;
 using NBT;
-using static Packets.Play.PlayerInfo;
 
 public class PlayerData
 {
@@ -23,7 +19,7 @@ public class PlayerData
     /// </summary>
     /// <param name="name"></param>
     /// <param name="server"></param>
-    public PlayerData(string name, RPGServer server)
+    public PlayerData(string name, MinecraftCore server)
     {
         username = name;
         loginname = name;

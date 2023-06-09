@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="NBT.TAG_String">
+    <Position X="13.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAEgEAAAAAAAQAAAEAgIAAYAEABAAA=</HashCode>
+      <FileName>tags\TAG_String.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NBT.TAG">
+    <Position X="8" Y="5.75" Width="1.5" />
+    <NestedTypes>
+      <Class Name="NBT.TAG.TagType" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>tags\TAG.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>gAgAgBABAAAAAAIEiBYAAABgIwAEAAJgIAFIJBAKAAA=</HashCode>
+      <FileName>tags\TAG.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NBT.TAG_Byte">
+    <Position X="9.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAEgEAAAAAAAQIAAAAgIAAYAAAAAgA=</HashCode>
+      <FileName>tags\TAG_Byte.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NBT.TAG_Byte_Array">
+    <Position X="13.25" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEiMAAAAEAAQAAAAAgIAAYAAAIAAA=</HashCode>
+      <FileName>tags\TAG_Byte_Array.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NBT.TAG_Compound">
+    <Position X="1" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gkIAAEAABAAAABAUiEAEBAQAAQAABAAkKABYAABQIAA=</HashCode>
+      <FileName>tags\TAG_Compound.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="NBT.TAG_Double">
+    <Position X="2.75" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAEgEAABAAAAQAAAAAgIAAYAAAAAAA=</HashCode>
+      <FileName>tags\TAG_Double.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NBT.TAG_END">
+    <Position X="1" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEgEAAAAAAAAAAAAAgAAAIAAAAAAA=</HashCode>
+      <FileName>tags\TAG_END.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NBT.TAG_Float">
+    <Position X="9.75" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAIEgEAAAAAAAUAAAAAgIAAYAAAAAAA=</HashCode>
+      <FileName>tags\TAG_Float.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NBT.TAG_Int">
+    <Position X="6.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEgEAAAAAAAQQAAAAgIABYAAAAAAA=</HashCode>
+      <FileName>tags\TAG_Int.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NBT.TAG_Int_Array">
+    <Position X="11.5" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEiMAEAAAAAQAAAAAgIAAYAAQAAAA=</HashCode>
+      <FileName>tags\TAG_Int_Array.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NBT.TAG_List">
+    <Position X="2.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAAAAADAEiMAAAAQAAQAABAAgIAAYAABAAAA=</HashCode>
+      <FileName>tags\TAG_List.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="NBT.TAG_Long">
+    <Position X="11.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEgEAIAAAAAQAAAAAgIABYAAAAAAA=</HashCode>
+      <FileName>tags\TAG_Long.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NBT.TAG_Long_Array">
+    <Position X="4.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAEiMAAAAAAAQAAAAAgIAAYAAAAAAA=</HashCode>
+      <FileName>tags\TAG_Long_Array.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NBT.TAG_Short">
+    <Position X="4.5" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAgAAAAAAAEgEAAAAAAAQAAAAAgIAAYAAAAAAA=</HashCode>
+      <FileName>tags\TAG_Short.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

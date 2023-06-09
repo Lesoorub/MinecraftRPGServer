@@ -24,7 +24,7 @@ public class UnloadCommand : IChatCommand
             }
         }, Execute);
     }
-    void Execute(RPGServer server, Player player, string[] args)
+    void Execute(MinecraftCore server, Player player, string[] args)
     {
         if (args.Length >= 1)
         {

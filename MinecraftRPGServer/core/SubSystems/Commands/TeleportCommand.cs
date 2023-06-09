@@ -42,7 +42,7 @@ public class TeleportCommand : IChatCommand
             RedirectNode = teleport
         }, Execute);
     }
-    void Execute(RPGServer server, Player player, string[] args)
+    void Execute(MinecraftCore server, Player player, string[] args)
     {
         switch (args.Length)
         {

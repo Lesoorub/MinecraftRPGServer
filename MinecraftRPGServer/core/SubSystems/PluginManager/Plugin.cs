@@ -4,10 +4,10 @@ using Newtonsoft.Json;
 public class Plugin
 {
     public PluginConfig config;
-    public virtual void OnPreInit(RPGServer server) { }
-    public virtual void OnPostInit(RPGServer server) { }
+    public virtual void OnPreInit(MinecraftCore server) { }
+    public virtual void OnPostInit(MinecraftCore server) { }
 
-    public virtual void OnTick(RPGServer server, long tick) { }
+    public virtual void OnTick(MinecraftCore server, long tick) { }
 
 
     public virtual bool OnPlayerLoginIn(Player player, out string reason) { reason = null; return true; }

@@ -516,15 +516,15 @@
     <Compile Include="special types\NBT.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="core\RPGServer.cs" />
+    <Compile Include="core\MinecraftCore.cs" />
     <Compile Include="special types\Chat.cs" />
     <Compile Include="special types\TextScheme.cs" />
     <Compile Include="special types\VillagerData.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="ClassDiagram1.cd" />
-    <None Include="Graph1.dgml" />
+    <None Include="Player.cd" />
+    <None Include="World.cd" />
     <None Include="packages.config" />
     <None Include="Resources\blocks.json" />
     <None Include="Resources\block_entity_type_1.18.2.json" />

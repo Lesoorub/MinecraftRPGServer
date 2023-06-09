@@ -68,7 +68,7 @@ public class InfoCommand : IChatCommand
         },
         Execute);
     }
-    private void Execute(RPGServer server, Player player, string[] args)
+    private void Execute(MinecraftCore server, Player player, string[] args)
     {
         if (args.Length == 0) return;
         if (args[0].Equals("world"))

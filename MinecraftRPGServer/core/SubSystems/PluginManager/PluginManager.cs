@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using static Packets.Play.PlayerInfo;
 
 namespace MinecraftRPGServer
 {
@@ -9,7 +8,7 @@ namespace MinecraftRPGServer
     {
         public static Dictionary<string, PluginInstance> plugins = new Dictionary<string, PluginInstance>();
 
-        public static bool LoadPlugin(RPGServer server, string path)
+        public static bool LoadPlugin(MinecraftCore server, string path)
         {
             var info = new FileInfo(path);
             if (!info.Exists) return false;
@@ -29,7 +28,7 @@ namespace MinecraftRPGServer
             }
             return true;
         }
-        public static void LoadPlugins(RPGServer server, string pluginsPath)
+        public static void LoadPlugins(MinecraftCore server, string pluginsPath)
         {
             new DirectoryInfo(pluginsPath).Create();
             foreach (var path in Directory.GetFiles(pluginsPath, "*.dll", SearchOption.TopDirectoryOnly))
@@ -39,18 +38,18 @@ namespace MinecraftRPGServer
             }
         }
 
-        public static void OnPreInit(RPGServer server)
+        public static void OnPreInit(MinecraftCore server)
         {
             foreach (var pl in plugins)
                 pl.Value.plugin.OnPreInit(server);
         }
-        public static void OnPostInit(RPGServer server)
+        public static void OnPostInit(MinecraftCore server)
         {
             foreach (var pl in plugins)
                 pl.Value.plugin.OnPostInit(server);
         }
 
-        public static void OnTick(RPGServer server, long tick)
+        public static void OnTick(MinecraftCore server, long tick)
         {
             foreach (var pl in plugins)
                 pl.Value.plugin.OnTick(server, tick);

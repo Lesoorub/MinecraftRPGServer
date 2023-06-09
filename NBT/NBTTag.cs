@@ -263,13 +263,25 @@ namespace NBT
 
                 foreach (var element in compound.data)
                 {
+                    Type fieldType = null;
                     var field = type.GetField(element.name);
-                    if (field == null) continue;
+                    var property = type.GetProperty(element.name);
+                    if (field != null)
+                        fieldType = field.FieldType;
+                    if (property != null)
+                        fieldType = property.PropertyType;
+                    if (fieldType == null)
+                    {
+                        continue;
+                    }
                     if (element.body == null) continue;
-                    var d = ToObject(element, field.FieldType);
-                    if (field.FieldType != d.GetType())
-                        d = Convert.ChangeType(d, field.FieldType);
-                    field.SetValue(obj, d);
+                    var d = ToObject(element, fieldType);
+                    if (fieldType != d.GetType())
+                        d = Convert.ChangeType(d, fieldType);
+                    if (field != null)
+                        field.SetValue(obj, d);
+                    if (property != null)
+                        property.SetValue(obj, d);
                 }
                 return obj;
             }

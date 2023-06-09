@@ -20,7 +20,7 @@ public class ColorsCommand : IChatCommand
             }
         }, Execute);
     }
-    void Execute(RPGServer server, Player player, string[] args)
+    void Execute(MinecraftCore server, Player player, string[] args)
     {
         string msg = "example";
         if (args.Length != 0)

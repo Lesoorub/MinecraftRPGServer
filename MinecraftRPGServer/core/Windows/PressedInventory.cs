@@ -46,7 +46,7 @@ namespace Inventory
                 for (int i = 0; i < target.Length; i++)
                 {
                     if (Items.TryGetValue(offset + i, out item))
-                        target[offset].item = item;
+                        target[i].item = item;
                 }
                 offset += target.Length;
             }

@@ -2,6 +2,6 @@
 
 public interface IPacketListener
 {
-    RPGServer server { get; set; }
+    MinecraftCore server { get; set; }
     void OnPacketRecieved(IClient client, IPacket packet);
 }

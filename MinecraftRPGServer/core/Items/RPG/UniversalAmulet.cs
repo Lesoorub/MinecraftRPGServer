@@ -11,7 +11,7 @@ namespace Inventory.Items
         [JsonIgnore]
         int ReloadTime = 1;
         [JsonIgnore]
-        int ReloadTicks => ReloadTime * RPGServer.TicksPerSecond;
+        int ReloadTicks => ReloadTime * MinecraftCore.TicksPerSecond;
         public override CustomModelData model => CustomModelData.amulet1;
         public UniversalAmulet()
         {
@@ -36,7 +36,7 @@ namespace Inventory.Items
             if (SetCooldown(player, ReloadTicks))
                 Scroll.Execute(player, player.Position, power);
             else
-                player.EchoIntoChatFromServer($"Reloading {(player.Cooldowns[ItemID] - player.rpgserver.currentTick) / RPGServer.TicksPerSecond} second(s)");
+                player.EchoIntoChatFromServer($"Reloading {(player.Cooldowns[ItemID] - player.rpgserver.currentTick) / MinecraftCore.TicksPerSecond} second(s)");
         }
     }
 }

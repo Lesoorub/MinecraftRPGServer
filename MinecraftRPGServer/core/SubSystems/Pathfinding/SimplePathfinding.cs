@@ -7,6 +7,8 @@ using MinecraftRPGServer.core.SubSystems.Physics;
 public interface ICollisionProvider
 {
     bool HasCollision(v3i position);
+    bool HasCollision(v3f position);
+    bool HasCollision(float x, float y, float z);
 }
 
 public interface IPathfinder

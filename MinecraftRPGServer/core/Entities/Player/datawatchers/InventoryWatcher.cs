@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Runtime.CompilerServices;
 using Inventory;
-using Inventory.Items;
 
 public class InventoryWatcher : DataWatcher<InventoryWatcher.InventoryArgs>
 {
@@ -36,10 +35,6 @@ public class InventoryWatcher : DataWatcher<InventoryWatcher.InventoryArgs>
                 InvokeOnChange(inv, new InventoryArgs(a));
             }
         }
-
-        //TODO У меня там в dump есть Items, это словарь предметов.
-        //По нему нужно пройтись и посмотреть изменения с помощью функции f.
-        //result:
         var items = inv.mainInv
                 .Concat(inv.hotbar)
                 .Concat(inv.Armor)
@@ -51,18 +46,6 @@ public class InventoryWatcher : DataWatcher<InventoryWatcher.InventoryArgs>
             f(items[pair.Key], ref i);
             dump.Items[pair.Key] = i;
         }
-
-        //f(inv.CarriedItem, ref dump.CarriedItem);
-        //f(inv.Offhand, ref dump.Offhand);
-        //int k;
-        //for (k = 0; k < inv.hotbar.Length; k++)
-        //    f(inv.hotbar[k], ref dump.hotbar[k]);
-        //for (k = 0; k < inv.mainInv.Length; k++)
-        //    f(inv.mainInv[k], ref dump.mainInv[k]);
-        //for (k = 0; k < inv.Craft.Length; k++)
-        //    f(inv.Craft[k], ref dump.Craft[k]);
-        //for (k = 0; k < inv.Armor.Length; k++)
-        //    f(inv.Armor[k], ref dump.Armor[k]);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

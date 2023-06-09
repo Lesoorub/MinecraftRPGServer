@@ -19,8 +19,8 @@ public class PlayerProtocol :
 {
     #region Fields
     public NetworkProvider network { get; set; }
-    public MineServer.MineServer server { get; set; }
-    public RPGServer rpgserver { get => server as RPGServer; }
+    public MineServer.ConnectionsServer server { get; set; }
+    public MinecraftCore rpgserver { get => server as MinecraftCore; }
     public int protocolVersion { get; set; }
 
     protected GamemodeType gamemode = GamemodeType.Survival;
@@ -395,7 +395,7 @@ public class PlayerProtocol :
                         (IPacket)PacketListener.Parse(
                             mpacket,
                             PackageRegistry.BoundToServer[
-                                RPGServer.IndexFromPacketIdAndState(
+                                MinecraftCore.IndexFromPacketIdAndState(
                                     mpacket.packet_id,
                                     State.Play)]));
                 }
@@ -526,7 +526,7 @@ public class PlayerProtocol :
                     RandomPlus.Range(-.25f, .25f),
                     RandomPlus.Range(-.25f, .25f)
                 ).Normalized + target.BoxCollider.y / 2 * v3f.up,
-                $"&c-{damage:N1}", RPGServer.TicksPerSecond * 1);
+                $"&c-{damage:N1}", MinecraftCore.TicksPerSecond * 1);
     }
     public void OpenWindow(AbstractWindow window)
     {

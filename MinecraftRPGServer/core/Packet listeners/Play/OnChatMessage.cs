@@ -18,7 +18,7 @@ public sealed class OnChatMessage : PacketListener
             return;
         }
 
-        var server = client.server as RPGServer;
+        var server = client.server as MinecraftCore;
 
         var cfg = server.config.chat;
 

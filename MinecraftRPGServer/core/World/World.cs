@@ -37,4 +37,14 @@ public abstract class World : IWorld, ICollisionProvider//, ILightWorld
         return GetBlock(position).haveCollision;
     }
     public virtual void PrepairingToSpawnWorld(int radius) { }
+
+    public bool HasCollision(v3f position)
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool HasCollision(float x, float y, float z)
+    {
+        throw new NotImplementedException();
+    }
 }

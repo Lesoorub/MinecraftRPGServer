@@ -7,12 +7,12 @@ using Packets.Play;
 public class TabPlayerInfo
 {
     public const int UpdateDelayMs = 10000;
-    public RPGServer server;
+    public MinecraftCore server;
     public Thread thread;
     PerformanceCounter PC;
     static readonly string header = Chat.ColoredText("&grad(fc4300,246bd8)ARHELLIUM").ToString();
     static string footer;
-    public TabPlayerInfo(RPGServer server)
+    public TabPlayerInfo(MinecraftCore server)
     {
         this.server = server;
         server.OnLoginIn += Server_OnLoginIn;

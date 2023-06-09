@@ -5,7 +5,7 @@ public class SaveAllCommand : IChatCommand
     {
         Commands.Register("save-all", Execute);
     }
-    void Execute(RPGServer server, Player player, string[] args)
+    void Execute(MinecraftCore server, Player player, string[] args)
     {
         server.dispatcher.Invoke(() =>
         {
@@ -21,7 +21,7 @@ public class SaveAllCommand : IChatCommand
         });
     }
 
-    void Log(string text, Player player, RPGServer server)
+    void Log(string text, Player player, MinecraftCore server)
     {
         server.logger.Write(text);
         if (player != null)

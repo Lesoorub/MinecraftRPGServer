@@ -16,7 +16,7 @@ namespace MinecraftRPGServer
         //public static extern int Sum(int a, int b);
         static void Main(string[] args)
         {
-            var server = new RPGServer(StartUpSettings.Parse(args));
+            var server = new MinecraftCore(StartUpSettings.Parse(args));
             server.Start();
             while (server.isStarted)
                 server.ExecuteConsoleCommand(Console.ReadLine());

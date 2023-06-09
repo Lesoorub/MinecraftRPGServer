@@ -6,7 +6,12 @@ public static class Commands
 {
     public static Command root = new Command(new Node(), null);
     public static byte[] DeclareCommands;
-    public delegate void ExecuteArgs(RPGServer server, Player player, string[] args);
+    public delegate void ExecuteArgs(MinecraftCore server, Player player, string[] args);
+    
+    static Commands()
+    {
+        Init();
+    }
     public static void Init()
     {
         foreach (var cmd_type in Tools.GetAllTypesWithAttribute<ChatCommandAttribute>())
@@ -38,7 +43,7 @@ public static class Commands
         parent.node.Childrens.Add(node);
         return cmd;
     }
-    public static bool Execute(string cmd, RPGServer server, Player player, string[] args)
+    public static bool Execute(string cmd, MinecraftCore server, Player player, string[] args)
     {
         var spl = cmd.TrimStart('/').Split(' ');
         Command current = root;

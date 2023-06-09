@@ -6,17 +6,10 @@ using Newtonsoft.Json;
 
 public class FileSystemPlayerDataProvider : IPlayerDataProvider
 {
-    RPGServer server;
+    MinecraftCore server;
     public const string players_dir_in_world = "playerdata";
 
-    public static JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings()
-    {
-        Formatting = Formatting.Indented,
-        TypeNameHandling = TypeNameHandling.All,
-        DefaultValueHandling = DefaultValueHandling.Ignore,
-        CheckAdditionalContent = true,
-    };
-    public FileSystemPlayerDataProvider(RPGServer server)
+    public FileSystemPlayerDataProvider(MinecraftCore server)
     {
         this.server = server;
     }
@@ -28,10 +21,10 @@ public class FileSystemPlayerDataProvider : IPlayerDataProvider
             var fi = PathToSave(Player.FromLoginName(loginname));
             if (fi.Exists)
             {
-                var text = File.ReadAllText(fi.FullName);
+                var bytes = File.ReadAllBytes(fi.FullName);
                 try
                 {
-                    return new NBTTag(JsonConvert.DeserializeObject<PlayerData>(text, jsonSerializerSettings));
+                    return new NBTTag(bytes);
                 }
                 catch (Exception ex)
                 {
@@ -39,9 +32,9 @@ public class FileSystemPlayerDataProvider : IPlayerDataProvider
                     var json = new
                     {
                         exception = ex,
-                        wrongJson = text
+                        wrongJson = bytes
                     };
-                    File.WriteAllText(fi.FullName + ".wrong", JsonConvert.SerializeObject(json));
+                    File.WriteAllBytes(fi.FullName + ".wrong", bytes);
                     File.Delete(fi.FullName);
                     return new NBTTag(new PlayerData(loginname, server));
                 }
@@ -55,17 +48,19 @@ public class FileSystemPlayerDataProvider : IPlayerDataProvider
     {
         return Task.Run(() =>
         {
-            File.WriteAllText(PathToSave(
+            File.WriteAllBytes(PathToSave(
                 Player.FromLoginName(loginname)).FullName, 
-                JsonConvert.SerializeObject(
-                    data.ToObject<PlayerData>(), 
-                jsonSerializerSettings));
+                data.Bytes
+                );
         });
     }
 
     public FileInfo PathToSave(Guid player_uuid)
     {
-        var fi = new FileInfo(Path.Combine(server.config.world.WorldPath, players_dir_in_world, player_uuid.ToString() + ".json"));
+        var fi = new FileInfo(Path.Combine(
+            server.config.world.WorldPath,
+            players_dir_in_world,
+            player_uuid.ToString() + ".nbt"));
         fi.Directory.Create();
         return fi;
     }

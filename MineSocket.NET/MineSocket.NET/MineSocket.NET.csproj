@@ -58,7 +58,7 @@
     <Compile Include="intefaces\IPacket.cs" />
     <Compile Include="intefaces\ISerializable.cs" />
     <Compile Include="libs\Logger.cs" />
-    <Compile Include="MineServer.cs" />
+    <Compile Include="ConnectionsServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="core\SerializableToBytes.cs" />
     <Compile Include="specify types\VarInt.cs" />

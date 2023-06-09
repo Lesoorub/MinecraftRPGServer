@@ -14,7 +14,7 @@ namespace Authentication
     {
         public static void OnLoginStart(IClient client)
         {
-            var server = client.server as RPGServer;
+            var server = client.server as MinecraftCore;
             var con_cl = client as ConnectedClient;
 
             if (server.config.OnlineMode)
@@ -59,7 +59,7 @@ namespace Authentication
         }
         public static void LoginSucces(ConnectedClient client)
         {
-            var server = client.server as RPGServer;
+            var server = client.server as MinecraftCore;
             if (server.LoginIn(client, client.username, out var player, out var reason))
             {
                 player.network.history.Enqueue(new StringHistoryElement("Encrypt enabled"));

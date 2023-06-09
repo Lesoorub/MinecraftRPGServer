@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using MineServer;
 using NBT;
-using Newtonsoft.Json;
 
 public class Player : PlayerProtocol, IDisposable
 {
@@ -29,8 +28,7 @@ public class Player : PlayerProtocol, IDisposable
     public Player(NBTTag data, World world) : base(world)
     {
         this.rawData = data;
-        var json = data.ToJson();
-        this.data = JsonConvert.DeserializeObject<PlayerData>(json);
+        this.data = this.rawData.ToObject<PlayerData>();
         PlayerUUID = FromLoginName(this.data.loginname);
         inventory = new Inventory.InventoryOfPlayer();
         this.data.inventory.UnloadTo(ref inventory);

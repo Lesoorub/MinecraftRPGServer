@@ -3,7 +3,7 @@ using MineServer;
 
 public class PacketListener : IPacketListener
 {
-    public RPGServer server { get; set; }
+    public MinecraftCore server { get; set; }
     public static object Parse(MinecraftPacket packet, Type type)
     {
         var parsed = Activator.CreateInstance(type);

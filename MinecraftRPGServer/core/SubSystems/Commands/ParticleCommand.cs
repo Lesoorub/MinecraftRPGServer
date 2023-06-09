@@ -59,7 +59,7 @@ public class ParticleCommand : IChatCommand
         }, Execute);
     }
     readonly int[] ignore = new int[] { 2, 3, 14, 15, 17, 22, 23, 24, 30, 35, 36 };
-    void Execute(RPGServer server, Player player, string[] args)
+    void Execute(MinecraftCore server, Player player, string[] args)
     {
         if (args.Length >= 1 && args[0] == "all")
         {

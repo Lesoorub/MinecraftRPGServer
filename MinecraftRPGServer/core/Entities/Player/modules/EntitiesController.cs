@@ -9,7 +9,7 @@ public class EntitiesController : IModule
     Player player;
     EntityView view => player.view;
     NetworkProvider network => player.network;
-    RPGServer rpgserver => player.rpgserver;
+    MinecraftCore rpgserver => player.rpgserver;
 
     public delegate void EntitySpawnArgs(Entity entity);
     public event EntitySpawnArgs OnEntitySpawn;

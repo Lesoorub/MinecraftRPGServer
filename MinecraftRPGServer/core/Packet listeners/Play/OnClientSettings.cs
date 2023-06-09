@@ -8,7 +8,7 @@ public class OnClientSettings : PacketListener
     {
         var player = client as Player;
         if (player == null) return;
-        var server = player.server as RPGServer;
+        var server = player.server as MinecraftCore;
         if (!player.isInit)
         {
             player.settings.UpdateBy(server, packet as ClientSettings);

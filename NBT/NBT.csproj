@@ -80,6 +80,7 @@
     <Compile Include="tags\TAG_String.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Tags.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

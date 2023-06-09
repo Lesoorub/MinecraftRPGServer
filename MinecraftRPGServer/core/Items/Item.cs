@@ -14,7 +14,9 @@ namespace Inventory
     {
         [JsonIgnore]
         public bool Present { get => itemCount != 0; }
+        [JsonIgnore]
         public virtual ItemNameID ItemID { get; set; }
+        public int ID { get => (int)ItemID; set => ItemID = (ItemNameID)value; }
         private byte itemCount = 0;
         public byte ItemCount
         {

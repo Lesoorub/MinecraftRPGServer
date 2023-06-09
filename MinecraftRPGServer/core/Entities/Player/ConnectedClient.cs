@@ -5,14 +5,14 @@ public class ConnectedClient : IClient
 {
     public State current_state = State.Handhaking;
     public NetworkProvider network { get; set; }
-    public MineServer.MineServer server { get; set; }
+    public MineServer.ConnectionsServer server { get; set; }
     public int protocolVersion { get; set; }
 
     public byte[] VerifyToken { get; set; }
     public RSA rsa { get; set; }
     public byte[] SharedSecret { get; set; }
     public string username { get; set; }
-    public ConnectedClient(NetworkProvider network, RPGServer server)
+    public ConnectedClient(NetworkProvider network, MinecraftCore server)
     {
         this.network = network;
         this.server = server;
@@ -46,7 +46,7 @@ public class ConnectedClient : IClient
                         (IPacket)PacketListener.Parse(
                             mpacket,
                             PackageRegistry.BoundToServer[
-                                RPGServer.IndexFromPacketIdAndState(
+                                MinecraftCore.IndexFromPacketIdAndState(
                                     mpacket.packet_id,
                                     current_state)]));
                 }

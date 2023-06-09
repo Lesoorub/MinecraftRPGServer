@@ -15,7 +15,7 @@ public sealed class Status : PacketListener
     {
         var con_client = client as ConnectedClient;
         if (con_client == null) return;
-        var server = (con_client.server as RPGServer);
+        var server = (con_client.server as MinecraftCore);
 
         if (favicon == null)
         {
